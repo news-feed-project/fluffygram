@@ -25,4 +25,5 @@
 🎨 : 코드의 구조, 형태 개선<br>
 💡 comment : 주석 추가, 변경<br>
 🔥 remove : 파일, 코드 삭제<br>
-➡️ brach : 브랜치 생성
+➡️ brach : 브랜치 생성<br>
+➕ dependency : 의존성 추가<br>
