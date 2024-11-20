@@ -23,5 +23,6 @@
 🚚 rename : 파일, 경로, route를 옮기거나 이름 변경<br>
 ♻️ refactor : 코드 리팩토링<br>
 🎨 : 코드의 구조, 형태 개선<br>
-💡 : comment : 주석 추가, 변경<br>
+💡 comment : 주석 추가, 변경<br>
 🔥 remove : 파일, 코드 삭제<br>
+➡️ brach : 브랜치 생성
