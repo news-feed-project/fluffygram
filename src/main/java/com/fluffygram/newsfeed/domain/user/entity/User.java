@@ -2,6 +2,7 @@ package com.fluffygram.newsfeed.domain.user.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 
@@ -13,23 +14,27 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @NotBlank
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(name = "password")
     private String password;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(name = "user_nickname")
     private String userNickname;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column(name = "profile_image")
     private String profileImage;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_status")
     private UserStatus userStatus;
 
     public User() {
@@ -66,4 +71,6 @@ public class User extends BaseEntity {
         this.userStatus = userStatus;
     }
 }
+
+
 

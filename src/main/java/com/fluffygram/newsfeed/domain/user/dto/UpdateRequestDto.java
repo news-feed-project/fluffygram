@@ -11,15 +11,10 @@ public class UpdateRequestDto {
     @Size(min = 8, max = 40)
     private final String presentPassword;
 
-    @NotBlank
-    @Size(min = 8, max = 40)
     private final String ChangePassword;
 
-    @NotBlank
-    @Size(min = 1, max = 4)
     private final String userNickname;
 
-    @NotBlank
     private final String phoneNumber;
 
 

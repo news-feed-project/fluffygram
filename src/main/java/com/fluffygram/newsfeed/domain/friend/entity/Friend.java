@@ -2,7 +2,6 @@ package com.fluffygram.newsfeed.domain.friend.entity;
 
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
