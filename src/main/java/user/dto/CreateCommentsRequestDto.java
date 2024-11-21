@@ -14,4 +14,6 @@ public class CreateCommentsRequestDto {
         this.userId = userId;
         this.comment = comment;
     }
+
+
 }

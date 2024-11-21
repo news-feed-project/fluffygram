@@ -3,21 +3,23 @@ package user.dto;
 import lombok.Getter;
 import user.entity.Comments;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 public class CommentsResponseDto {
-    private final long boardId;
-    private final long userId;
-    private final String comment;
-    //댓글 생성
-    public CommentsResponseDto(long boardId, long userId, String comment) {
-        this.boardId = boardId;
-        this.userId = userId;
-        this.comment = comment;
-    }
+    private Long id;
+    private Long boardid;
+    private String usernickname;
+    private String comment;
+    private LocalDateTime createdat;
+    private LocalDateTime modifyat;
 
-    //댓글 전체 조회
-    public static CommentsResponseDto toDto(Comments comment) {
-        return new CommentsResponseDto(comment.getboardId(), comment.getuserId(),
-                comment.getcomment());
+
+    public CommentsResponseDto(Comments comments) {
+        this.id = comments.getId();
+        this.boardid = comments.getBoardId();
+        this.usernickname = comments.getUserNickName();
+        this.comment = comments.getComment();
     }
 }

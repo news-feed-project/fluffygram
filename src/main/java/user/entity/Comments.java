@@ -11,4 +11,7 @@ public class Comments extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long boardId;
+    private Long userId;
+    private String comment;
 }

@@ -8,7 +8,8 @@ import user.dto.CommentsResponseDto;
 import user.dto.CommentsWithUsernameResponseDto;
 import user.dto.CreateCommentsRequestDto;
 import user.dto.UpdateCommentsRequestDto;
-import user.service.CommentsService;
+import user.service.CommentService;
+import user.service.CommentService;
 
 import java.util.List;
 
@@ -16,32 +17,29 @@ import java.util.List;
 @RequestMapping("/comments")
 @RequiredArgsConstructor
 public class CommentsController {
-    private final CommentsService commentsService;
+    private final CommentService commentService;
 
     //댓글 생성(작성)
     @PostMapping
-    public ResponseEntity<CommentsResponseDto> save (@RequestBody CreateCommentsRequestDto requestDto){
-
-        CommentsResponseDto friendResponseDto =
-                commentsService.save(
-                        requestDto.getboardId(),
-                        requestDto.getuserId(),
-                        requestDto.getcomment()
-                );
-        return new ResponseEntity<>(friendResponseDto, HttpStatus.CREATED);
-    } //저장
+    public ResponseEntity<CommentsResponseDto> createComment(
+            @RequestBody CreateCommentsRequestDto requestDto) {
+        CommentsResponseDto commentsResponseDto = commentService.createComment(
+                requestDto.getBoardId(), requestDto.getUserId(), requestDto.getComment()
+        );
+        return new ResponseEntity<>(commentsResponseDto, HttpStatus.CREATED);
+    }
 
     //댓글 전체 조회
     @GetMapping
     public ResponseEntity<List<CommentsResponseDto>> findAllComments(){
-        List<CommentsResponseDto> commentsResponseDtoList = commentsService.findAllComments();
+        List<CommentsResponseDto> commentsResponseDtoList = commentService.findAllComments();
         return new ResponseEntity<>(commentsResponseDtoList, HttpStatus.OK);
     }
 
     //댓글 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<CommentsWithUsernameResponseDto> findCommentsById(@PathVariable Long id) {
-        CommentsWithUsernameResponseDto commentWithUsernameResponseDto = commentsService.findCommentsById(id);
+        CommentsWithUsernameResponseDto commentWithUsernameResponseDto = commentService.findCommentsById(id);
 
         return new ResponseEntity<>(commentWithUsernameResponseDto, HttpStatus.OK);
 
@@ -53,7 +51,15 @@ public class CommentsController {
         @PathVariable Long id,
         @RequestBody UpdateCommentsRequestDto requestDto
     ) {
-        commentsService.updateComments(requestDto.getcomments());
+        commentService.UpdateComments(requestDto.getComment());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //댓글 단건 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CommentsResponseDto> deleteComments(@PathVariable Long id) {
+        commentService.deleteComment(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
