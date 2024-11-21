@@ -20,12 +20,8 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-<<<<<<< HEAD
-src/main/resources/application.properties
-=======
 application.properties
 
->>>>>>> main
 .idea
 *.iws
 *.iml
@@ -43,4 +39,3 @@ out/
 
 ### VS Code ###
 .vscode/
-src/main/resources/application.properties
