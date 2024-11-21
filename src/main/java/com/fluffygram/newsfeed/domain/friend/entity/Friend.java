@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.friend.entity;
 
+import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -18,13 +19,13 @@ public class Friend {
     @Column(name = "id", nullable = false)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "send_user_id")
-//    private User sendUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "send_user_id")
+    private User sendUser;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "received_user_id")
-//    private User receivedUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "received_user_id")
+    private User receivedUser;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "friend_status", nullable = false, columnDefinition = "ENUM('REQUESTED', 'ACCEPTED', 'NOT_FRIEND') DEFAULT 'NOT_FRIEND'")
@@ -44,13 +45,13 @@ public class Friend {
 
     public Friend() { }
 
-//    // 사용자로부터 친구 요청을 받는 생성자
-//    public Friend(User sendUser, User receivedUser, FriendStatus friendStatus) {
-//        this.sendUser = sendUser;
-//        this.receivedUser = receivedUser;
-//        this.friendStatus = friendStatus;
-//        this.requestAt = LocalDateTime.now(); // 친구 요청 시간. 현재시간.
-//    }
+    // 사용자로부터 친구 요청을 받는 생성자
+    public Friend(User sendUser, User receivedUser, FriendStatus friendStatus) {
+        this.sendUser = sendUser;
+        this.receivedUser = receivedUser;
+        this.friendStatus = friendStatus;
+        this.requestAt = LocalDateTime.now(); // 친구 요청 시간. 현재시간.
+    }
 
     // 생성자를 통해 "친구요청상태" / "수락상태" 관리
     public void acceptFriendRequest() {
@@ -58,6 +59,7 @@ public class Friend {
         this.acceptAt = LocalDateTime.now(); // 친구 수락 시간. 현재시간.
     }
 
+    // 친구관계 삭제시. NOT_FRIEND
     public void rejectFriendRequest() {
         this.friendStatus = FriendStatus.NOT_FRIEND;
         this.acceptAt = LocalDateTime.now();
