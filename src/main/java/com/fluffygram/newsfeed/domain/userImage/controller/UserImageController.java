@@ -17,9 +17,9 @@ public class UserImageController {
 
     private final UserImageService userImageService;
 
-    @GetMapping("/{image}")
-    public ResponseEntity<Resource> getUserImage(@PathVariable String image) {
-        Resource resource = userImageService.getUserImage(image);
+    @GetMapping("/{imageName}")
+    public ResponseEntity<Resource> getUserImage(@PathVariable String imageName) {
+        Resource resource = userImageService.getUserImage(imageName);
 
         // HTTP 응답 생성 (Content-Disposition: inline)
         return ResponseEntity.ok()
