@@ -25,7 +25,7 @@
 ♻️ Refactor : 코드 리팩토링<br>
 💡 Comment : 주석 추가, 변경<br>
 🔥 Remove : 파일, 코드 삭제<br>
-➡️ Brach : 브랜치 생성<br>
+🔀 Brach : 브랜치 생성<br>
 ➕ Dependency : 의존성 추가<br>
 🏗️ Chore : 빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등
 
