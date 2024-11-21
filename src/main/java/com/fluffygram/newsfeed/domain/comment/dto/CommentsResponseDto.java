@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentsResponseDto {
     private Long id;
-    private Long boardid;
+    private Long BoardId;
     private String comment;
     private LocalDateTime createdat;
     private LocalDateTime modifyat;
@@ -16,7 +16,7 @@ public class CommentsResponseDto {
 
     public CommentsResponseDto(Comments comments) {
         this.id = comments.getId();
-        this.boardid = comments.getBoardId();
+        this.BoardId = comments.getBoardId();
         this.comment = comments.getComment();
     }
     public static CommentsResponseDto toDto(Comments comments) {
