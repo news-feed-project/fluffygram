@@ -13,69 +13,100 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FriendController {
 
-    // 의존성 자동주입
     private final FriendService friendService;
 
     /**
      * 친구 요청 API
      *
-     * @param session
-     * @param requestDto 요청 Dto
-     * @return 성공시 201 Created 응답코드
+     * @param session       현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto    요청 Dto
+     * @return              HTTP 상태 코드 반환
      *
-     * 사용자가 다른사용자에게 친구요청을 하는 API
-     * 요청본문(JSON) 에는 요청을 보내는 유저의 id와 요청을 받는 유저의 id를 포함해야함
-     * 요청 정상 처리시 201 CREATED 상태코드 반환
      */
     @PostMapping
     public ResponseEntity<Void> sendFriendRequest(
             HttpSession session,
             @RequestBody FriendRequestDto requestDto) {
 
-        Long sendUserId = (Long) session.getAttribute("userId");
+        Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (sendUserId == null) {
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-//        long sendUserId = requestDto.getSendUserId();
-        long receivedUserId = requestDto.getReceivedUserId();
-
-        friendService.sendFriendRequest(sendUserId, receivedUserId);
+        friendService.sendFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    // TODO : 친구요청수락 API. API문서에는 요청데이터가 없는걸로 나오는데,어째야할지? 이게 맞는거같기도하고.
+    /**
+     * 친구 요청 수락 API
+     *
+     * @param session        현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto     요청 Dto
+     * @return               HTTP 상태 코드 반환
+     *
+     */
     @GetMapping("/accept")
     public ResponseEntity<Void> acceptFriendRequest(
             HttpSession session,
             @RequestBody FriendRequestDto requestDto) {
 
-        Long sendUserId = (Long) session.getAttribute("userId");
+        Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (sendUserId == null) {
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        friendService.acceptFriendRequest(sendUserId, requestDto.getReceivedUserId());
+        friendService.acceptFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // TODO : 친구요청거절 API 만들기.
+    /**
+     * 친구 요청 거절 API
+     *
+     * @param session        현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto     요청 Dto
+     * @return               HTTP 상태 코드 반환
+     *
+     */
     @GetMapping("/reject")
     public ResponseEntity<Void> rejectFriendRequest(
             HttpSession session,
             @RequestBody FriendRequestDto requestDto) {
 
-        Long sendUserId = (Long) session.getAttribute("userId");
+        Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (sendUserId == null) {
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        friendService.rejectFriendRequest(sendUserId, requestDto.getReceivedUserId());
+        friendService.rejectFriendRequest(loginUserId, requestDto.getReceivedUserId());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 친구 삭제 API
+     *
+     * @param session        현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto     요청 Dto
+     * @return               HTTP 상태 코드 반환
+     *
+     */
+    @DeleteMapping
+    public ResponseEntity<Void> deleteFriend(
+            HttpSession session,
+            @RequestBody FriendRequestDto requestDto) {
+
+        Long loginUserId = (Long) session.getAttribute("userId");
+
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        friendService.deleteFriend(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -86,29 +117,7 @@ public class FriendController {
 
         return null;
     }
-
-    // TODO : 친구삭제 API
-    @DeleteMapping
-    public ResponseEntity<Void> deleteFriend(
-            HttpSession session,
-            @RequestBody FriendRequestDto requestDto) {
-
-        Long sendUserId = (Long) session.getAttribute("userId");
-        if (sendUserId == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        long receivedUserId = requestDto.getReceivedUserId();
-
-        friendService.deleteFriend(sendUserId, receivedUserId);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
 
-
-// 친구요청 거절하면
-
-// 데이터베이스에 1,2 / 2,1 같이넣기
 
 
