@@ -1,9 +1,9 @@
-package user.repository;
+package com.fluffygram.newsfeed.domain.comment.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import user.entity.Comments;
+import com.fluffygram.newsfeed.domain.comment.entity.Comments;
 
 public interface CommentsRepository extends JpaRepository<Comments, Long> {
 

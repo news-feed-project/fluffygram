@@ -1,16 +1,14 @@
-package user.dto;
+package com.fluffygram.newsfeed.domain.comment.dto;
 
 import lombok.Getter;
-import user.entity.Comments;
+import com.fluffygram.newsfeed.domain.comment.entity.Comments;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 public class CommentsResponseDto {
     private Long id;
     private Long boardid;
-    private String usernickname;
     private String comment;
     private LocalDateTime createdat;
     private LocalDateTime modifyat;
@@ -19,7 +17,9 @@ public class CommentsResponseDto {
     public CommentsResponseDto(Comments comments) {
         this.id = comments.getId();
         this.boardid = comments.getBoardId();
-        this.usernickname = comments.getUserNickName();
         this.comment = comments.getComment();
+    }
+    public static CommentsResponseDto toDto(Comments comments) {
+        return new CommentsResponseDto(comments.getId(), comments.getBoardId(), comments.getComment());
     }
 }

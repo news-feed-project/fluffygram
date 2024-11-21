@@ -1,4 +1,4 @@
-package user.entity;
+package com.fluffygram.newsfeed.domain.comment.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import jakarta.persistence.*;

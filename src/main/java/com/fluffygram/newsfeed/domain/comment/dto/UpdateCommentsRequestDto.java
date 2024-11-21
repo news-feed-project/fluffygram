@@ -1,4 +1,4 @@
-package user.dto;
+package com.fluffygram.newsfeed.domain.comment.dto;
 
 import lombok.Getter;
 

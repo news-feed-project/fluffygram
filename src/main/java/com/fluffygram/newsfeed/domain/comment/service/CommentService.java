@@ -1,11 +1,10 @@
-package user.service;
+package com.fluffygram.newsfeed.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import user.dto.CommentsResponseDto;
-import user.dto.CommentsWithUsernameResponseDto;
-import user.dto.UpdateCommentsRequestDto;
-import user.repository.CommentsRepository;
+import com.fluffygram.newsfeed.domain.comment.dto.CommentsResponseDto;
+import com.fluffygram.newsfeed.domain.comment.dto.CommentsWithUsernameResponseDto;
+import com.fluffygram.newsfeed.domain.comment.repository.CommentsRepository;
 
 import java.util.List;
 

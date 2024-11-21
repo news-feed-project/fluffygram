@@ -1,15 +1,14 @@
-package user.controller;
+package com.fluffygram.newsfeed.domain.comment.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import user.dto.CommentsResponseDto;
-import user.dto.CommentsWithUsernameResponseDto;
-import user.dto.CreateCommentsRequestDto;
-import user.dto.UpdateCommentsRequestDto;
-import user.service.CommentService;
-import user.service.CommentService;
+import com.fluffygram.newsfeed.domain.comment.dto.CommentsResponseDto;
+import com.fluffygram.newsfeed.domain.comment.dto.CommentsWithUsernameResponseDto;
+import com.fluffygram.newsfeed.domain.comment.dto.CreateCommentsRequestDto;
+import com.fluffygram.newsfeed.domain.comment.dto.UpdateCommentsRequestDto;
+import com.fluffygram.newsfeed.domain.comment.service.CommentService;
 
 import java.util.List;
 
