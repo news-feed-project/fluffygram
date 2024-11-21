@@ -1,0 +1,38 @@
+package com.fluffygram.newsfeed.domain.board.dto;
+
+
+import com.fluffygram.newsfeed.domain.board.entity.Board;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
+
+//응답
+public class BoardResponseDto {
+    private final String id;//게시물 id
+    private final String title;//게시물 제목
+    private final String contents;//게시물 내용
+    private final String userNickname;//유저 닉네임
+    private final LocalDateTime createdAt;//게시물 생성일
+    private final LocalDateTime modifiedAt;//게시물 수정일
+
+    public BoardResponseDto(String id, String title, String contents, String userNickname, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+        this.id = id;
+        this.title = title;
+        this.contents = contents;
+        this.userNickname = userNickname;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
+
+    //게시물 전체 조회
+    public static BoardResponseDto toDto(Board board) {
+        return new BoardResponseDto(
+                board.getId(),
+                board.getTitle(),
+                board.getContents(),
+                board.getUserNickname,
+                board.getCreatedAt(),
+                board.getModifiedAt());
+    }
+}
+
