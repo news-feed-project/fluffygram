@@ -8,8 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +51,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/mypage/{id}")
+    @GetMapping("/my_page/{id}")
     public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
         UserResponseDto userResponseDto = userService.getUserById(id);
 
