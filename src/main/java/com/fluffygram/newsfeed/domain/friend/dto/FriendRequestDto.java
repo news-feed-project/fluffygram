@@ -1,13 +1,16 @@
 package com.fluffygram.newsfeed.domain.friend.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class FriendRequestDto {
 
     // 필드
+    @NotNull
     @NotBlank
     private long sendUserId;
 
+    @NotNull
     @NotBlank
     private long receivedUserId;
 
