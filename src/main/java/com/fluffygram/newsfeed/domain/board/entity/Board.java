@@ -27,7 +27,7 @@ public class Board extends BaseEntity {
     //연관관계 - N:1
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;//사용자 id(외래키)
+    private User user;//사용자 id(외래키)
 
     @Column(length = 20, nullable = false)
     private String title;//게시물 제목
@@ -46,7 +46,7 @@ public class Board extends BaseEntity {
     }
 
     public void setUser(User userId) {
-        this.userId = userId;
+        this.user = userId;
     }
 
     //게시물 수정
@@ -54,4 +54,5 @@ public class Board extends BaseEntity {
         this.title = title;
         this.contents = contents;
     }
+
 }

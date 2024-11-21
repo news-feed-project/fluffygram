@@ -127,6 +127,7 @@ public class UserController {
                 .body(resource);
     }
 
+
     /*
     * 클라이언트 예시
     *

@@ -29,7 +29,7 @@ public class BoardService {
         //게시물 저장
         Board saveBoard = boardRepository.save(board);
 
-        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
+        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findUserById.getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
     }
 
     //게시물 전체 List 조회
@@ -45,7 +45,10 @@ public class BoardService {
         //게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
-        return new BoardResponseDto(findBoard.getId(),findBoard.getTitle(),findBoard.getContents(),findBoard.getCreatedAt(),findBoard.getModifiedAt());
+        //사용자 id로 사용자 조회
+        User findUserById = userRepository.findByIdOrElseThrow(id);
+
+        return new BoardResponseDto(findBoard.getId(),findBoard.getTitle(),findBoard.getContents(), findUserById.getUserNickname(), findBoard.getCreatedAt(),findBoard.getModifiedAt());
     }
 
     //게시물 id로 특정 게시물 수정
@@ -53,11 +56,14 @@ public class BoardService {
         //게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
+        //사용자 id로 사용자 조회
+        User findUserById = userRepository.findByIdOrElseThrow(id);
+
         findBoard.serUpdateBoard(title, contents);
         
         //수정된 게시물 저장하기
         Board saveBoard = boardRepository.save(findBoard);
-        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
+        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findUserById.getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
     }
     
     //게시물 id로 특정 게시물 삭제

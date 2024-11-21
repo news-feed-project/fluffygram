@@ -63,9 +63,7 @@ public class BoardController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }//updateSchedule
-    
 
-    
     //게시물 ID로 특정 게시물 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long id) {
