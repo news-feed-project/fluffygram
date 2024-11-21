@@ -18,35 +18,29 @@ public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @NotNull
     @NotBlank
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "send_user_id")
-    @NotNull
     @NotBlank
     private User sendUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "received_user_id")
-    @NotNull
     @NotBlank
     private User receivedUser;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "friend_status", columnDefinition = "ENUM('REQUESTED', 'ACCEPTED', 'NOT_FRIEND') DEFAULT 'NOT_FRIEND'")
-    @NotNull
     @NotBlank
     private FriendStatus friendStatus = FriendStatus.NOT_FRIEND;
 
     @Column(name = "request_at")
-    @NotNull
     @NotBlank
     private LocalDateTime requestAt;
 
     @Column(name = "accept_at")
-    @NotNull
     @NotBlank
     private LocalDateTime acceptAt;
 
