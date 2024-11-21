@@ -8,7 +8,7 @@ import lombok.Getter;
 public class DeleteRequestDto {
 
     @NotBlank
-    @Size(min = 4, max = 40)
+    @Size(min = 8, max = 40)
     private String password;
 
     DeleteRequestDto(){}

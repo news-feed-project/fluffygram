@@ -13,7 +13,7 @@ public class SignUpRequestDto {
     private final String email;
 
     @NotBlank
-    @Size(min = 4, max = 40)
+    @Size(min = 8, max = 40)
     private final String password;
 
     @NotBlank

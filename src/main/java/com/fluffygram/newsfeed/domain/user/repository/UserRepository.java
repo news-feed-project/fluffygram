@@ -13,4 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     }
 
     Optional<User> findByEmail(String email);
+
+    default User findUserByEmailOrElseThrow(String email){
+        return findByEmail(email).orElseThrow(()-> new RuntimeException("[email = " + email + "] 에 해당하는 유저가 존재하지 않습니다."));
+    }
 }

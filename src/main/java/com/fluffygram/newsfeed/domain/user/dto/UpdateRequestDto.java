@@ -8,8 +8,12 @@ import lombok.Getter;
 public class UpdateRequestDto {
 
     @NotBlank
-    @Size(min = 4, max = 40)
-    private final String password;
+    @Size(min = 8, max = 40)
+    private final String presentPassword;
+
+    @NotBlank
+    @Size(min = 8, max = 40)
+    private final String ChangePassword;
 
     @NotBlank
     @Size(min = 1, max = 4)
@@ -19,8 +23,9 @@ public class UpdateRequestDto {
     private final String phoneNumber;
 
 
-    public UpdateRequestDto(String password, String userNickname, String phoneNumber) {
-        this.password = password;
+    public UpdateRequestDto(String presentPassword, String changePassword, String userNickname, String phoneNumber) {
+        this.presentPassword = presentPassword;
+        ChangePassword = changePassword;
         this.userNickname = userNickname;
         this.phoneNumber = phoneNumber;
     }

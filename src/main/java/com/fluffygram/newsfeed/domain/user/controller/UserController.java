@@ -1,8 +1,11 @@
 package com.fluffygram.newsfeed.domain.user.controller;
 
 import com.fluffygram.newsfeed.domain.user.dto.*;
+import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.service.UserService;
+import com.fluffygram.newsfeed.global.config.Const;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -22,7 +25,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(@RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
@@ -50,11 +53,18 @@ public class UserController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/mypage/{id}")
     public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
-        UserResponseDto userResponseDto = userService.findById(id);
+        UserResponseDto userResponseDto = userService.getUserById(id);
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/others/{id}")
+    public ResponseEntity<OtherUserResponseDto> getOtherUser(@PathVariable Long id) {
+        OtherUserResponseDto otherUserResponseDto = userService.getOtherUserById(id);
+
+        return new ResponseEntity<>(otherUserResponseDto, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
@@ -64,7 +74,7 @@ public class UserController {
         }
 
         UserResponseDto userResponseDto = userService.updateUserById(id,
-                requestDto.getPassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), profileImage);
+                requestDto.getPresentPassword(), requestDto.getChangePassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), profileImage);
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
@@ -75,14 +85,37 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
         }
-//        HttpSession session = request.getSession(false);
-//        User user = (User) session.getAttribute(Const.LOGIN_USER);
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        userService.delete(id, requestDto.getPassword(), 1L);
-//        session.invalidate();
+        userService.delete(id, requestDto.getPassword(), user.getId());
+        session.invalidate();
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestDto, BindingResult bindingResult, HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
+            throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
+        }
+
+        User user = userService.login(requestDto.getEmail(), requestDto.getPassword());
+
+        HttpSession session = request.getSession();
+        session.setAttribute(Const.LOGIN_USER, user);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        session.invalidate();
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @GetMapping("/{id}/image")
     public ResponseEntity<Resource> getUserImage(@PathVariable Long id) {

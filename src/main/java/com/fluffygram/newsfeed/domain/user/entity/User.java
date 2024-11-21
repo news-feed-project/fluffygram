@@ -28,16 +28,21 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String profileImage;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
     public User() {
 
     }
 
-    public User(String email, String encodedPassword, String userNickname, String phoneNumber, String profileImage) {
+    public User(String email, String encodedPassword, String userNickname, String phoneNumber, String profileImage, UserStatus userStatus) {
         this.email = email;
         this.password = encodedPassword;
         this.userNickname = userNickname;
         this.phoneNumber = phoneNumber;
         this.profileImage = profileImage;
+        this.userStatus = userStatus;
     }
 
 
@@ -55,6 +60,10 @@ public class User extends BaseEntity {
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void updateUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 }
 
