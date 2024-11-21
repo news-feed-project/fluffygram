@@ -17,7 +17,7 @@ public class SignUpRequestDto {
     private final String password;
 
     @NotBlank
-    @Size(min = 1, max = 4)
+    @Size(min = 1, max = 10)
     private final String userNickname;
 
     @NotBlank
