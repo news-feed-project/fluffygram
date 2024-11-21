@@ -28,13 +28,13 @@ public class FriendController {
             HttpSession session,
             @RequestBody FriendRequestDto requestDto) {
 
-        Long sendUserId = (Long) session.getAttribute("userId");
+        Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (sendUserId == null || !sendUserId.equals(requestDto.getSendUserId())) {
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        friendService.sendFriendRequest(sendUserId, requestDto.getReceivedUserId());
+        friendService.sendFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -52,13 +52,13 @@ public class FriendController {
             HttpSession session,
             @RequestBody FriendRequestDto requestDto) {
 
-        Long sendUserId = (Long) session.getAttribute("userId");
+        Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (sendUserId == null || !sendUserId.equals(requestDto.getSendUserId())) {
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        friendService.acceptFriendRequest(sendUserId, requestDto.getReceivedUserId());
+        friendService.acceptFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -76,13 +76,13 @@ public class FriendController {
             HttpSession session,
             @RequestBody FriendRequestDto requestDto) {
 
-        Long sendUserId = (Long) session.getAttribute("userId");
+        Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (sendUserId == null || !sendUserId.equals(requestDto.getSendUserId())) {
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        friendService.rejectFriendRequest(sendUserId, requestDto.getReceivedUserId());
+        friendService.rejectFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -100,13 +100,13 @@ public class FriendController {
             HttpSession session,
             @RequestBody FriendRequestDto requestDto) {
 
-        Long sendUserId = (Long) session.getAttribute("userId");
+        Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (sendUserId == null || !sendUserId.equals(requestDto.getSendUserId())) {
+        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        friendService.deleteFriend(sendUserId, requestDto.getReceivedUserId());
+        friendService.deleteFriend(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
