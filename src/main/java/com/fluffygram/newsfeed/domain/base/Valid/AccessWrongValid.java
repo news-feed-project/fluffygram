@@ -7,8 +7,9 @@ import java.util.Objects;
 @Component
 public class AccessWrongValid {
 
-    public void AccessMisMatchId(Long numberOne, Long numberTwo) {
-        if(!Objects.equals(numberOne, numberTwo)){
+    public void accessMisMatchId(Long numberOne, Long numberTwo) {
+        if (!Objects.equals(numberOne, numberTwo)) {
+            throw new RuntimeException("값 불일치");
         }
     }
 }
