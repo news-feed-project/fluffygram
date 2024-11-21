@@ -1,15 +1,15 @@
 package com.fluffygram.newsfeed.domain.friend.entity;
 
+import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @Setter
+@Entity
 @Table(name = "Friend")
 public class Friend {
 
@@ -18,13 +18,13 @@ public class Friend {
     @Column(name = "id", nullable = false)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "send_user_id")
-//    private User sendUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "send_user_id")
+    private User sendUser;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "received_user_id")
-//    private User receivedUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "received_user_id")
+    private User receivedUser;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "friend_status", nullable = false, columnDefinition = "ENUM('REQUESTED', 'ACCEPTED', 'NOT_FRIEND') DEFAULT 'NOT_FRIEND'")

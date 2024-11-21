@@ -1,4 +1,4 @@
-package com.fluffygram.newsfeed.domain.user.image;
+package com.fluffygram.newsfeed.global.tool;
 
 import com.fluffygram.newsfeed.global.config.Const;
 import org.springframework.core.io.Resource;
@@ -19,7 +19,7 @@ public class GetUserImage {
             // 파일을 Resource 객체로 변환
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {
-                throw new RuntimeException("파일이 없습니다.");
+                throw new RuntimeException("해당 유저의 이미지 파일이 없습니다.");
             }
         }
         catch (MalformedURLException e) {

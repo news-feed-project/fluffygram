@@ -1,4 +1,4 @@
-package com.fluffygram.newsfeed.domain.user.image;
+package com.fluffygram.newsfeed.global.tool;
 
 import com.fluffygram.newsfeed.global.config.Const;
 import org.springframework.stereotype.Component;
@@ -13,14 +13,14 @@ import java.util.UUID;
 @Component
 public class UploadUserImage {
 
-    public void FileAndDataUploadController() throws IOException {
+    static public void FileAndDataUploadController() throws IOException {
         // 업로드 디렉토리 생성 (없으면 생성)
         if (!Files.exists(Const.IMAGE_STORAGE_PATH)) {
             Files.createDirectories(Const.IMAGE_STORAGE_PATH);
         }
     }
 
-    public String uploadUserImage(MultipartFile file) {
+    static public String uploadUserImage(MultipartFile file) {
         String uniqueFilename;
 
         if (file.isEmpty()) {

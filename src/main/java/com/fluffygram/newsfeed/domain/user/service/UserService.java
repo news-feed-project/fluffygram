@@ -5,12 +5,10 @@ import com.fluffygram.newsfeed.domain.user.dto.OtherUserResponseDto;
 import com.fluffygram.newsfeed.domain.user.dto.UserResponseDto;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.entity.UserStatus;
-import com.fluffygram.newsfeed.domain.user.image.GetUserImage;
-import com.fluffygram.newsfeed.domain.user.image.UploadUserImage;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
+import com.fluffygram.newsfeed.domain.userImage.service.UserImageService;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,12 +19,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final UserImageService userImageService;
     private final UserRepository userRepository;
 
-    private final UploadUserImage uploadUserImage;
     private final PasswordEncoder passwordEncoder;
     private final AccessWrongValid accessWrongValid;
 
+    @Transactional
     public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber, MultipartFile profileImage) {
         Optional<User> userByEmail = userRepository.findByEmail(email);
 
@@ -36,12 +35,13 @@ public class UserService {
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(password);
 
-        // 이미지 업로드
-        String profileImageUrl = uploadUserImage.uploadUserImage(profileImage);
-
-        User user = new User(email, encodedPassword, userNickname, phoneNumber, profileImageUrl, UserStatus.REGISTER);
+        User user = new User(email, encodedPassword, userNickname, phoneNumber, profileImage.getOriginalFilename(), UserStatus.REGISTER);
 
         User savedUser = userRepository.save(user);
+
+        String profileImageUrl = userImageService.saveUserImage(profileImage, savedUser);
+
+        savedUser.updateProfileImage(profileImageUrl);
 
         return UserResponseDto.toDto(savedUser);
     }
@@ -76,12 +76,22 @@ public class UserService {
             throw new RuntimeException("비밀번호가 동일합니다. 다시 입력해주세요.");
         }
 
-        String profileImageUrl = uploadUserImage.uploadUserImage(profileImage);
+        if(!ChangePassword.isEmpty()){
+            user.updatePassword(passwordEncoder.encode(ChangePassword));
+        }
 
-        user.updatePassword(passwordEncoder.encode(ChangePassword));
-        user.updateUserNickname(userNickname);
-        user.updatePhoneNumber(phoneNumber);
-        user.updateProfileImage(profileImageUrl);
+        if(userNickname != null && !userNickname.isEmpty()){
+            user.updateUserNickname(userNickname);
+        }
+
+        if(phoneNumber != null && !phoneNumber.isEmpty()){
+            user.updatePhoneNumber(phoneNumber);
+        }
+
+        if(profileImage != null && !profileImage.isEmpty()){
+            String profileImageUrl = userImageService.updateUserImage(profileImage, user);
+            user.updateProfileImage(profileImageUrl);
+        }
 
         User savedUser = userRepository.save(user);
 
@@ -112,11 +122,6 @@ public class UserService {
         //userRepository.delete(userById.get());
     }
 
-    public Resource getUserImage(Long id) {
-        String imageUrl = userRepository.findByIdOrElseThrow(id).getProfileImage();
-
-        return GetUserImage.getImage(imageUrl);
-    }
 
     public User login(String email, String password) {
         User user = userRepository.findUserByEmailOrElseThrow(email);
