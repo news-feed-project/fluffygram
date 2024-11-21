@@ -23,9 +23,8 @@ public class BoardService {
         //사용자 id로 사용자 조회
         User findUserById = userRepository.findByIdOrElseThrow(id);
 
-        Board board = new Board(id, title, contents);
-        board.setUser(findUserById);//사용자를 조회해서 참조
-        
+        Board board = new Board(id, title, contents, findUserById);
+
         //게시물 저장
         Board saveBoard = boardRepository.save(board);
 
@@ -45,25 +44,31 @@ public class BoardService {
         //게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
-        //사용자 id로 사용자 조회
-        User findUserById = userRepository.findByIdOrElseThrow(id);
+        //사용자 id로 사용자 조회 -> 사용자 id로 조회하고있지 않다
+//        User findUserById = userRepository.findByIdOrElseThrow(id);
 
-        return new BoardResponseDto(findBoard.getId(),findBoard.getTitle(),findBoard.getContents(), findUserById.getUserNickname(), findBoard.getCreatedAt(),findBoard.getModifiedAt());
+        return new BoardResponseDto(findBoard.getId(),findBoard.getTitle(),findBoard.getContents(), findBoard.getUser().getUserNickname(), findBoard.getCreatedAt(),findBoard.getModifiedAt());
     }
 
     //게시물 id로 특정 게시물 수정
-    public BoardResponseDto updateBoard(Long id, @NotBlank String title, String contents) {
+    public BoardResponseDto updateBoard(Long id, String title, String contents) {
         //게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
-        //사용자 id로 사용자 조회
-        User findUserById = userRepository.findByIdOrElseThrow(id);
+//        //사용자 id로 사용자 조회
+//        User findUserById = userRepository.findByIdOrElseThrow(id);
 
-        findBoard.serUpdateBoard(title, contents);
-        
+        if(title != null){
+            findBoard.updateTitle(title);
+        }
+
+        if(contents != null){
+            findBoard.updateContents(contents);
+        }
+
         //수정된 게시물 저장하기
         Board saveBoard = boardRepository.save(findBoard);
-        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findUserById.getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
+        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findBoard.getUser().getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
     }
     
     //게시물 id로 특정 게시물 삭제

@@ -115,39 +115,4 @@ public class UserController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-    @GetMapping("/{id}/image")
-    public ResponseEntity<Resource> getUserImage(@PathVariable Long id) {
-        Resource resource = userService.getUserImage(id);
-
-        // HTTP 응답 생성 (Content-Disposition: inline)
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg") // 기본 MIME 타입
-                .body(resource);
-    }
-
-
-    /*
-    * 클라이언트 예시
-    *
-    const imageUrl = "http://localhost:8080/images/example.png";
-    const imgElement = document.getElementById("myImage");
-
-    fetch(imageUrl)
-      .then(response => {
-        if (response.ok) {
-        * blob 을 이용
-          return response.blob();
-        } else {
-          throw new Error("Image not found");
-        }
-      })
-      .then(blob => {
-        const imageUrl = URL.createObjectURL(blob);
-        imgElement.src = imageUrl;
-      })
-      .catch(error => console.error("Error loading image:", error));
-
-     */
 }

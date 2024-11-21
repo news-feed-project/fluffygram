@@ -11,8 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
@@ -36,22 +34,22 @@ public class Board extends BaseEntity {
     private String contents;//게시물 내용
 
     //게시글 생성
-    public Board(Long id, String title, String contents) {
+    public Board(Long id, String title, String contents, User user) {
         this.id = id;
         this.title = title;
         this.contents = contents;
+        this.user = user;
     }
 
     public Board() {
     }
 
-    public void setUser(User userId) {
-        this.user = userId;
-    }
-
-    //게시물 수정
-    public void serUpdateBoard(@NotBlank String title, String contents) {
+    //게시물 제목 수정
+    public void updateTitle(String title) {
         this.title = title;
+    }
+    //게시물 내용 수정
+    public void updateContents(String contents) {
         this.contents = contents;
     }
 
