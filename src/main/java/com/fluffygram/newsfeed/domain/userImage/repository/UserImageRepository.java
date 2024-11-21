@@ -2,7 +2,7 @@ package com.fluffygram.newsfeed.domain.userImage.repository;
 
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.userImage.entity.UserImage;
-import com.fluffygram.newsfeed.global.tool.GetUserImage;
+import com.fluffygram.newsfeed.global.tool.GetImage;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface UserImageRepository extends JpaRepository<UserImage, Long> {
 
     default Resource getImage(String imageUrl){
-        return GetUserImage.getImage(imageUrl);
+        return GetImage.getImage(imageUrl);
     }
 
     Optional<UserImage> findUserImageByUser(User user);

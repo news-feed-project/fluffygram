@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 
 
-public class GetUserImage {
+public class GetImage {
 
     public static Resource getImage(String imageUrl) {
         Resource resource;

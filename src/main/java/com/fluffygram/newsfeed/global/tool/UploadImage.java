@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 @Component
-public class UploadUserImage {
+public class UploadImage {
 
     static public void FileAndDataUploadController() throws IOException {
         // 업로드 디렉토리 생성 (없으면 생성)

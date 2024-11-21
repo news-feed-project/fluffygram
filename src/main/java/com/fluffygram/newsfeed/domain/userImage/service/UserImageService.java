@@ -2,7 +2,7 @@ package com.fluffygram.newsfeed.domain.userImage.service;
 
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.userImage.entity.UserImage;
-import com.fluffygram.newsfeed.global.tool.UploadUserImage;
+import com.fluffygram.newsfeed.global.tool.UploadImage;
 import com.fluffygram.newsfeed.domain.userImage.repository.UserImageRepository;
 import com.fluffygram.newsfeed.global.config.Const;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class UserImageService {
     @Transactional
     public String saveUserImage(MultipartFile profileImage, User user) {
 
-        String DBfileName = UploadUserImage.uploadUserImage(profileImage);
+        String DBfileName = UploadImage.uploadUserImage(profileImage);
 
         UserImage userImage = new UserImage(user, profileImage.getOriginalFilename(), DBfileName, Const.IMAGE_STORAGE);
 
@@ -36,7 +36,7 @@ public class UserImageService {
 
 
     public String updateUserImage(MultipartFile profileImage, User user) {
-        String DBfileName = UploadUserImage.uploadUserImage(profileImage);
+        String DBfileName = UploadImage.uploadUserImage(profileImage);
 
         UserImage userImage = userImageRepository.getUserImageByUser(user);
 
