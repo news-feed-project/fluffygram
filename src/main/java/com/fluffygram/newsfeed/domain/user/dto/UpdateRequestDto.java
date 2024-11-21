@@ -18,13 +18,10 @@ public class UpdateRequestDto {
     @NotBlank
     private final String phoneNumber;
 
-    private final String profileImage;
 
-
-    public UpdateRequestDto(String password, String userNickname, String phoneNumber, String profileImage) {
+    public UpdateRequestDto(String password, String userNickname, String phoneNumber) {
         this.password = password;
         this.userNickname = userNickname;
         this.phoneNumber = phoneNumber;
-        this.profileImage = profileImage;
     }
 }

@@ -1,11 +1,8 @@
 package com.fluffygram.newsfeed.domain.user.controller;
 
 import com.fluffygram.newsfeed.domain.user.dto.*;
-import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.service.UserService;
-import com.fluffygram.newsfeed.global.config.Const;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -61,13 +58,13 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateRequestDto requestDto, BindingResult bindingResult){
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateRequestDto requestDto, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
         }
 
         UserResponseDto userResponseDto = userService.updateUserById(id,
-                requestDto.getPassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), requestDto.getProfileImage());
+                requestDto.getPassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), profileImage);
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
@@ -78,11 +75,11 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
         }
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute(Const.LOGIN_USER);
+//        HttpSession session = request.getSession(false);
+//        User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        userService.delete(id, requestDto.getPassword(), user.getId());
-        session.invalidate();
+        userService.delete(id, requestDto.getPassword(), 1L);
+//        session.invalidate();
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

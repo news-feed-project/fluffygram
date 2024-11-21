@@ -1,4 +1,4 @@
-package com.fluffygram.newsfeed.domain.user.service;
+package com.fluffygram.newsfeed.domain.user.image;
 
 import com.fluffygram.newsfeed.global.config.Const;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class UploadUserImage {
         String uniqueFilename;
 
         if (file.isEmpty()) {
-            throw new RuntimeException("파일이 없습니다.");
+            return null;
         }
 
         String contentType = file.getContentType();
