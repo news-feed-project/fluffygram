@@ -1,12 +1,17 @@
 package com.fluffygram.newsfeed.domain.friend.controller;
 
+import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendRequestDto;
+import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.service.FriendService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/friends")
@@ -14,25 +19,21 @@ import org.springframework.web.bind.annotation.*;
 public class FriendController {
 
     private final FriendService friendService;
+    private final AccessWrongValid accessWrongValid;
 
     /**
      * 친구 요청 API
      *
-     * @param session       현재 세션에서 로그인한 사용자의 ID 가져옴
-     * @param requestDto    요청 Dto
-     * @return              HTTP 상태 코드 반환
-     *
+     * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto 요청 Dto
+     * @return HTTP 상태 코드 반환
      */
     @PostMapping
     public ResponseEntity<Void> sendFriendRequest(
             HttpSession session,
-            @RequestBody FriendRequestDto requestDto) {
+            @RequestBody @Valid FriendRequestDto requestDto) {
 
         Long loginUserId = (Long) session.getAttribute("userId");
-
-        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         friendService.sendFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -42,21 +43,16 @@ public class FriendController {
     /**
      * 친구 요청 수락 API
      *
-     * @param session        현재 세션에서 로그인한 사용자의 ID 가져옴
-     * @param requestDto     요청 Dto
-     * @return               HTTP 상태 코드 반환
-     *
+     * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto 요청 Dto
+     * @return HTTP 상태 코드 반환
      */
-    @GetMapping("/accept")
+    @PutMapping("/accept")
     public ResponseEntity<Void> acceptFriendRequest(
             HttpSession session,
-            @RequestBody FriendRequestDto requestDto) {
+            @RequestBody @Valid FriendRequestDto requestDto) {
 
         Long loginUserId = (Long) session.getAttribute("userId");
-
-        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         friendService.acceptFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -66,21 +62,16 @@ public class FriendController {
     /**
      * 친구 요청 거절 API
      *
-     * @param session        현재 세션에서 로그인한 사용자의 ID 가져옴
-     * @param requestDto     요청 Dto
-     * @return               HTTP 상태 코드 반환
-     *
+     * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto 요청 Dto
+     * @return HTTP 상태 코드 반환
      */
-    @GetMapping("/reject")
+    @PutMapping("/reject")
     public ResponseEntity<Void> rejectFriendRequest(
             HttpSession session,
-            @RequestBody FriendRequestDto requestDto) {
+            @RequestBody @Valid FriendRequestDto requestDto) {
 
         Long loginUserId = (Long) session.getAttribute("userId");
-
-        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         friendService.rejectFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -90,32 +81,41 @@ public class FriendController {
     /**
      * 친구 삭제 API
      *
-     * @param session        현재 세션에서 로그인한 사용자의 ID 가져옴
-     * @param requestDto     요청 Dto
-     * @return               HTTP 상태 코드 반환
-     *
+     * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param requestDto 요청 Dto
+     * @return HTTP 상태 코드 반환
      */
     @DeleteMapping
     public ResponseEntity<Void> deleteFriend(
             HttpSession session,
-            @RequestBody FriendRequestDto requestDto) {
+            @RequestBody @Valid FriendRequestDto requestDto) {
 
         Long loginUserId = (Long) session.getAttribute("userId");
-
-        if (loginUserId == null || !loginUserId.equals(requestDto.getSendUserId())) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
 
         friendService.deleteFriend(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // TODO : 모든 친구 조회 API 만들기. List타입 반환 유저가 있어야할듯?
+    /**
+     * 전체친구조회 API
+     *
+     * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
+     * @param userId 요청자의 Id
+     * @return 친구의 Id를 List로 반환
+     */
     @GetMapping("/{userId}")
-    public ResponseEntity<Void> findAllFriends(@PathVariable Long userId) {
+    public ResponseEntity<List<FriendResponseDto>> findAllFriends(
+            HttpSession session,
+            @PathVariable Long userId) {
 
-        return null;
+        Long loginUserId = (Long) session.getAttribute("userId");
+
+        accessWrongValid.validateFriendRequestByUserId(loginUserId, userId);
+
+        List<FriendResponseDto> friends = friendService.findAllFriends(userId);
+
+        return new ResponseEntity<>(friends, HttpStatus.OK);
     }
 }
 

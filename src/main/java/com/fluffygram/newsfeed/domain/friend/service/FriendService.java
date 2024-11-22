@@ -1,5 +1,8 @@
 package com.fluffygram.newsfeed.domain.friend.service;
 
+import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
+import com.fluffygram.newsfeed.domain.friend.dto.FriendRequestDto;
+import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
@@ -8,12 +11,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class FriendService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final AccessWrongValid accessWrongValid;
 
     /**
      * 친구 요청 저장
@@ -24,11 +31,10 @@ public class FriendService {
      */
     public void sendFriendRequest(long sendUserId, long receivedUserId) {
 
-        User sendUser = userRepository.findById(sendUserId)
-                .orElseThrow(() -> new RuntimeException("요청자 ID 못찾음."));
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
 
-        User receivedUser = userRepository.findById(receivedUserId)
-                .orElseThrow(() -> new RuntimeException("요청받는사람 ID 못찾음."));
+        User sendUser = userRepository.findByIdOrElseThrow(sendUserId);
+        User receivedUser = userRepository.findByIdOrElseThrow(receivedUserId);
 
         Friend friend = new Friend(sendUser, receivedUser, Friend.FriendStatus.REQUESTED);
         Friend friend2 = new Friend(receivedUser, sendUser, Friend.FriendStatus.REQUESTED);
@@ -46,10 +52,11 @@ public class FriendService {
      */
     @Transactional
     public void acceptFriendRequest(long sendUserId, long receivedUserId) {
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
-                .orElseThrow( () -> new RuntimeException("친구요청없다.") );
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserId(receivedUserId, sendUserId)
-                .orElseThrow( () -> new RuntimeException("친구요청없다.") );
+
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
+
+        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
+        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
 
         friend.acceptFriendRequest();
         friend2.acceptFriendRequest();
@@ -64,10 +71,11 @@ public class FriendService {
      */
     @Transactional
     public void rejectFriendRequest(Long sendUserId, long receivedUserId) {
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
-                .orElseThrow( () -> new RuntimeException("그런요청없다"));
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserId(receivedUserId, sendUserId)
-                .orElseThrow( () -> new RuntimeException("그런요청없다"));
+
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
+
+        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
+        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
 
         friend.rejectFriendRequest();
         friend2.rejectFriendRequest();
@@ -82,14 +90,35 @@ public class FriendService {
      */
     @Transactional
     public void deleteFriend(Long sendUserId, long receivedUserId) {
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatus(
-                sendUserId, receivedUserId, Friend.FriendStatus.ACCEPTED)
-                .orElseThrow( () -> new RuntimeException("둘이 친구가 아니거나 그런친구관계없다."));
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatus(
-                        receivedUserId, sendUserId, Friend.FriendStatus.ACCEPTED)
-                .orElseThrow( () -> new RuntimeException("둘이 친구가 아니거나 그런친구관계없다."));
+
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
+
+        Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
+                sendUserId, receivedUserId, Friend.FriendStatus.ACCEPTED);
+
+        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
+                        receivedUserId, sendUserId, Friend.FriendStatus.ACCEPTED);
 
         friendRepository.delete(friend);
         friendRepository.delete(friend2);
+    }
+
+    /**
+     * 전체친구조회
+     *
+     * @param userId       요청을 보낸 사용자 ID
+     * @return List<FriendResponseDto>
+     */
+    public List<FriendResponseDto> findAllFriends(Long userId) {
+
+        List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(userId, Friend.FriendStatus.ACCEPTED);
+
+        if (friends.isEmpty()) {
+            throw new RuntimeException("친구가 없습니다.");
+        }
+
+        return friends.stream()
+                .map(friend -> new FriendResponseDto(friend.getReceivedUser().getId())) // 친구의 ID만 반환
+                .collect(Collectors.toList());
     }
 }
