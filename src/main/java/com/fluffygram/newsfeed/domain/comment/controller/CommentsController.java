@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.domain.comment.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +51,8 @@ public class CommentsController {
         @PathVariable Long id,
         @RequestBody UpdateCommentsRequestDto requestDto
     ) {
-        commentService.UpdateComments(requestDto.getComment());
+        commentService.UpdateComments(id,requestDto.getBoardId(),requestDto.getUserId(),
+                requestDto.getComment());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

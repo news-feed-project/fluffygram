@@ -53,9 +53,13 @@ public class CommentService {
 
     public void deleteComment(Long id) {
         Comments findcomments = commentsRepository.findCommentsByIdOrElseThrow(id);
-        CommentsRepository.delete(findcomments);
+        commentsRepository.delete(findcomments);
     }
     //댓글 수정
-    public  void UpdateComments(String comment){
+    public  void UpdateComments(Long id,Long boardId,Long userId, String comment) {
+        Comments setId  = commentsRepository.findCommentsByIdOrElseThrow(id);
+        commentsRepository.update(setId);
+
+
     }
 }
