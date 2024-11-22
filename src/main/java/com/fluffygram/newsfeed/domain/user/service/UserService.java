@@ -13,12 +13,12 @@ import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,10 +33,10 @@ public class UserService {
 
     @Transactional
     public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber, MultipartFile profileImage) {
-        Optional<User> userByEmail = userRepository.findByEmail(email);
-
-        // 중복 email(사용자 아이디) 확인 여부
-        userByEmail.ifPresent(user -> {throw new BusinessException(ExceptionType.EXIST_USER);});
+        // 이미 존재하는 email 인지 확인
+        if(userRepository.existsByEmail(email)){
+            throw new BusinessException(ExceptionType.EXIST_USER);
+        }
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(password);
@@ -57,11 +57,13 @@ public class UserService {
         // 유저의 이미지 이름을 고유한 이름으로 업데이트
         user.updateProfileImage(userImage);
 
+        savedUser = userRepository.save(savedUser);
+
         return UserResponseDto.ToDtoForMine(savedUser);
     }
 
-    public List<UserResponseDto> getAllUsers() {
-        return userRepository.findAll().stream().map(UserResponseDto::ToDtoForMine).toList();
+    public List<UserResponseDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable).stream().map(UserResponseDto::ToDtoForMine).toList();
     }
 
     public UserResponseDto getUserById(Long id) {
@@ -73,7 +75,18 @@ public class UserService {
 
 
     @Transactional
-    public UserResponseDto updateUserById(Long id, String presentPassword, String ChangePassword, String userNickname, String phoneNumber, MultipartFile profileImage) {
+    public UserResponseDto updateUserById(Long id,
+                                          String presentPassword,
+                                          String changePassword,
+                                          String userNickname,
+                                          String phoneNumber,
+                                          MultipartFile profileImage,
+                                          Long loginUserId) {
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인
+        if(!id.equals(loginUserId)){
+            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+        }
+
         User user = userRepository.findByIdOrElseThrow(id);
 
         // 비밀번호 일치 확인
@@ -82,30 +95,15 @@ public class UserService {
         }
 
         // 동일한 비밀번호 변경 시도 확인
-        if(!passwordEncoder.matches(ChangePassword, user.getPassword())){
+        if(!passwordEncoder.matches(changePassword, user.getPassword())){
             throw new BusinessException(ExceptionType.PASSWORD_SAME);
         }
 
-        // 비밀번호 업데이트
-        if(!ChangePassword.isEmpty()){
-            user.updatePassword(passwordEncoder.encode(ChangePassword));
-        }
+        // 이미지 파일 저장하기
+        UserImage userImage = userImageServiceImpl.updateImage(profileImage, user);
 
-        // 유저 닉네임 업데이트
-        if(userNickname != null && !userNickname.isEmpty()){
-            user.updateUserNickname(userNickname);
-        }
-
-        // 유저 전화번호 업데이트
-        if(phoneNumber != null && !phoneNumber.isEmpty()){
-            user.updatePhoneNumber(phoneNumber);
-        }
-
-        // 유저 프로필 이미지 변경
-        if(profileImage != null && !profileImage.isEmpty()){
-            UserImage userImage = userImageServiceImpl.updateImage(profileImage, user);
-            user.updateProfileImage(userImage);
-        }
+        // user 정보 변경하기
+        user = user.updateUser(changePassword, userNickname, phoneNumber, userImage);
 
         User savedUser = userRepository.save(user);
 
@@ -114,8 +112,12 @@ public class UserService {
 
     @Transactional
     public void delete(Long id, String password, Long loginUserId) {
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인
+        if(!id.equals(loginUserId)){
+            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+        }
+
         User userById = userRepository.findByIdOrElseThrow(id);
-        User userByLoginUserId = userRepository.findByIdOrElseThrow(loginUserId);
 
         // 탈퇴 여부 확인
         if(userById.getUserStatus().equals(UserStatus.DELETE)){
@@ -127,12 +129,13 @@ public class UserService {
             throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
         }
 
-        // 사용자 아이디(email) 일치 여부 확인
-        if(!accessWrongValid.AccessMisMatchString(userById.getEmail(), userByLoginUserId.getEmail())){
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
-
+        // 유저 상태를 탈퇴로 변경
         userById.updateUserStatus(UserStatus.DELETE);
+
+        // 유저 닉네임을 '탈퇴한 사용자' 로 변경
+        userById.updateUserNickname();
+
+        userRepository.save(userById);
     }
 
 

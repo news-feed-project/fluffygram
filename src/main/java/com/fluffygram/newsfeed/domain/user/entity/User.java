@@ -3,6 +3,7 @@ package com.fluffygram.newsfeed.domain.user.entity;
 import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import com.fluffygram.newsfeed.domain.user.enums.UserStatus;
+import com.fluffygram.newsfeed.global.config.PasswordEncoder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -53,18 +54,26 @@ public class User extends BaseEntity {
         this.userStatus = userStatus;
     }
 
+    public User updateUser(String password, String userNickname, String phoneNumber, UserImage profileImage) {
+        // 비밀번호 업데이트
+        if(userNickname != null && !password.isEmpty()){
+            PasswordEncoder passwordEncoder = new PasswordEncoder();
+            this.password = passwordEncoder.encode(password);
+        }
 
-    public void updatePassword(String encodedPassword) {
-        this.password = encodedPassword;
+        // 유저 닉네임 업데이트
+        if(userNickname != null && !userNickname.isEmpty()){
+            this.userNickname = userNickname;
+        }
+
+        // 유저 전화번호 업데이트
+        if(phoneNumber != null && !phoneNumber.isEmpty()){
+            this.phoneNumber = phoneNumber;
+        }
+
+        return this;
     }
 
-    public void updateUserNickname(String userNickname) {
-        this.userNickname = userNickname;
-    }
-
-    public void updatePhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public void updateProfileImage(UserImage profileImage) {
         this.profileImage = profileImage;
@@ -72,6 +81,10 @@ public class User extends BaseEntity {
 
     public void updateUserStatus(UserStatus userStatus) {
         this.userStatus = userStatus;
+    }
+
+    public void updateUserNickname() {
+        this.userNickname = "탈퇴한 사용자";
     }
 }
 
