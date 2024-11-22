@@ -15,7 +15,13 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     Optional<Friend> findBySendUserIdAndReceivedUserIdAndFriendStatus(
             Long sendUserId, long receivedUserId, Friend.FriendStatus friendStatus);
 
-    Optional<List<Friend>> findBySendUserAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
+    /*
+    SELECT *
+    FROM friend
+    WHERE send_user_id = :userId
+    AND friend_status = :friendStatus;
+    */
+    List<Friend> findBySendUser_IdAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
 
 
 
@@ -31,9 +37,14 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     }
 
     default List<Friend> findBySendUserAndFriendStatusOrThrow(Long userId, Friend.FriendStatus friendStatus) {
-        return findBySendUserAndFriendStatus(userId, friendStatus).orElseThrow( () -> new RuntimeException("친구가 없습니다."));
+
+        List<Friend> friends = findBySendUser_IdAndFriendStatus(userId, friendStatus);
+
+        if (friends.isEmpty()) {
+            throw new RuntimeException("친구가 없습니다.");
+        }
+
+        return friends;
     }
-
-
 
 }

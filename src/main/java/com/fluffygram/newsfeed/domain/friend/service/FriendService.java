@@ -113,6 +113,10 @@ public class FriendService {
 
         List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(userId, Friend.FriendStatus.ACCEPTED);
 
+        if (friends.isEmpty()) {
+            throw new RuntimeException("친구가 없습니다.");
+        }
+
         return friends.stream()
                 .map(friend -> new FriendResponseDto(friend.getReceivedUser().getId())) // 친구의 ID만 반환
                 .collect(Collectors.toList());
