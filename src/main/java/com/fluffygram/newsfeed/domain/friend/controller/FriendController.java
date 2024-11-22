@@ -47,7 +47,7 @@ public class FriendController {
      * @param requestDto 요청 Dto
      * @return HTTP 상태 코드 반환
      */
-    @GetMapping("/accept")
+    @PutMapping("/accept")
     public ResponseEntity<Void> acceptFriendRequest(
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
@@ -66,7 +66,7 @@ public class FriendController {
      * @param requestDto 요청 Dto
      * @return HTTP 상태 코드 반환
      */
-    @GetMapping("/reject")
+    @PutMapping("/reject")
     public ResponseEntity<Void> rejectFriendRequest(
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
