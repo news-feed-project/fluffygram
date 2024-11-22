@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,11 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
-        }
-
+    public ResponseEntity<UserResponseDto> signUp(@RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
         UserResponseDto userResponseDto =
                 userService.signUp(
                         requestDto.getEmail(),
@@ -66,11 +61,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateRequestDto requestDto, BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
-        }
-
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateRequestDto requestDto){
         UserResponseDto userResponseDto = userService.updateUserById(id,
                 requestDto.getPresentPassword(), requestDto.getChangePassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), profileImage);
 
@@ -79,10 +70,7 @@ public class UserController {
 
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> userDelete(@PathVariable Long id, @Valid @RequestBody DeleteRequestDto requestDto, BindingResult bindingResult, HttpServletRequest request) {
-        if (bindingResult.hasErrors()) {
-            throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
-        }
+    public ResponseEntity<Void> userDelete(@PathVariable Long id, @Valid @RequestBody DeleteRequestDto requestDto, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
@@ -93,11 +81,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestDto, BindingResult bindingResult, HttpServletRequest request) {
-        if (bindingResult.hasErrors()) {
-            throw new RuntimeException(String.valueOf(bindingResult.getFieldError().getDefaultMessage()));
-        }
-
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletRequest request) {
         User user = userService.login(requestDto.getEmail(), requestDto.getPassword());
 
         HttpSession session = request.getSession();

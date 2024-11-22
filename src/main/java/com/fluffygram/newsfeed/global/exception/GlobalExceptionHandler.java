@@ -17,7 +17,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     // @valid 유효성 검사 예외처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 
         // 유효성 검사 오류 메시지를 필드별로 수집
         Map<String, String> errors = new HashMap<>();
@@ -26,26 +26,27 @@ public class GlobalExceptionHandler {
         }
 
         // 에러 응답 생성
-        ExceptionResponse exceptionResponse = new ExceptionResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), errors);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), errors);
 
         log.error("[MethodArgumentNotValidException] : {}", exceptionResponse.getErrors());
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
-
+    // 비지니스 로직 예외처리
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Object> handleNotFoundException(BusinessException ex) {
-        // 오류 메세지 저장
+    public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException ex) {
+        ExceptionType exceptionType = ex.getExceptionType();
+
         Map<String, String> errors = new HashMap<>();
-        errors.put("error", ex.getMessage());
+        errors.put(exceptionType.name(), ex.getMessage());
 
         // 에러 응답 생성
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), ex.getMessage());
+        ExceptionResponse exceptionResponse = new ExceptionResponse(exceptionType.getStatus(), exceptionType.getStatus().value(), errors);
 
-        log.error("[ {} ] - NOT_FOUND : {}", ex.getClass(), exceptionResponse.getErrors());
+        log.error("[ {} ] - {} : {}", ex.getClass(), exceptionType.getStatus(), exceptionResponse.getErrors());
 
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exceptionResponse, exceptionType.getStatus());
     }
 
 }
