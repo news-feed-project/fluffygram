@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.friend.service;
 
+import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
@@ -7,6 +8,9 @@ import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -86,5 +90,19 @@ public class FriendService {
 
         friendRepository.delete(friend);
         friendRepository.delete(friend2);
+    }
+
+    /**
+     * 전체친구조회
+     *
+     * @param userId       요청을 보낸 사용자 ID
+     * @return List<FriendResponseDto>
+     */
+    public List<FriendResponseDto> findAllFriends(Long userId) {
+        List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(userId, Friend.FriendStatus.ACCEPTED);
+
+        return friends.stream()
+                .map(friend -> new FriendResponseDto(friend.getReceivedUser().getId())) // 친구의 ID만 반환
+                .collect(Collectors.toList());
     }
 }
