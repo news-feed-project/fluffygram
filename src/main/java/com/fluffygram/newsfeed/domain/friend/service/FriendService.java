@@ -97,9 +97,12 @@ public class FriendService {
     public void deleteFriend(Long loginUserId, long receivedUserId) {
 
         Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(
-                loginUserId, receivedUserId, Friend.FriendStatus.ACCEPTED);
+                loginUserId, receivedUserId);
+        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(
+                receivedUserId, loginUserId);
 
         friendRepository.delete(friend);
+        friendRepository.delete(friend2);
     }
 
     /**
@@ -111,10 +114,6 @@ public class FriendService {
     public List<FriendResponseDto> findAllFriends(Long userId) {
 
         List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(userId, Friend.FriendStatus.ACCEPTED);
-
-        if (friends.isEmpty()) {
-            throw new RuntimeException("친구가 없습니다.");
-        }
 
         return friends.stream()
                 .map(friend -> new FriendResponseDto(friend.getReceivedUser())) // 친구의 ID만 반환

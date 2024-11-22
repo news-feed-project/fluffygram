@@ -5,6 +5,7 @@ import com.fluffygram.newsfeed.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,15 +16,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     Optional<Friend> findBySendUserIdAndReceivedUserId(
             Long sendUserId, long receivedUserId);
-    //AndFriendStatus
-    //Long sendUserId, long receivedUserId, Friend.FriendStatus friendStatus);
 
-    /*
-    SELECT *
-    FROM friend
-    WHERE send_user_id = :userId
-    AND friend_status = :friendStatus;
-    */
     List<Friend> findBySendUser_IdAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
 
 
@@ -34,7 +27,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     }
 
     default Friend findBySendUserIdAndReceivedUserIdOrThrow(
-            Long sendUserId, long receivedUserId, Friend.FriendStatus friendStatus) {
+            Long sendUserId, long receivedUserId) {
         return findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
                 .orElseThrow( ()-> new RuntimeException("현재 이미 둘이 친구가 아닙니다.") );
     }
@@ -43,10 +36,9 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
         List<Friend> friends = findBySendUser_IdAndFriendStatus(userId, friendStatus);
 
-        if (friends.isEmpty()) {
-            throw new RuntimeException("친구가 없습니다.");
+        if (friends == null) {
+            return Collections.emptyList();
         }
-
         return friends;
     }
 
