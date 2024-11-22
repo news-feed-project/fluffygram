@@ -1,12 +1,12 @@
 package com.fluffygram.newsfeed.domain.friend.service;
 
-import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
-import com.fluffygram.newsfeed.domain.friend.dto.FriendRequestDto;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
+import com.fluffygram.newsfeed.global.exception.BusinessException;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,21 +20,30 @@ public class FriendService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
-    private final AccessWrongValid accessWrongValid;
 
     /**
      * 친구 요청 저장
      *
-     * @param sendUserId       요청을 보낸 사용자 ID
+     * @param loginUserId       요청을 보낸 사용자 ID
      * @param receivedUserId   요청을 받은 사용자 ID
      *
      */
-    public void sendFriendRequest(long sendUserId, long receivedUserId) {
+    public void sendFriendRequest(long loginUserId, long receivedUserId) {
 
-        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
+        if (loginUserId == receivedUserId) {
+            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+        }
 
-        User sendUser = userRepository.findByIdOrElseThrow(sendUserId);
+        User sendUser = userRepository.findByIdOrElseThrow(loginUserId);
         User receivedUser = userRepository.findByIdOrElseThrow(receivedUserId);
+
+        // 중복 여부 확인
+        boolean isDuplicate = friendRepository.existsBySendUserAndReceivedUser(sendUser, receivedUser);
+        boolean isDuplicate2 = friendRepository.existsBySendUserAndReceivedUser(receivedUser, sendUser);
+        if (isDuplicate || isDuplicate2) {
+            throw new BusinessException(ExceptionType.EXIST_USER);
+        }
+
 
         Friend friend = new Friend(sendUser, receivedUser, Friend.FriendStatus.REQUESTED);
         Friend friend2 = new Friend(receivedUser, sendUser, Friend.FriendStatus.REQUESTED);
@@ -46,17 +55,15 @@ public class FriendService {
     /**
      * 친구 요청 수락
      *
-     * @param sendUserId       요청을 보낸 사용자 ID
+     * @param loginUserId       요청을 보낸 사용자 ID
      * @param receivedUserId   요청을 받은 사용자 ID
      *
      */
     @Transactional
-    public void acceptFriendRequest(long sendUserId, long receivedUserId) {
+    public void acceptFriendRequest(long loginUserId, long receivedUserId) {
 
-        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
-
-        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
-        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
+        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
+        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
 
         friend.acceptFriendRequest();
         friend2.acceptFriendRequest();
@@ -65,17 +72,15 @@ public class FriendService {
     /**
      * 친구 요청 거절
      *
-     * @param sendUserId       요청을 보낸 사용자 ID
+     * @param loginUserId       요청을 보낸 사용자 ID
      * @param receivedUserId   요청을 받은 사용자 ID
      *
      */
     @Transactional
-    public void rejectFriendRequest(Long sendUserId, long receivedUserId) {
+    public void rejectFriendRequest(Long loginUserId, long receivedUserId) {
 
-        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
-
-        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
-        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
+        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
+        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
 
         friend.rejectFriendRequest();
         friend2.rejectFriendRequest();
@@ -84,23 +89,17 @@ public class FriendService {
     /**
      * 친구 삭제
      *
-     * @param sendUserId       요청을 보낸 사용자 ID
+     * @param loginUserId       요청을 보낸 사용자 ID
      * @param receivedUserId   요청을 받은 사용자 ID
      *
      */
     @Transactional
-    public void deleteFriend(Long sendUserId, long receivedUserId) {
+    public void deleteFriend(Long loginUserId, long receivedUserId) {
 
-        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
-
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
-                sendUserId, receivedUserId, Friend.FriendStatus.ACCEPTED);
-
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
-                        receivedUserId, sendUserId, Friend.FriendStatus.ACCEPTED);
+        Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(
+                loginUserId, receivedUserId, Friend.FriendStatus.ACCEPTED);
 
         friendRepository.delete(friend);
-        friendRepository.delete(friend2);
     }
 
     /**
@@ -118,7 +117,7 @@ public class FriendService {
         }
 
         return friends.stream()
-                .map(friend -> new FriendResponseDto(friend.getReceivedUser().getId())) // 친구의 ID만 반환
+                .map(friend -> new FriendResponseDto(friend.getReceivedUser())) // 친구의 ID만 반환
                 .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.friend.entity;
 
+import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -12,14 +13,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "Friend")
-public class Friend {
-
-    // @NotBlank 는 문자열만??
+public class Friend extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @NotNull
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,14 +35,6 @@ public class Friend {
     @NotNull
     private FriendStatus friendStatus = FriendStatus.NOT_FRIEND;
 
-    @Column(name = "request_at")
-    @NotNull
-    private LocalDateTime requestAt;
-
-    @Column(name = "accept_at")
-    @NotNull
-    private LocalDateTime acceptAt;
-
     public enum FriendStatus {
         REQUESTED, // 요청중상태
         ACCEPTED, // 친구상태
@@ -58,19 +48,16 @@ public class Friend {
         this.sendUser = sendUser;
         this.receivedUser = receivedUser;
         this.friendStatus = friendStatus;
-        this.requestAt = LocalDateTime.now(); // 친구 요청 시간. 현재시간.
     }
 
     // 생성자를 통해 "친구요청상태" / "수락상태" 관리
     public void acceptFriendRequest() {
         this.friendStatus = FriendStatus.ACCEPTED;
-        this.acceptAt = LocalDateTime.now(); // 친구 수락 시간. 현재시간.
     }
 
     // 친구관계 삭제시. NOT_FRIEND
     public void rejectFriendRequest() {
         this.friendStatus = FriendStatus.NOT_FRIEND;
-        this.acceptAt = LocalDateTime.now();
     }
 
 }

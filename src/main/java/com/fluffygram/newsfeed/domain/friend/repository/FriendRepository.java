@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.domain.friend.repository;
 
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
+import com.fluffygram.newsfeed.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +13,10 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     Optional<Friend> findBySendUserIdAndReceivedUserId(long sendUserId, long receivedUserId);
 
-    Optional<Friend> findBySendUserIdAndReceivedUserIdAndFriendStatus(
-            Long sendUserId, long receivedUserId, Friend.FriendStatus friendStatus);
+    Optional<Friend> findBySendUserIdAndReceivedUserId(
+            Long sendUserId, long receivedUserId);
+    //AndFriendStatus
+    //Long sendUserId, long receivedUserId, Friend.FriendStatus friendStatus);
 
     /*
     SELECT *
@@ -30,9 +33,9 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
                 .orElseThrow(() -> new RuntimeException("친구 요청을 찾을 수 없습니다."));
     }
 
-    default Friend findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
+    default Friend findBySendUserIdAndReceivedUserIdOrThrow(
             Long sendUserId, long receivedUserId, Friend.FriendStatus friendStatus) {
-        return findBySendUserIdAndReceivedUserIdAndFriendStatus(sendUserId, receivedUserId, friendStatus)
+        return findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
                 .orElseThrow( ()-> new RuntimeException("현재 이미 둘이 친구가 아닙니다.") );
     }
 
@@ -46,5 +49,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
         return friends;
     }
+
+    boolean existsBySendUserAndReceivedUser(User sendUser, User receivedUser);
 
 }
