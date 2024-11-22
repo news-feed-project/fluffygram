@@ -1,13 +1,13 @@
 package com.fluffygram.newsfeed.domain.user.service;
 
-import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
-import com.fluffygram.newsfeed.domain.Image.service.UserImageServiceImpl;
-import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
+import com.fluffygram.newsfeed.domain.Image.entity.Image;
+import com.fluffygram.newsfeed.domain.Image.service.ImageService;
 import com.fluffygram.newsfeed.domain.user.dto.UserResponseDto;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import com.fluffygram.newsfeed.domain.user.enums.UserStatus;
+import com.fluffygram.newsfeed.domain.base.enums.UserStatus;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
+import com.fluffygram.newsfeed.global.exception.BadValueException;
 import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +23,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserImageServiceImpl userImageServiceImpl;
+    private final ImageService imageService;
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
-
     private final ResourceLoader resourceLoader;
 
     @Transactional
@@ -46,15 +45,16 @@ public class UserService {
         // 유저 DB 저장
         User savedUser = userRepository.save(user);
 
-        if(profileImage.isEmpty()){
+        if(profileImage == null || profileImage.isEmpty()){
             Resource resource = resourceLoader.getResource("classpath:static/user.jpg");
             profileImage = (MultipartFile) resource;
         }
 
-        UserImage userImage = userImageServiceImpl.saveImage(profileImage, savedUser.getId());
+        // 이미지 저장
+        Image image = imageService.saveImage(profileImage, savedUser.getId());
 
         // 유저의 이미지 이름을 고유한 이름으로 업데이트
-        user.updateProfileImage(userImage);
+        user.updateProfileImage(image);
 
         savedUser = userRepository.save(savedUser);
 
@@ -98,14 +98,14 @@ public class UserService {
 
         // 동일한 비밀번호 변경 시도 확인
         if(!passwordEncoder.matches(changePassword, user.getPassword())){
-            throw new BusinessException(ExceptionType.PASSWORD_SAME);
+            throw new BadValueException(ExceptionType.PASSWORD_SAME);
         }
 
         // 이미지 파일 저장하기
-        UserImage userImage = userImageServiceImpl.updateImage(profileImage, user);
+        Image image = imageService.updateImage(profileImage, id);
 
         // user 정보 변경하기
-        user = user.updateUser(changePassword, userNickname, phoneNumber, userImage);
+        user = user.updateUser(changePassword, userNickname, phoneNumber, image);
 
         User savedUser = userRepository.save(user);
 

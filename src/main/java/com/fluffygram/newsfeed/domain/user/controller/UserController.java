@@ -33,7 +33,8 @@ public class UserController {
      *
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam(required = false) MultipartFile profileImage,
+                                                  @Valid @ModelAttribute SignUpRequestDto requestDto){
         UserResponseDto userResponseDto = userService.signUp(
                         requestDto.getEmail(),
                         requestDto.getPassword(),
@@ -54,7 +55,7 @@ public class UserController {
      *
      */
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAllUsers(@RequestParam @PageableDefault() Pageable pageable) {
+    public ResponseEntity<List<UserResponseDto>> getAllUsers(@PageableDefault() Pageable pageable) {
         List<UserResponseDto> userResponseDtoList = userService.getAllUsers(pageable);
 
         return new ResponseEntity<>(userResponseDtoList, HttpStatus.OK);
@@ -92,7 +93,7 @@ public class UserController {
      */
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id,
-                                                      @RequestParam MultipartFile profileImage,
+                                                      @RequestParam(required = false) MultipartFile profileImage,
                                                       @Valid @ModelAttribute UpdateUserRequestDto requestDto,
                                                       HttpServletRequest request){
         HttpSession session = request.getSession(false);

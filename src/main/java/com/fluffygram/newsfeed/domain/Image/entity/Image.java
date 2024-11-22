@@ -1,14 +1,14 @@
 package com.fluffygram.newsfeed.domain.Image.entity;
 
+import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
-import com.fluffygram.newsfeed.domain.board.entity.Board;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "board_image_file")
-public class BoardImage extends BaseEntity{
+@Table(name = "image_file")
+public class Image extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -22,19 +22,22 @@ public class BoardImage extends BaseEntity{
     @Column(name = "file_url")
     private String fileUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id", nullable = false)
-    private Board board;
+    @Enumerated(EnumType.STRING)
+    private ImageStatus status;
 
-    public BoardImage(Board board, String originalFilename, String dbFileName, String fileUrl) {
-        this.board = board;
-        this.fileName = originalFilename;
-        this.DBFileName = dbFileName;
-        this.fileUrl = fileUrl;
+    private Long statusId;
+
+
+    public Image() {
+
     }
 
-    public BoardImage() {
-
+    public Image(String originalFilename, String dBfileName, String userImageStorage, Long statusId, ImageStatus status) {
+        this.fileName = originalFilename;
+        this.DBFileName = dBfileName;
+        this.fileUrl = userImageStorage;
+        this.statusId = statusId;
+        this.status = status;
     }
 
     public void updateFileName(String fileName) {

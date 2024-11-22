@@ -15,6 +15,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,25 +27,25 @@ public class BoardController {
 
     //게시물 생성(저장)
     @PostMapping
-    public ResponseEntity<BoardResponseDto> save(@RequestBody CreateBoardRequestDto requestDto,
+    public ResponseEntity<BoardResponseDto> save(@RequestParam(required = false) List<MultipartFile> boardImages,
+                                                 @Valid @ModelAttribute CreateBoardRequestDto requestDto,
                                                  HttpServletRequest request){
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        BoardResponseDto boardResponseDto =
-                boardService.save(
-                        requestDto.getUserId(),
-                        requestDto.getTitle(),
-                        requestDto.getContents(),
-                        user.getId()
-                );
+        BoardResponseDto boardResponseDto = boardService.save(requestDto.getUserId(),
+                requestDto.getTitle(),
+                requestDto.getContents(),
+                boardImages, user.getId()
+        );
+
         return  new ResponseEntity<>(boardResponseDto, HttpStatus.CREATED);
     }
 
-    //-- contents 제외한 dto로 변경
+    //-- contents 제외한 dto 로 변경
     //게시물 전체 List 조회
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> findAllBoard(@PageableDefault(size = 10, page = 0) Pageable pageable,
+    public ResponseEntity<List<BoardResponseDto>> findAllBoard(@PageableDefault() Pageable pageable,
                                                                    @Valid @ModelAttribute() PaginationCondition paginationCondition){
         List<BoardResponseDto> boardResponseDtoList =
                 boardService.findAllBoard(pageable);
@@ -63,13 +64,20 @@ public class BoardController {
     //게시물 ID로 특정 게시물 수정
     @PutMapping("/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id,
-                                                        @RequestBody UpdateBoardRequestDto requestDto,
+                                                        @RequestParam(required = false) List<MultipartFile> boardImages,
+                                                        @Valid @ModelAttribute UpdateBoardRequestDto requestDto,
                                                         HttpServletRequest request
     ) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        BoardResponseDto boardResponseDto = boardService.updateBoard(id, requestDto.getTitle(), requestDto.getContents(), user.getId());
+        BoardResponseDto boardResponseDto = boardService.updateBoard(
+                id,
+                requestDto.getTitle(),
+                requestDto.getContents(),
+                user.getId(),
+                boardImages
+        );
 
         return new ResponseEntity<>(boardResponseDto, HttpStatus.OK);
     }//updateSchedule

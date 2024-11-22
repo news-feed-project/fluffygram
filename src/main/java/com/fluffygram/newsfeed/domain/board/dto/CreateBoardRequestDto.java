@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.domain.board.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 
@@ -8,12 +9,11 @@ import lombok.Getter;
 @Getter
 public class CreateBoardRequestDto {
 
-    @NotBlank
+    @NotNull
     private final Long userId;//사용자 id
 
     @NotBlank
     private final String title;//게시물 제목
-
 
     private final String contents;//게시물 내용
 

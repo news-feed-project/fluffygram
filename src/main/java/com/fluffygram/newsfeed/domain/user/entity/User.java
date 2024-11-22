@@ -1,8 +1,8 @@
 package com.fluffygram.newsfeed.domain.user.entity;
 
-import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
+import com.fluffygram.newsfeed.domain.Image.entity.Image;
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
-import com.fluffygram.newsfeed.domain.user.enums.UserStatus;
+import com.fluffygram.newsfeed.domain.base.enums.UserStatus;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -39,7 +39,7 @@ public class User extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "profile_image")
-    private UserImage profileImage;
+    private Image profileImage;
 
 
     public User() {
@@ -54,7 +54,7 @@ public class User extends BaseEntity {
         this.userStatus = userStatus;
     }
 
-    public User updateUser(String password, String userNickname, String phoneNumber, UserImage profileImage) {
+    public User updateUser(String password, String userNickname, String phoneNumber, Image profileImage) {
         // 비밀번호 업데이트
         if(userNickname != null && !password.isEmpty()){
             PasswordEncoder passwordEncoder = new PasswordEncoder();
@@ -71,11 +71,15 @@ public class User extends BaseEntity {
             this.phoneNumber = phoneNumber;
         }
 
+        if(profileImage != null){
+            this.profileImage = profileImage;
+        }
+
         return this;
     }
 
 
-    public void updateProfileImage(UserImage profileImage) {
+    public void updateProfileImage(Image profileImage) {
         this.profileImage = profileImage;
     }
 
