@@ -24,11 +24,8 @@ public class FriendService {
      */
     public void sendFriendRequest(long sendUserId, long receivedUserId) {
 
-        User sendUser = userRepository.findById(sendUserId)
-                .orElseThrow(() -> new RuntimeException("요청자 ID 못찾음."));
-
-        User receivedUser = userRepository.findById(receivedUserId)
-                .orElseThrow(() -> new RuntimeException("요청받는사람 ID 못찾음."));
+        User sendUser = userRepository.findByIdOrElseThrow(sendUserId);
+        User receivedUser = userRepository.findByIdOrElseThrow(receivedUserId);
 
         Friend friend = new Friend(sendUser, receivedUser, Friend.FriendStatus.REQUESTED);
         Friend friend2 = new Friend(receivedUser, sendUser, Friend.FriendStatus.REQUESTED);
@@ -46,10 +43,9 @@ public class FriendService {
      */
     @Transactional
     public void acceptFriendRequest(long sendUserId, long receivedUserId) {
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
-                .orElseThrow( () -> new RuntimeException("친구요청없다.") );
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserId(receivedUserId, sendUserId)
-                .orElseThrow( () -> new RuntimeException("친구요청없다.") );
+
+        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
+        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
 
         friend.acceptFriendRequest();
         friend2.acceptFriendRequest();
@@ -64,10 +60,9 @@ public class FriendService {
      */
     @Transactional
     public void rejectFriendRequest(Long sendUserId, long receivedUserId) {
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
-                .orElseThrow( () -> new RuntimeException("그런요청없다"));
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserId(receivedUserId, sendUserId)
-                .orElseThrow( () -> new RuntimeException("그런요청없다"));
+
+        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
+        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
 
         friend.rejectFriendRequest();
         friend2.rejectFriendRequest();
@@ -82,12 +77,12 @@ public class FriendService {
      */
     @Transactional
     public void deleteFriend(Long sendUserId, long receivedUserId) {
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatus(
-                sendUserId, receivedUserId, Friend.FriendStatus.ACCEPTED)
-                .orElseThrow( () -> new RuntimeException("둘이 친구가 아니거나 그런친구관계없다."));
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatus(
-                        receivedUserId, sendUserId, Friend.FriendStatus.ACCEPTED)
-                .orElseThrow( () -> new RuntimeException("둘이 친구가 아니거나 그런친구관계없다."));
+
+        Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
+                sendUserId, receivedUserId, Friend.FriendStatus.ACCEPTED);
+
+        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
+                        receivedUserId, sendUserId, Friend.FriendStatus.ACCEPTED);
 
         friendRepository.delete(friend);
         friendRepository.delete(friend2);
