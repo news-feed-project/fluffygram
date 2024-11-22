@@ -37,10 +37,10 @@ public class CommentsController {
 
     //댓글 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<CommentsWithUsernameResponseDto> findCommentsById(@PathVariable Long id) {
-        CommentsWithUsernameResponseDto commentWithUsernameResponseDto = commentService.findCommentsById(id);
+    public ResponseEntity<CommentsResponseDto> findCommentsById(@PathVariable Long id) {
+        CommentsResponseDto commentResponseDto = commentService.findCommentsById(id);
 
-        return new ResponseEntity<>(commentWithUsernameResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
 
     }
 

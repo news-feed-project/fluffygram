@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    default User findByIdOrElseThrow(Long id) {
+    static User findByIdOrElseThrow(Long id) {
         return findById(id).orElseThrow(()-> new RuntimeException("[id = " + id + "] 에 해당하는 유저가 존재하지 않습니다."));
     }
 
