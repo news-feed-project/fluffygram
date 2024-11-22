@@ -22,7 +22,7 @@ public class OtherUserResponseDto {
 
     public static OtherUserResponseDto toDto(User user) {
 
-        return new OtherUserResponseDto(user.getId(), user.getUserNickname(), user.getProfileImage(), user.getCreatedAt(), user.getModifiedAt());
+        return new OtherUserResponseDto(user.getId(), user.getUserNickname(), user.getProfileImage().getDBFileName(), user.getCreatedAt(), user.getModifiedAt());
     }
 
 }
