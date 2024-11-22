@@ -26,7 +26,7 @@ public class UserResponseDto {
 
     public static UserResponseDto toDto(User user) {
         // String userImage = GetUserImage.getUserImage(user.getProfileImage());
-        String userImage = user.getProfileImage();
+        String userImage = user.getProfileImage().getDBFileName();
 
         return new UserResponseDto(user.getId(), user.getEmail(), user.getUserNickname(), user.getPhoneNumber(), userImage, user.getCreatedAt(), user.getModifiedAt());
     }
