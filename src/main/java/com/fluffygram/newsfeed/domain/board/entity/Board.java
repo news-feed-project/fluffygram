@@ -17,7 +17,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "board")
 public class Board extends BaseEntity {
-    public String getUserNickname;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;//게시물 id
@@ -52,5 +52,4 @@ public class Board extends BaseEntity {
     public void updateContents(String contents) {
         this.contents = contents;
     }
-
 }

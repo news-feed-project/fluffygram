@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.board.controller;
 
+import com.fluffygram.newsfeed.domain.board.dto.BoardListResponseDto;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
 import com.fluffygram.newsfeed.domain.board.dto.CreateBoardRequestDto;
 import com.fluffygram.newsfeed.domain.board.dto.UpdateBoardRequestDto;
@@ -36,10 +37,11 @@ public class BoardController {
         return  new ResponseEntity<>(boardResponseDto, HttpStatus.CREATED);
     }
 
+    //-- contents 제외한 dto로 변경
     //게시물 전체 List 조회
     @GetMapping
-    public ResponseEntity<List<BoardResponseDto>> findAllBoard(){
-        List<BoardResponseDto> boardResponseDtoList =
+    public ResponseEntity<List<BoardListResponseDto>> findAllBoard(){
+        List<BoardListResponseDto> boardResponseDtoList =
                 boardService.findAllBoard();
 
         return  new ResponseEntity<>(boardResponseDtoList, HttpStatus.OK);

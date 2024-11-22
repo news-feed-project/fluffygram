@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.board.service;
 
+import com.fluffygram.newsfeed.domain.board.dto.BoardListResponseDto;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
@@ -17,6 +18,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
+    //--로그인 세션 사용하기
 
     //게시물 생성(저장)
     public BoardResponseDto save(Long id, String title, String contents){
@@ -28,14 +30,16 @@ public class BoardService {
         //게시물 저장
         Board saveBoard = boardRepository.save(board);
 
-        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findUserById.getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
+//        --.toDto(saveBoard) 사용하기
+//        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findUserById.getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
+        return BoardResponseDto.toDto(saveBoard);
     }
 
     //게시물 전체 List 조회
-    public List<BoardResponseDto> findAllBoard() {
+    public List<BoardListResponseDto> findAllBoard() {
         return boardRepository.findAll()
                 .stream()
-                .map(BoardResponseDto::toDto)
+                .map(BoardListResponseDto::toDto)
                 .toList();
     }
 
@@ -58,6 +62,7 @@ public class BoardService {
 //        //사용자 id로 사용자 조회
 //        User findUserById = userRepository.findByIdOrElseThrow(id);
 
+        //--entity로 옮기기
         if(title != null){
             findBoard.updateTitle(title);
         }
