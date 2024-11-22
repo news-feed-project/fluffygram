@@ -39,8 +39,8 @@ public class FriendService {
 
         // 중복 여부 확인
         boolean isDuplicate = friendRepository.existsBySendUserAndReceivedUser(sendUser, receivedUser);
-        boolean isDuplicate2 = friendRepository.existsBySendUserAndReceivedUser(receivedUser, sendUser);
-        if (isDuplicate || isDuplicate2) {
+
+        if (isDuplicate) {
             throw new BusinessException(ExceptionType.EXIST_USER);
         }
 
@@ -62,6 +62,10 @@ public class FriendService {
     @Transactional
     public void acceptFriendRequest(long loginUserId, long receivedUserId) {
 
+        if (loginUserId == receivedUserId) {
+            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+        }
+
         Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
         Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
 
@@ -79,6 +83,10 @@ public class FriendService {
     @Transactional
     public void rejectFriendRequest(Long loginUserId, long receivedUserId) {
 
+        if (loginUserId == receivedUserId) {
+            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+        }
+
         Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
         Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
 
@@ -95,6 +103,10 @@ public class FriendService {
      */
     @Transactional
     public void deleteFriend(Long loginUserId, long receivedUserId) {
+
+        if (loginUserId == receivedUserId) {
+            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+        }
 
         Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(
                 loginUserId, receivedUserId);
