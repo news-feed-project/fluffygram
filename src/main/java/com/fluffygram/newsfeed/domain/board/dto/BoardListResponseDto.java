@@ -6,30 +6,28 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-//게시물 단일 조회
+//전체 게시물 조회
 @Getter
-public class BoardResponseDto {
+public class BoardListResponseDto {
     private final Long id;//게시물 id
     private final String title;//게시물 제목
-    private final String contents;//게시물 내용
     private final String userNickname;//유저 닉네임
     private final LocalDateTime createdAt;//게시물 생성일
     private final LocalDateTime modifiedAt;//게시물 수정일
 
-    public BoardResponseDto(Long id, String title, String contents, String userNickname, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public BoardListResponseDto(Long id, String title, String userNickname, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.title = title;
-        this.contents = contents;
         this.userNickname = userNickname;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }
 
-    public static BoardResponseDto toDto(Board board) {
-        return new BoardResponseDto(
+    //게시물 전체 조회
+    public static BoardListResponseDto toDto(Board board) {
+        return new BoardListResponseDto(
                 board.getId(),
                 board.getTitle(),
-                board.getContents(),
                 board.getUser().getUserNickname(),
                 board.getCreatedAt(),
                 board.getModifiedAt());
