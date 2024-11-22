@@ -10,7 +10,6 @@ import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.fluffygram.newsfeed.domain.comment.dto.CommentsResponseDto;
-import com.fluffygram.newsfeed.domain.comment.dto.CommentsWithUsernameResponseDto;
 import com.fluffygram.newsfeed.domain.comment.repository.CommentsRepository;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class CommentService {
 
         Comments comments = new Comments(comment, user, board);
 
-        return new CommentsResponseDto(commentsRepository.save(comments));
+        return CommentsResponseDto.toDto(commentsRepository.save(comments));
     }
 
     public List<CommentsResponseDto> findAllComments() {
@@ -47,7 +46,11 @@ public class CommentService {
     }
 
     public void deleteComment(Long id) {
+        commentsRepository.deleteById(id);
     }
-    public  void UpdateComments(String comment){
+    public  void UpdateComments(Long id, String comment){
+        Comments comments = commentsRepository.findCommentsByIdOrElseThrow(id);
+
+        comments.updateComment(comment);
     }
 }

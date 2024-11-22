@@ -1,10 +1,10 @@
-package com.fluffygram.newsfeed.domain.user.entity;
+package com.fluffygram.newsfeed.domain.user.enums;
 
 import lombok.Getter;
 
 @Getter
 public enum UserStatus {
-    REGISTER(1, "가입"), DELETE(0, "탈퇴");
+    REGISTER(1, "가입"), DELETE(2, "탈퇴"), ADMIN(0, "관리자");
 
 
     private final int statusNumber;

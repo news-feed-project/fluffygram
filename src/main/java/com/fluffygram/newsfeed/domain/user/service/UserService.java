@@ -3,10 +3,9 @@ package com.fluffygram.newsfeed.domain.user.service;
 import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
 import com.fluffygram.newsfeed.domain.Image.service.UserImageServiceImpl;
 import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
-import com.fluffygram.newsfeed.domain.user.dto.OtherUserResponseDto;
 import com.fluffygram.newsfeed.domain.user.dto.UserResponseDto;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import com.fluffygram.newsfeed.domain.user.entity.UserStatus;
+import com.fluffygram.newsfeed.domain.user.enums.UserStatus;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
 import com.fluffygram.newsfeed.global.exception.BusinessException;
@@ -58,33 +57,27 @@ public class UserService {
         // 유저의 이미지 이름을 고유한 이름으로 업데이트
         user.updateProfileImage(userImage);
 
-        return UserResponseDto.toDto(savedUser);
+        return UserResponseDto.ToDtoForMine(savedUser);
     }
 
     public List<UserResponseDto> getAllUsers() {
-        return userRepository.findAll().stream().map(UserResponseDto::toDto).toList();
+        return userRepository.findAll().stream().map(UserResponseDto::ToDtoForMine).toList();
     }
 
     public UserResponseDto getUserById(Long id) {
 
         User user = userRepository.findByIdOrElseThrow(id);
 
-        return UserResponseDto.toDto(user);
+        return UserResponseDto.ToDtoForMine(user);
     }
 
-    public OtherUserResponseDto getOtherUserById(Long id) {
-
-        User user = userRepository.findByIdOrElseThrow(id);
-
-        return OtherUserResponseDto.toDto(user);
-    }
 
     @Transactional
-    public UserResponseDto updateUserById(Long id, String PresentPassword, String ChangePassword, String userNickname, String phoneNumber, MultipartFile profileImage) {
+    public UserResponseDto updateUserById(Long id, String presentPassword, String ChangePassword, String userNickname, String phoneNumber, MultipartFile profileImage) {
         User user = userRepository.findByIdOrElseThrow(id);
 
         // 비밀번호 일치 확인
-        if(passwordEncoder.matches(PresentPassword, user.getPassword())){
+        if(passwordEncoder.matches(presentPassword, user.getPassword())){
             throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
         }
 
@@ -116,7 +109,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        return UserResponseDto.toDto(savedUser);
+        return UserResponseDto.ToDtoForMine(savedUser);
     }
 
     @Transactional

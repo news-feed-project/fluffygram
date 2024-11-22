@@ -1,12 +1,10 @@
 package com.fluffygram.newsfeed.domain.comment.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.fluffygram.newsfeed.domain.comment.dto.CommentsResponseDto;
-import com.fluffygram.newsfeed.domain.comment.dto.CommentsWithUsernameResponseDto;
 import com.fluffygram.newsfeed.domain.comment.dto.CreateCommentsRequestDto;
 import com.fluffygram.newsfeed.domain.comment.dto.UpdateCommentsRequestDto;
 import com.fluffygram.newsfeed.domain.comment.service.CommentService;
@@ -51,8 +49,7 @@ public class CommentsController {
         @PathVariable Long id,
         @RequestBody UpdateCommentsRequestDto requestDto
     ) {
-        commentService.UpdateComments(id,requestDto.getBoardId(),requestDto.getUserId(),
-                requestDto.getComment());
+        commentService.UpdateComments(id, requestDto.getComment());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -64,8 +61,5 @@ public class CommentsController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-
 
 }

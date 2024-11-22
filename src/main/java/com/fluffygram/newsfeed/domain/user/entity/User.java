@@ -2,6 +2,7 @@ package com.fluffygram.newsfeed.domain.user.entity;
 
 import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
+import com.fluffygram.newsfeed.domain.user.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

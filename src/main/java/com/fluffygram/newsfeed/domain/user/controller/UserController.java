@@ -2,6 +2,7 @@ package com.fluffygram.newsfeed.domain.user.controller;
 
 import com.fluffygram.newsfeed.domain.user.dto.*;
 import com.fluffygram.newsfeed.domain.user.entity.User;
+import com.fluffygram.newsfeed.domain.user.enums.UserRelationship;
 import com.fluffygram.newsfeed.domain.user.service.UserService;
 import com.fluffygram.newsfeed.global.config.Const;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,8 +33,7 @@ public class UserController {
      */
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
-        UserResponseDto userResponseDto =
-                userService.signUp(
+        UserResponseDto userResponseDto = userService.signUp(
                         requestDto.getEmail(),
                         requestDto.getPassword(),
                         requestDto.getUserNickname(),
@@ -68,28 +68,21 @@ public class UserController {
      * @return ResponseEntity<UserResponseDto>  사용자 정보 및 http 상태 전달
      *
      */
-    @GetMapping("/mypage/{id}")
-    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        User LoginUser = (User) session.getAttribute(Const.LOGIN_USER);
+
         UserResponseDto userResponseDto = userService.getUserById(id);
+        if(id.equals(LoginUser.getId())){
+            userResponseDto.setStatus(UserRelationship.OTHER.toString());
+        }
+        else {
+            userResponseDto.setStatus(UserRelationship.OTHER.toString());
+        }
+
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
-    }
-
-    /**
-     *  다른 사용자 프로필 조회 API
-     *  다른 사용자의 프로필을 조회할 때 사용
-     *  민감한 정보 제외
-     *
-     * @param id    사용자 id
-     *
-     * @return ResponseEntity<OtherUserResponseDto>  다른 사용자 정보 및 http 상태 전달
-     *
-     */
-    @GetMapping("/others/{id}")
-    public ResponseEntity<OtherUserResponseDto> getOtherUser(@PathVariable Long id) {
-        OtherUserResponseDto otherUserResponseDto = userService.getOtherUserById(id);
-
-        return new ResponseEntity<>(otherUserResponseDto, HttpStatus.OK);
     }
 
     /**
