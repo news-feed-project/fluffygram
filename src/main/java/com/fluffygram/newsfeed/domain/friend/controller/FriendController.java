@@ -1,10 +1,9 @@
 package com.fluffygram.newsfeed.domain.friend.controller;
 
+import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendRequestDto;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.service.FriendService;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
-import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
+    private final AccessWrongValid accessWrongValid;
 
     /**
      * 친구 요청 API
@@ -34,13 +34,6 @@ public class FriendController {
             @RequestBody @Valid FriendRequestDto requestDto) {
 
         Long loginUserId = (Long) session.getAttribute("userId");
-
-        if (loginUserId == null) {
-            throw new BusinessException(ExceptionType.USER_NOT_FOUND);
-        }
-        if (!loginUserId.equals(requestDto.getSendUserId()) || loginUserId.equals(requestDto.getReceivedUserId())) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
 
         friendService.sendFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -61,13 +54,6 @@ public class FriendController {
 
         Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (loginUserId == null) {
-            throw new BusinessException(ExceptionType.USER_NOT_FOUND);
-        }
-        if (!loginUserId.equals(requestDto.getSendUserId()) || loginUserId.equals(requestDto.getReceivedUserId())) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
-
         friendService.acceptFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -86,13 +72,6 @@ public class FriendController {
             @RequestBody @Valid FriendRequestDto requestDto) {
 
         Long loginUserId = (Long) session.getAttribute("userId");
-
-        if (loginUserId == null) {
-            throw new BusinessException(ExceptionType.USER_NOT_FOUND);
-        }
-        if (!loginUserId.equals(requestDto.getSendUserId()) || loginUserId.equals(requestDto.getReceivedUserId())) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
 
         friendService.rejectFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -113,13 +92,6 @@ public class FriendController {
 
         Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (loginUserId == null) {
-            throw new BusinessException(ExceptionType.USER_NOT_FOUND);
-        }
-        if (!loginUserId.equals(requestDto.getSendUserId()) || loginUserId.equals(requestDto.getReceivedUserId())) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
-
         friendService.deleteFriend(loginUserId, requestDto.getReceivedUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -139,12 +111,7 @@ public class FriendController {
 
         Long loginUserId = (Long) session.getAttribute("userId");
 
-        if (loginUserId == null) {
-            throw new BusinessException(ExceptionType.USER_NOT_FOUND);
-        }
-        if (!loginUserId.equals(userId)) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
+        accessWrongValid.validateFriendRequestByUserId(loginUserId, userId);
 
         List<FriendResponseDto> friends = friendService.findAllFriends(userId);
 

@@ -16,6 +16,11 @@ public class FriendRequestDto {
     // 생성자
     public FriendRequestDto() {}
 
+    public FriendRequestDto(long sendUserId, long receivedUserId) {
+        this.sendUserId = sendUserId;
+        this.receivedUserId = receivedUserId;
+    }
+
     // Getter , Setter
     public long getSendUserId() {
         return sendUserId;

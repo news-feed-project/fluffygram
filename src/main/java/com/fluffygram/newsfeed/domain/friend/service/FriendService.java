@@ -1,5 +1,7 @@
 package com.fluffygram.newsfeed.domain.friend.service;
 
+import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
+import com.fluffygram.newsfeed.domain.friend.dto.FriendRequestDto;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
@@ -18,6 +20,7 @@ public class FriendService {
 
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
+    private final AccessWrongValid accessWrongValid;
 
     /**
      * 친구 요청 저장
@@ -27,6 +30,8 @@ public class FriendService {
      *
      */
     public void sendFriendRequest(long sendUserId, long receivedUserId) {
+
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
 
         User sendUser = userRepository.findByIdOrElseThrow(sendUserId);
         User receivedUser = userRepository.findByIdOrElseThrow(receivedUserId);
@@ -48,6 +53,8 @@ public class FriendService {
     @Transactional
     public void acceptFriendRequest(long sendUserId, long receivedUserId) {
 
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
+
         Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
         Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
 
@@ -64,6 +71,8 @@ public class FriendService {
      */
     @Transactional
     public void rejectFriendRequest(Long sendUserId, long receivedUserId) {
+
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
 
         Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(sendUserId, receivedUserId);
         Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, sendUserId);
@@ -82,6 +91,8 @@ public class FriendService {
     @Transactional
     public void deleteFriend(Long sendUserId, long receivedUserId) {
 
+        accessWrongValid.validateFriendRequestDto(sendUserId, new FriendRequestDto(sendUserId, receivedUserId));
+
         Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdAndFriendStatusOrThrow(
                 sendUserId, receivedUserId, Friend.FriendStatus.ACCEPTED);
 
@@ -99,6 +110,7 @@ public class FriendService {
      * @return List<FriendResponseDto>
      */
     public List<FriendResponseDto> findAllFriends(Long userId) {
+
         List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(userId, Friend.FriendStatus.ACCEPTED);
 
         return friends.stream()
