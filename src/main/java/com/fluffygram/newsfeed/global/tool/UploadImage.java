@@ -1,6 +1,5 @@
 package com.fluffygram.newsfeed.global.tool;
 
-import com.fluffygram.newsfeed.global.config.Const;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,14 +12,14 @@ import java.util.UUID;
 @Component
 public class UploadImage {
 
-    static public void FileAndDataUploadController() throws IOException {
+    public static void FileAndDataUploadController(Path path) throws IOException {
         // 업로드 디렉토리 생성 (없으면 생성)
-        if (!Files.exists(Const.IMAGE_STORAGE_PATH)) {
-            Files.createDirectories(Const.IMAGE_STORAGE_PATH);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
         }
     }
 
-    static public String uploadUserImage(MultipartFile file) {
+    static public String uploadUserImage(Path path, MultipartFile file) {
         String uniqueFilename;
 
         if (file.isEmpty()) {
@@ -45,13 +44,13 @@ public class UploadImage {
         }
 
         try {
-            FileAndDataUploadController();
+            FileAndDataUploadController(path);
 
             // 고유 파일 이름 생성
             uniqueFilename = UUID.randomUUID() + originalFileExtension;
 
             // 파일 저장 경로
-            Path filePath = Const.IMAGE_STORAGE_PATH.resolve(uniqueFilename);
+            Path filePath = path.resolve(uniqueFilename);
 
             // 파일 저장
             file.transferTo(filePath.toFile());

@@ -1,14 +1,14 @@
-package com.fluffygram.newsfeed.domain.userImage.entity;
+package com.fluffygram.newsfeed.domain.Image.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
-import com.fluffygram.newsfeed.domain.user.entity.User;
+import com.fluffygram.newsfeed.domain.board.entity.Board;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "user_image_file")
-public class UserImage extends BaseEntity {
+@Table(name = "board_image_file")
+public class BoardImage extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -22,19 +22,18 @@ public class UserImage extends BaseEntity {
     @Column(name = "file_url")
     private String fileUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
-    private User user;
-
-    public UserImage(User user, String originalFilename, String dbFileName, String fileUrl) {
-        this.user = user;
+    public BoardImage(Board board, String originalFilename, String dbFileName, String fileUrl) {
+        this.board = board;
         this.fileName = originalFilename;
         this.DBFileName = dbFileName;
         this.fileUrl = fileUrl;
     }
 
-    public UserImage() {
+    public BoardImage() {
 
     }
 

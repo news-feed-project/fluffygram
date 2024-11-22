@@ -31,7 +31,7 @@ public class UserController {
      *
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
         UserResponseDto userResponseDto =
                 userService.signUp(
                         requestDto.getEmail(),
@@ -104,7 +104,7 @@ public class UserController {
      *
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateUserRequestDto requestDto){
         UserResponseDto userResponseDto = userService.updateUserById(id,
                 requestDto.getPresentPassword(), requestDto.getChangePassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), profileImage);
 
@@ -124,7 +124,7 @@ public class UserController {
      */
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> userDelete(@PathVariable Long id, @Valid @RequestBody DeleteRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<Void> userDelete(@PathVariable Long id, @Valid @RequestBody DeleteUserRequestDto requestDto, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 

@@ -33,9 +33,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
                     ",\n" +
                     "httpStatus :" + exceptionType.getStatus().toString() +
                     ",\n" +
-                    "httpStatusCode :" + exceptionType.getStatus().value() +
-                    ",\n" +
-                    "error :" + ex.getMessage();
+                    "error :" + exceptionType.getMessage();
 
 
             response.getWriter().write(errorMsg);

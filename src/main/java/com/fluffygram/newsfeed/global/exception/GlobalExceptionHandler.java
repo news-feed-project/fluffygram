@@ -8,7 +8,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +38,7 @@ public class GlobalExceptionHandler {
         ExceptionType exceptionType = ex.getExceptionType();
 
         Map<String, String> errors = new HashMap<>();
-        errors.put(exceptionType.name(), ex.getMessage());
+        errors.put(exceptionType.name(), exceptionType.getMessage());
 
         // 에러 응답 생성
         ExceptionResponse exceptionResponse = new ExceptionResponse(exceptionType.getStatus(), exceptionType.getStatus().value(), errors);

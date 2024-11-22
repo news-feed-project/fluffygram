@@ -1,16 +1,19 @@
 package com.fluffygram.newsfeed.domain.user.service;
 
+import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
+import com.fluffygram.newsfeed.domain.Image.service.UserImageServiceImpl;
 import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
 import com.fluffygram.newsfeed.domain.user.dto.OtherUserResponseDto;
 import com.fluffygram.newsfeed.domain.user.dto.UserResponseDto;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.entity.UserStatus;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
-import com.fluffygram.newsfeed.domain.userImage.service.UserImageService;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
 import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,11 +24,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserImageService userImageService;
+    private final UserImageServiceImpl userImageServiceImpl;
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final AccessWrongValid accessWrongValid;
+
+    private final ResourceLoader resourceLoader;
 
     @Transactional
     public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber, MultipartFile profileImage) {
@@ -38,16 +43,20 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(password);
 
         // 유저 생성
-        User user = new User(email, encodedPassword, userNickname, phoneNumber, profileImage.getOriginalFilename(), UserStatus.REGISTER);
+        User user = new User(email, encodedPassword, userNickname, phoneNumber, UserStatus.REGISTER);
 
         // 유저 DB 저장
         User savedUser = userRepository.save(user);
 
-        // 유저 이미지 저장
-        String profileImageUrl = userImageService.saveUserImage(profileImage, savedUser);
+        if(profileImage.isEmpty()){
+            Resource resource = resourceLoader.getResource("classpath:static/user.jpg");
+            profileImage = (MultipartFile) resource;
+        }
+
+        UserImage userImage = userImageServiceImpl.saveImage(profileImage, savedUser.getId());
 
         // 유저의 이미지 이름을 고유한 이름으로 업데이트
-        savedUser.updateProfileImage(profileImageUrl);
+        user.updateProfileImage(userImage);
 
         return UserResponseDto.toDto(savedUser);
     }
@@ -101,8 +110,8 @@ public class UserService {
 
         // 유저 프로필 이미지 변경
         if(profileImage != null && !profileImage.isEmpty()){
-            String profileImageUrl = userImageService.updateUserImage(profileImage, user);
-            user.updateProfileImage(profileImageUrl);
+            UserImage userImage = userImageServiceImpl.updateImage(profileImage, user);
+            user.updateProfileImage(userImage);
         }
 
         User savedUser = userRepository.save(user);
