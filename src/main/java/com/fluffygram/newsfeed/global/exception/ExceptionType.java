@@ -16,6 +16,7 @@ public enum ExceptionType {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER", "해당 유저의 정보를 찾을 수 없습니다."),
     FAIL_FILE_UPLOADED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE", "해당 파일 업로드에 실패하였습니다."),
     FAIL_FILE_DOWNLOADED(HttpStatus.INTERNAL_SERVER_ERROR, "FILE", "해당 파일 다운로드에 실패하였습니다.");
+
     private final HttpStatus status;
     private final String type;
     private final String message;

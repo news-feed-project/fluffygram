@@ -137,10 +137,12 @@ public class UserService {
     public User login(String email, String password) {
         User user = userRepository.findUserByEmailOrElseThrow(email);
 
+        // 탈퇴 여부 확인
         if(user.getUserStatus().equals(UserStatus.DELETE)){
             throw new BusinessException(ExceptionType.DELETED_USER);
         }
 
+        // 비밀번호 일치 여부 확인
         if(passwordEncoder.matches(password, user.getPassword())){
             throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
         }

@@ -2,6 +2,8 @@ package com.fluffygram.newsfeed.domain.userImage.repository;
 
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.userImage.entity.UserImage;
+import com.fluffygram.newsfeed.global.exception.BusinessException;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import com.fluffygram.newsfeed.global.tool.GetImage;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +21,6 @@ public interface UserImageRepository extends JpaRepository<UserImage, Long> {
     Optional<UserImage> findUserImageByUser(User user);
 
     default UserImage getUserImageByUser(User user){
-        return findUserImageByUser(user).stream().findAny().orElseThrow(()-> new RuntimeException("[id = " + user.getId() + "] 에 해당하는 유저가 존재하지 않습니다."));
+        return findUserImageByUser(user).stream().findAny().orElseThrow(()-> new BusinessException(ExceptionType.USER_NOT_FOUND));
     }
 }

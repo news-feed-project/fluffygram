@@ -22,6 +22,14 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    /**
+     *  회원 가입(사용자 생성) API
+     *
+     * @param profileImage  사용자 프로필 이미지
+     * @param requestDto    사용자 정보를 입력한 요청 Dto
+     * @return ResponseEntity<UserResponseDto>  사용자 정보 및 http 상태 전달
+     *
+     */
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(@RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
         UserResponseDto userResponseDto =
@@ -37,7 +45,13 @@ public class UserController {
     }
 
 
-
+    /**
+     *  사용자 전체 조회 API
+     *  관리자가 회원 전체를 조회할 때 사용
+     *
+     * @return ResponseEntity<List<UserResponseDto>>  사용자들 정보 및 http 상태 전달
+     *
+     */
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         List<UserResponseDto> userResponseDtoList = userService.getAllUsers();
@@ -45,14 +59,32 @@ public class UserController {
         return new ResponseEntity<>(userResponseDtoList, HttpStatus.OK);
     }
 
-
-    @GetMapping("/my_page/{id}")
+    /**
+     *  사용자 단건 조회 API
+     *  자신의 프로필을 조회할 때 사용
+     *
+     * @param id    사용자 id
+     *
+     * @return ResponseEntity<UserResponseDto>  사용자 정보 및 http 상태 전달
+     *
+     */
+    @GetMapping("/mypage/{id}")
     public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
         UserResponseDto userResponseDto = userService.getUserById(id);
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
+    /**
+     *  다른 사용자 프로필 조회 API
+     *  다른 사용자의 프로필을 조회할 때 사용
+     *  민감한 정보 제외
+     *
+     * @param id    사용자 id
+     *
+     * @return ResponseEntity<OtherUserResponseDto>  다른 사용자 정보 및 http 상태 전달
+     *
+     */
     @GetMapping("/others/{id}")
     public ResponseEntity<OtherUserResponseDto> getOtherUser(@PathVariable Long id) {
         OtherUserResponseDto otherUserResponseDto = userService.getOtherUserById(id);
@@ -60,6 +92,17 @@ public class UserController {
         return new ResponseEntity<>(otherUserResponseDto, HttpStatus.OK);
     }
 
+    /**
+     *  사용자 정보 수정 API
+     *  본인의 정보를 수정할 때 사용
+     *
+     * @param id    사용자 id
+     * @param profileImage 프로필 이미지
+     * @param requestDto 수정할 내용이 담긴 dto
+     *
+     * @return ResponseEntity<UserResponseDto>  수정한 사용자 정보 및 http 상태 전달
+     *
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateRequestDto requestDto){
         UserResponseDto userResponseDto = userService.updateUserById(id,
@@ -68,6 +111,17 @@ public class UserController {
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
+    /**
+     *  사용자 삭제 API
+     *  사용자를 삭제할 때 사용
+     *
+     * @param id    사용자 id
+     * @param requestDto 수정할 내용이 담긴 dto
+     * @param request 요청 : Session 확인
+     *
+     * @return ResponseEntity<Void>  http 상태 전달
+     *
+     */
     @Transactional
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> userDelete(@PathVariable Long id, @Valid @RequestBody DeleteRequestDto requestDto, HttpServletRequest request) {
@@ -80,6 +134,15 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     *  로그인 API
+     *
+     * @param requestDto 수정할 내용이 담긴 dto
+     * @param request 요청 : Session 확인
+     *
+     * @return ResponseEntity<Void>  http 상태 전달
+     *
+     */
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletRequest request) {
         User user = userService.login(requestDto.getEmail(), requestDto.getPassword());
@@ -90,6 +153,15 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    /**
+     *  로그아웃 API
+     *
+     * @param request 요청 : Session 확인
+     *
+     * @return ResponseEntity<Void>  http 상태 전달
+     *
+     */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
