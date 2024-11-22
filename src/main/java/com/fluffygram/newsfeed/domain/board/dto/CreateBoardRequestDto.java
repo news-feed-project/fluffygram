@@ -13,6 +13,8 @@ public class CreateBoardRequestDto {
 
     @NotBlank
     private final String title;//게시물 제목
+
+
     private final String contents;//게시물 내용
 
     public CreateBoardRequestDto(Long userId, String title, String contents) {

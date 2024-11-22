@@ -1,6 +1,5 @@
 package com.fluffygram.newsfeed.domain.board.service;
 
-import com.fluffygram.newsfeed.domain.board.dto.BoardListResponseDto;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
@@ -39,10 +38,10 @@ public class BoardService {
     }
 
     //게시물 전체 List 조회
-    public List<BoardListResponseDto> findAllBoard(Pageable pageable) {
+    public List<BoardResponseDto> findAllBoard(Pageable pageable) {
         return boardRepository.findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
-                .map(BoardListResponseDto::toDto)
+                .map(BoardResponseDto::toDtoForAll)
                 .toList();
     }
 

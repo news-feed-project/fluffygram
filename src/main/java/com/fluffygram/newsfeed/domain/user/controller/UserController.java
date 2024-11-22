@@ -2,7 +2,6 @@ package com.fluffygram.newsfeed.domain.user.controller;
 
 import com.fluffygram.newsfeed.domain.user.dto.*;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import com.fluffygram.newsfeed.domain.user.enums.UserRelationship;
 import com.fluffygram.newsfeed.domain.user.service.UserService;
 import com.fluffygram.newsfeed.global.config.Const;
 import jakarta.servlet.http.HttpServletRequest;
@@ -75,14 +74,7 @@ public class UserController {
         HttpSession session = request.getSession(false);
         User LoginUser = (User) session.getAttribute(Const.LOGIN_USER);
 
-        UserResponseDto userResponseDto = userService.getUserById(id);
-        if(id.equals(LoginUser.getId())){
-            userResponseDto.setStatus(UserRelationship.OTHER.toString());
-        }
-        else {
-            userResponseDto.setStatus(UserRelationship.OTHER.toString());
-        }
-
+        UserResponseDto userResponseDto = userService.getUserById(id, LoginUser.getId());
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }

@@ -1,6 +1,5 @@
 package com.fluffygram.newsfeed.domain.board.controller;
 
-import com.fluffygram.newsfeed.domain.board.dto.BoardListResponseDto;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
 import com.fluffygram.newsfeed.domain.board.dto.CreateBoardRequestDto;
 import com.fluffygram.newsfeed.domain.board.dto.UpdateBoardRequestDto;
@@ -45,9 +44,9 @@ public class BoardController {
     //-- contents 제외한 dto로 변경
     //게시물 전체 List 조회
     @GetMapping
-    public ResponseEntity<List<BoardListResponseDto>> findAllBoard(@PageableDefault(size = 10, page = 0) Pageable pageable,
+    public ResponseEntity<List<BoardResponseDto>> findAllBoard(@PageableDefault(size = 10, page = 0) Pageable pageable,
                                                                    @Valid @ModelAttribute() PaginationCondition paginationCondition){
-        List<BoardListResponseDto> boardResponseDtoList =
+        List<BoardResponseDto> boardResponseDtoList =
                 boardService.findAllBoard(pageable);
 
         return  new ResponseEntity<>(boardResponseDtoList, HttpStatus.OK);

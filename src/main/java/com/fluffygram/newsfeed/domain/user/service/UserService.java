@@ -27,7 +27,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
-    private final AccessWrongValid accessWrongValid;
 
     private final ResourceLoader resourceLoader;
 
@@ -66,9 +65,12 @@ public class UserService {
         return userRepository.findAll(pageable).stream().map(UserResponseDto::ToDtoForMine).toList();
     }
 
-    public UserResponseDto getUserById(Long id) {
-
+    public UserResponseDto getUserById(Long id, Long loginUserId) {
         User user = userRepository.findByIdOrElseThrow(id);
+
+        if (!id.equals(loginUserId)) {
+            return UserResponseDto.ToDtoForOther(user);
+        }
 
         return UserResponseDto.ToDtoForMine(user);
     }
