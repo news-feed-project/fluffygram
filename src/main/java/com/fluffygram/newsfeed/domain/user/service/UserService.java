@@ -2,6 +2,7 @@ package com.fluffygram.newsfeed.domain.user.service;
 
 import com.fluffygram.newsfeed.domain.Image.entity.Image;
 import com.fluffygram.newsfeed.domain.Image.service.ImageService;
+import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
 import com.fluffygram.newsfeed.domain.user.dto.UserResponseDto;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.base.enums.UserStatus;
@@ -134,8 +135,12 @@ public class UserService {
         // 유저 상태를 탈퇴로 변경
         userById.updateUserStatus(UserStatus.DELETE);
 
+        //유저 이미지 데이터 삭제
+        imageService.deleteImage(id, ImageStatus.USER);
+
         // 유저 닉네임을 '탈퇴한 사용자' 로 변경
         userById.updateUserNickname();
+
 
         userRepository.save(userById);
     }

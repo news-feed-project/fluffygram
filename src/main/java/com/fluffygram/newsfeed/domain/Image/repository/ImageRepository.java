@@ -20,13 +20,6 @@ public interface ImageRepository extends JpaRepository<Image, Long>{
         return GetImage.getImage(Const.USER_IMAGE_STORAGE, imageUrl);
     }
 
-    Optional<Image> findBoardImageByDBFileName(String DBFileName);
-
-
-    default Image getImageOrElseThrow(String DBFileName){
-        return findBoardImageByDBFileName(DBFileName).stream().findAny().orElseThrow(()-> new BusinessException(ExceptionType.FILE_NOT_FOUND));
-    }
-
     Optional<Image> findUserImageByStatusId(Long id);
 
 
@@ -35,4 +28,6 @@ public interface ImageRepository extends JpaRepository<Image, Long>{
     }
 
     List<Image> findAllByStatusIdAndStatus(Long id, ImageStatus status);
+
+    void deleteByStatusIdAndStatus(Long id, ImageStatus status);
 }

@@ -98,6 +98,10 @@ public class BoardService {
             throw new BusinessException(ExceptionType.USER_NOT_MATCH);
         }
 
+        //게시물 이미지 데이터 삭제
+        imageService.deleteImage(id, ImageStatus.BOARD);
+
+        // 제시물 삭제
         boardRepository.delete(findBoard);
     }
     

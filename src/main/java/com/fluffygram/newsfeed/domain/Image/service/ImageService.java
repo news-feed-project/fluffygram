@@ -55,10 +55,12 @@ public class ImageService {
         return imageRepository.findAllByStatusIdAndStatus(id, status);
     }
 
-    public void deleteImage(String imageName) {
-        Image image = imageRepository.getImageOrElseThrow(imageName);
-
-        imageRepository.delete(image);
+    public void deleteImage(Long id, ImageStatus status) {
+        if (status == ImageStatus.BOARD || status == ImageStatus.USER) {
+            imageRepository.deleteByStatusIdAndStatus(id, status);
+        } else if (status == ImageStatus.ORPHANAGE) {
+            imageRepository.deleteById(id);
+        }
     }
 
 

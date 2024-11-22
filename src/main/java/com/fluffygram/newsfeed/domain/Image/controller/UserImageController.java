@@ -3,6 +3,7 @@ package com.fluffygram.newsfeed.domain.Image.controller;
 import com.fluffygram.newsfeed.domain.Image.dto.ImageResponseDto;
 import com.fluffygram.newsfeed.domain.Image.entity.Image;
 import com.fluffygram.newsfeed.domain.Image.service.ImageService;
+import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +44,9 @@ public class UserImageController {
     }
 
 
-    @DeleteMapping("/{imageName}")
-    public ResponseEntity<Void> deleteUserImage(@PathVariable String imageName) {
-        imageService.deleteImage(imageName);
-
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUserImage(@RequestParam Long imageId) {
+        imageService.deleteImage(imageId, ImageStatus.ORPHANAGE);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
