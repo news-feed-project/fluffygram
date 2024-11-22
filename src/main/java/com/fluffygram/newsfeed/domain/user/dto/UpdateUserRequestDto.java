@@ -5,22 +5,22 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class UpdateRequestDto {
+public class UpdateUserRequestDto {
 
     @NotBlank
     @Size(min = 8, max = 40)
     private final String presentPassword;
 
-    private final String ChangePassword;
+    private final String changePassword;
 
     private final String userNickname;
 
     private final String phoneNumber;
 
 
-    public UpdateRequestDto(String presentPassword, String changePassword, String userNickname, String phoneNumber) {
+    public UpdateUserRequestDto(String presentPassword, String changePassword, String userNickname, String phoneNumber) {
         this.presentPassword = presentPassword;
-        ChangePassword = changePassword;
+        this.changePassword = changePassword;
         this.userNickname = userNickname;
         this.phoneNumber = phoneNumber;
     }

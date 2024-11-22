@@ -5,15 +5,15 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class DeleteRequestDto {
+public class DeleteUserRequestDto {
 
     @NotBlank
     @Size(min = 8, max = 40)
     private String password;
 
-    DeleteRequestDto(){}
+    DeleteUserRequestDto(){}
 
-    public DeleteRequestDto(String password) {
+    public DeleteUserRequestDto(String password) {
         this.password = password;
     }
 }

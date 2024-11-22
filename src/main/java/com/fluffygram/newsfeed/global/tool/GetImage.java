@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.global.tool;
 
-import com.fluffygram.newsfeed.global.config.Const;
+import com.fluffygram.newsfeed.global.exception.BusinessException;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import java.net.MalformedURLException;
@@ -9,17 +10,17 @@ import java.nio.file.Path;
 
 public class GetImage {
 
-    public static Resource getImage(String imageUrl) {
+    public static Resource getImage(Path path, String imageUrl) {
         Resource resource;
 
         try {
             // 파일 경로 생성
-            Path filePath = Const.IMAGE_STORAGE_PATH.resolve(imageUrl).normalize();
+            Path filePath = path.resolve(imageUrl).normalize();
 
             // 파일을 Resource 객체로 변환
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {
-                throw new RuntimeException("해당 유저의 이미지 파일이 없습니다.");
+                throw new BusinessException(ExceptionType.FILE_NOT_FOUND);
             }
         }
         catch (MalformedURLException e) {
@@ -28,5 +29,4 @@ public class GetImage {
 
         return resource;
     }
-
 }
