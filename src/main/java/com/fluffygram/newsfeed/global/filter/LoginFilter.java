@@ -1,12 +1,11 @@
 package com.fluffygram.newsfeed.global.filter;
 
 import com.fluffygram.newsfeed.global.config.Const;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.WrongAccessException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,7 +30,7 @@ public class LoginFilter implements Filter {
             HttpSession session = httpRequest.getSession(false);
 
             if (session == null || session.getAttribute(Const.LOGIN_USER) == null) {
-                throw new BusinessException(ExceptionType.NOT_LOGIN);
+                throw new WrongAccessException(ExceptionType.NOT_LOGIN);
             }
         }
         chain.doFilter(request, response);

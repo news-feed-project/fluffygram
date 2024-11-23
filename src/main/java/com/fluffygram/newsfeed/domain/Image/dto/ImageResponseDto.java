@@ -1,6 +1,5 @@
 package com.fluffygram.newsfeed.domain.Image.dto;
 
-import com.fluffygram.newsfeed.domain.Image.entity.BoardImage;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -21,11 +20,6 @@ public class ImageResponseDto {
         this.filename = filename;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-
-    public static ImageResponseDto BoardImageToDto(BoardImage image) {
-        return new ImageResponseDto(image.getId(), image.getDBFileName(), image.getCreatedAt(), image.getModifiedAt());
     }
 
 }
