@@ -51,6 +51,9 @@ public class CommentService {
     public  void UpdateComments(Long id, String comment){
         Comments comments = commentsRepository.findCommentsByIdOrElseThrow(id);
 
+
         comments.updateComment(comment);
+
     }
+
 }
