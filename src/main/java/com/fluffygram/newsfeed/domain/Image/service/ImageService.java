@@ -9,7 +9,6 @@ import com.fluffygram.newsfeed.global.tool.UploadImage;
 import com.fluffygram.newsfeed.global.config.Const;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -22,7 +21,6 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
 
-    @Transactional
     public Image saveImage(MultipartFile profileImage, Long id) {
 
         String DBfileName = UploadImage.uploadUserImage(Const.USER_IMAGE_STORAGE_PATH, profileImage);
@@ -32,7 +30,6 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
-    @Transactional
     public void saveImages(List<MultipartFile> profileImages, Long boardId) {
 
         for (MultipartFile profileImage : profileImages) {

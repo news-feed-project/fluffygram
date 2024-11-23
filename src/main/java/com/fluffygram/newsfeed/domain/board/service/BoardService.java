@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.domain.board.service;
 
 import com.fluffygram.newsfeed.domain.Image.entity.Image;
+import com.fluffygram.newsfeed.domain.Image.repository.ImageRepository;
 import com.fluffygram.newsfeed.domain.Image.service.ImageService;
 import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
@@ -24,6 +25,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     //게시물 생성(저장)
     public BoardResponseDto save(Long userId, String title, String contents, List<MultipartFile> boardImages, Long loginUserId) {
@@ -82,6 +84,10 @@ public class BoardService {
         // 이미지 파일 수정하기
         List<Image> images = imageService.updateImages(boardImages, id);
 
+        if (images == null){
+            images = imageRepository.findAllByStatusIdAndStatus(id, ImageStatus.BOARD).stream().toList();
+        }
+
         //수정된 게시물 저장하기
         Board saveBoard = boardRepository.save(findBoard);
 
@@ -103,6 +109,9 @@ public class BoardService {
 
         // 제시물 삭제
         boardRepository.delete(findBoard);
+
+        // 게시물 이미지 데이터 삭제
+        imageRepository.deleteAll(imageRepository.findAllByStatusIdAndStatus(id, ImageStatus.BOARD));
     }
     
 }
