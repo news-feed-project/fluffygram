@@ -61,5 +61,4 @@ public class Board extends BaseEntity {
 
         return this;
     }
-
 }
