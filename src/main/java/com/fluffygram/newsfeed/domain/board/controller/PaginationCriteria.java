@@ -9,9 +9,11 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class PaginationCondition {
+public class PaginationCriteria {
 
-    String likeManySort = "like";
+    String dateType = "create";
+
+    String likeManySort = "noLike";
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startAt;

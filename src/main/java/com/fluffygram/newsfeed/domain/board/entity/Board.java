@@ -37,7 +37,7 @@ public class Board extends BaseEntity {
 
     //양방향관계 - 1:N
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<BoardLike> boardLikeListList = new ArrayList<>();
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     //게시글 생성
     public Board(String title, String contents, User user) {

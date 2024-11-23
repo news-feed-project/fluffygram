@@ -46,9 +46,9 @@ public class BoardController {
     //게시물 전체 List 조회
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> findAllBoard(@PageableDefault() Pageable pageable,
-                                                                   @Valid @ModelAttribute() PaginationCondition paginationCondition){
+                                                                   @Valid @ModelAttribute() PaginationCriteria paginationCriteria){
         List<BoardResponseDto> boardResponseDtoList =
-                boardService.findAllBoard(pageable);
+                boardService.findAllBoard(pageable, paginationCriteria);
 
         return  new ResponseEntity<>(boardResponseDtoList, HttpStatus.OK);
     }

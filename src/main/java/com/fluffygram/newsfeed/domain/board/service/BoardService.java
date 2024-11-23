@@ -4,15 +4,18 @@ import com.fluffygram.newsfeed.domain.Image.entity.Image;
 import com.fluffygram.newsfeed.domain.Image.repository.ImageRepository;
 import com.fluffygram.newsfeed.domain.Image.service.ImageService;
 import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
+import com.fluffygram.newsfeed.domain.board.controller.PaginationCriteria;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
+import com.fluffygram.newsfeed.domain.board.repository.BoardSpecification;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,10 +52,25 @@ public class BoardService {
         return BoardResponseDto.toDto(saveBoard, images);
     }
 
-    //게시물 전체 List 조회
-    public List<BoardResponseDto> findAllBoard(Pageable pageable) {
-        return boardRepository.findAllByOrderByCreatedAtDesc(pageable)
-                .stream()
+    public List<BoardResponseDto> findAllBoard(Pageable pageable, PaginationCriteria criteria) {
+        Specification<Board> spec = Specification.where(null);
+
+        // dateType에 따른 정렬 조건
+        if (criteria.getDateType() != null) {
+            spec = spec.and(BoardSpecification.filterByDateType(criteria.getDateType()));
+        }
+
+        // likeManySort 조건
+        if ("yes".equals(criteria.getLikeManySort())) {
+            spec = spec.and(BoardSpecification.filterByLikeManySort(criteria.getLikeManySort()));
+        }
+
+        // modifyAt 범위 조건
+        if (criteria.getStartAt() != null && criteria.getEndAt() != null) {
+            spec = spec.and(BoardSpecification.filterByModifyAtRange(criteria.getStartAt(), criteria.getEndAt()));
+        }
+
+        return boardRepository.findAll(spec, pageable).stream()
                 .map(BoardResponseDto::toDtoForAll)
                 .toList();
     }
