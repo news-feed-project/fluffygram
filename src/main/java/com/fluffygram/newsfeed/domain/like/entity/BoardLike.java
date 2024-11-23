@@ -3,7 +3,6 @@ package com.fluffygram.newsfeed.domain.like.entity;
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import com.fluffygram.newsfeed.domain.user.entity.UserStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
