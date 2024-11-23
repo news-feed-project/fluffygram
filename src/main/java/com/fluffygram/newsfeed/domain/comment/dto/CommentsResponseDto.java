@@ -29,7 +29,7 @@ public class CommentsResponseDto {
     public static CommentsResponseDto toDto(Comments comments) {
         return new CommentsResponseDto(
                 comments.getId(),
-                comments.getBoardId(),
+                comments.getBoard().getId(),
                 comments.getComment(),
                 comments.getUserNickname(),
                 comments.getCreatedAt(),
