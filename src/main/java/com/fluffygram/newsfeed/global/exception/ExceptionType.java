@@ -15,7 +15,7 @@ public enum ExceptionType {
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 파일을 찾을 수 없습니다."),
     NOT_LOGIN(HttpStatus.UNAUTHORIZED, "로그인을 해주세요."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,  "해당 유저의 정보를 찾을 수 없습니다."),
-    FAIL_FILE_UPLOADED(HttpStatus.INTERNAL_SERVER_ERROR,  "해당 파일 업로드에 실패하였습니다."),
+    FAIL_FILE_UPLOADED(HttpStatus.INTERNAL_SERVER_ERROR,  "해당 파일 업로드에 실패하였습니다. 잘못된 형식의 확장자입니다."),
     FAIL_FILE_DOWNLOADED(HttpStatus.INTERNAL_SERVER_ERROR,  "해당 파일 다운로드에 실패하였습니다.");
 
     private final HttpStatus status;

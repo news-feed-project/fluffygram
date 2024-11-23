@@ -9,8 +9,8 @@ import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class BoardService {
     public BoardResponseDto save(Long userId, String title, String contents, List<MultipartFile> boardImages, Long loginUserId) {
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!loginUserId.equals(userId)) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
         //사용자 id로 사용자 조회
         User findUserById = userRepository.findByIdOrElseThrow(userId);
@@ -75,7 +75,7 @@ public class BoardService {
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!loginUserId.equals(findBoard.getUser().getId())) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         // 제목 및 내용 수정하기
@@ -101,7 +101,7 @@ public class BoardService {
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!loginUserId.equals(findBoard.getUser().getId())) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         //게시물 이미지 데이터 삭제

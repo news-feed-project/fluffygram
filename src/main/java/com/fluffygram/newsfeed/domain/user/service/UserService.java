@@ -8,9 +8,7 @@ import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.base.enums.UserStatus;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
-import com.fluffygram.newsfeed.global.exception.BadValueException;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
-import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -34,7 +32,7 @@ public class UserService {
     public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber, MultipartFile profileImage) {
         // 이미 존재하는 email 인지 확인
         if(userRepository.existsByEmail(email)){
-            throw new BusinessException(ExceptionType.EXIST_USER);
+            throw new BadValueException(ExceptionType.EXIST_USER);
         }
 
         // 비밀번호 암호화
@@ -87,14 +85,14 @@ public class UserService {
                                           Long loginUserId) {
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!id.equals(loginUserId)){
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         User user = userRepository.findByIdOrElseThrow(id);
 
         // 비밀번호 일치 확인
         if(passwordEncoder.matches(presentPassword, user.getPassword())){
-            throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
+            throw new BadValueException(ExceptionType.PASSWORD_NOT_CORRECT);
         }
 
         // 동일한 비밀번호 변경 시도 확인
@@ -117,19 +115,19 @@ public class UserService {
     public void delete(Long id, String password, Long loginUserId) {
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!id.equals(loginUserId)){
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         User userById = userRepository.findByIdOrElseThrow(id);
 
         // 탈퇴 여부 확인
         if(userById.getUserStatus().equals(UserStatus.DELETE)){
-            throw new BusinessException(ExceptionType.DELETED_USER);
+            throw new WrongAccessException(ExceptionType.DELETED_USER);
         }
 
         // 비밀번호 일치 여부 확인
         if(passwordEncoder.matches(password, userById.getPassword())){
-            throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
+            throw new BadValueException(ExceptionType.PASSWORD_NOT_CORRECT);
         }
 
         // 유저 상태를 탈퇴로 변경
@@ -151,12 +149,12 @@ public class UserService {
 
         // 탈퇴 여부 확인
         if(user.getUserStatus().equals(UserStatus.DELETE)){
-            throw new BusinessException(ExceptionType.DELETED_USER);
+            throw new WrongAccessException(ExceptionType.DELETED_USER);
         }
 
         // 비밀번호 일치 여부 확인
         if(passwordEncoder.matches(password, user.getPassword())){
-            throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
+            throw new BadValueException(ExceptionType.PASSWORD_NOT_CORRECT);
         }
 
         return user;
