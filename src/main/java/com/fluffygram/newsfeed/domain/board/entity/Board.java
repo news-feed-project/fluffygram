@@ -2,7 +2,7 @@ package com.fluffygram.newsfeed.domain.board.entity;
 
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
-import com.fluffygram.newsfeed.domain.comment.entity.Comments;
+import com.fluffygram.newsfeed.domain.comment.entity.Comment;
 import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -33,7 +33,7 @@ public class Board extends BaseEntity {
 
     //양방향관계 - 1:N
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comments> commentsList = new ArrayList<>();
+    private List<Comment> commentList = new ArrayList<>();
 
     //양방향관계 - 1:N
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)

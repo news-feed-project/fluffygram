@@ -2,55 +2,77 @@ package com.fluffygram.newsfeed.domain.comment.service;
 
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
-import com.fluffygram.newsfeed.domain.comment.entity.Comments;
+import com.fluffygram.newsfeed.domain.comment.entity.Comment;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.fluffygram.newsfeed.domain.comment.dto.CommentsResponseDto;
-import com.fluffygram.newsfeed.domain.comment.repository.CommentsRepository;
+import com.fluffygram.newsfeed.domain.comment.dto.CommentResponseDto;
+import com.fluffygram.newsfeed.domain.comment.repository.CommentRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private final CommentsRepository commentsRepository;
+    private final CommentRepository commentRepository;
 
-    private final UserRepository UserRepository;
+    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
     //댓글 생성
-    public CommentsResponseDto createComment(Long boardId, Long userId,String comment) {
-        User user = UserRepository.findByIdOrElseThrow(userId);
+    public CommentResponseDto createComment(Long boardId, Long userId, String commentContents, Long loginUserId) {
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인
+        if(!userId.equals(loginUserId)){
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
+        }
+
+        User user = userRepository.findByIdOrElseThrow(userId);
         Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
 
-        Comments comments = new Comments(comment, user, board);
+        Comment comment = new Comment(commentContents, user, board);
 
-        return CommentsResponseDto.toDto(commentsRepository.save(comments));
+        Comment savedComment = commentRepository.save(comment);
+
+        return CommentResponseDto.toDto(savedComment);
     }
 
-    public List<CommentsResponseDto> findAllComments() {
-        List<Comments> comments = commentsRepository.findAll();
+    public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {
+        Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);
 
-        return comments.stream().map(CommentsResponseDto::toDto).toList();
+        return comments.stream().map(CommentResponseDto::toDto).toList();
     }
 
-    public CommentsResponseDto findCommentsById(Long id) {
+    public CommentResponseDto findCommentById(Long id) {
 
-        Comments comments = commentsRepository.findById(id).orElseThrow(() -> new BusinessException(ExceptionType.USER_NOT_FOUND));
+        Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
-        return CommentsResponseDto.toDto(comments);
+        return CommentResponseDto.toDto(comment);
     }
 
-    public void deleteComment(Long id) {
-        commentsRepository.deleteById(id);
-    }
-    public  void UpdateComments(Long id, String comment){
-        Comments comments = commentsRepository.findCommentsByIdOrElseThrow(id);
+    public  void UpdateComments(Long id, String commentContents, Long loginUserId){
+        Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
-        comments.updateComment(comment);
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인 및 게시물 작성자 일치 여부 확인
+        if(!comment.getUser().getId().equals(loginUserId) || !comment.getBoard().getUser().getId().equals(loginUserId)){
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
+        }
+
+        comment.updateComment(commentContents);
+    }
+
+    public void deleteComment(Long id, Long loginUserId) {
+        Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
+
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인 및 게시물 작성자 일치 여부 확인
+        if(!comment.getUser().getId().equals(loginUserId) || !comment.getBoard().getUser().getId().equals(loginUserId)){
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
+        }
+
+        commentRepository.deleteById(id);
     }
 }

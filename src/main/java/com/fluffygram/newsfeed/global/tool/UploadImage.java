@@ -1,6 +1,5 @@
 package com.fluffygram.newsfeed.global.tool;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
-@Component
+
 public class UploadImage {
 
     public static void FileAndDataUploadController(Path path) throws IOException {
@@ -19,7 +18,7 @@ public class UploadImage {
         }
     }
 
-    static public String uploadUserImage(Path path, MultipartFile file) {
+    public static String uploadUserImage(Path path, MultipartFile file) {
         String uniqueFilename;
 
         if (file.isEmpty()) {
