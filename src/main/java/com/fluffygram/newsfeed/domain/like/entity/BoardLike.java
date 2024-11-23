@@ -14,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Entity
