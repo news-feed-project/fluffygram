@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/boards/{boardId}/boardlikes")
 @RequiredArgsConstructor
-public class BoardLikeController {
+public class CommentLikeController {
     private  final BoardLikeService boardLikeService;
 
-    //게시글 좋아요 활성화, 비활성화
+    //댓글 좋아요 활성화, 비활성화
     @PostMapping
     public ResponseEntity<BoardLikeResponseDto> createLike(@PathVariable Long boardId, @RequestBody BoardLikeRequestDto requestDto, HttpServletRequest request){
         //로그인 된 id 가져오기
