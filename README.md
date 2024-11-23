@@ -28,15 +28,3 @@
 🔀 Branch : 브랜치 추가, 병합 등<br>
 ➕ Dependency : 의존성 추가<br>
 🏗️ Chore : 빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등
-
-
-## 💡 ERD
-
-![image](https://github.com/user-attachments/assets/6779e075-6d04-48cd-8ab7-3cb2dbba59ae)
-
-*ERD 링크 : https://www.erdcloud.com/d/fbfYYCxPPry6AwEes
-
-
-## 🎉 API 명세서
-
-
