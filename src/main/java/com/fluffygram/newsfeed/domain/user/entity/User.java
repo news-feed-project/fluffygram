@@ -1,6 +1,8 @@
 package com.fluffygram.newsfeed.domain.user.entity;
 
+import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
+import com.fluffygram.newsfeed.domain.user.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -30,23 +32,24 @@ public class User extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "profile_image")
-    private String profileImage;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "user_status")
     private UserStatus userStatus;
+
+    @OneToOne
+    @JoinColumn(name = "profile_image")
+    private UserImage profileImage;
+
 
     public User() {
 
     }
 
-    public User(String email, String encodedPassword, String userNickname, String phoneNumber, String profileImage, UserStatus userStatus) {
+    public User(String email, String encodedPassword, String userNickname, String phoneNumber, UserStatus userStatus) {
         this.email = email;
         this.password = encodedPassword;
         this.userNickname = userNickname;
         this.phoneNumber = phoneNumber;
-        this.profileImage = profileImage;
         this.userStatus = userStatus;
     }
 
@@ -63,7 +66,7 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public void updateProfileImage(String profileImage) {
+    public void updateProfileImage(UserImage profileImage) {
         this.profileImage = profileImage;
     }
 

@@ -2,9 +2,9 @@ package com.fluffygram.newsfeed.domain.comment.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import com.fluffygram.newsfeed.domain.board.entity.Board;
+import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.apache.catalina.User;
 
 @Entity
 @Getter
@@ -19,12 +19,12 @@ public class Comments extends BaseEntity {
     //연관관계 - N:1
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user;  //사용자 id(외래키)
 
     //연관관계 - N:1
     @ManyToOne
     @JoinColumn(name = "board_id")
-    private Board board;
+    private Board board;    //게시물 id(외래키)
 
     public Comments(String comment, User user, Board board) {
         this.comment = comment;
@@ -32,8 +32,11 @@ public class Comments extends BaseEntity {
         this.board = board;
     }
 
-    public Comments() {}
+    public Comments() {
 
+    }
 
-
+    public void updateComment(String comment) {
+        this.comment = comment;
+    }
 }

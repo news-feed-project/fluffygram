@@ -1,16 +1,18 @@
 package com.fluffygram.newsfeed.domain.user.service;
 
+import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
+import com.fluffygram.newsfeed.domain.Image.service.UserImageServiceImpl;
 import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
-import com.fluffygram.newsfeed.domain.user.dto.OtherUserResponseDto;
 import com.fluffygram.newsfeed.domain.user.dto.UserResponseDto;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import com.fluffygram.newsfeed.domain.user.entity.UserStatus;
+import com.fluffygram.newsfeed.domain.user.enums.UserStatus;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
-import com.fluffygram.newsfeed.domain.userImage.service.UserImageService;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
 import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,11 +23,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserImageService userImageService;
+    private final UserImageServiceImpl userImageServiceImpl;
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final AccessWrongValid accessWrongValid;
+
+    private final ResourceLoader resourceLoader;
 
     @Transactional
     public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber, MultipartFile profileImage) {
@@ -38,44 +42,42 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(password);
 
         // 유저 생성
-        User user = new User(email, encodedPassword, userNickname, phoneNumber, profileImage.getOriginalFilename(), UserStatus.REGISTER);
+        User user = new User(email, encodedPassword, userNickname, phoneNumber, UserStatus.REGISTER);
 
         // 유저 DB 저장
         User savedUser = userRepository.save(user);
 
-        // 유저 이미지 저장
-        String profileImageUrl = userImageService.saveUserImage(profileImage, savedUser);
+        if(profileImage.isEmpty()){
+            Resource resource = resourceLoader.getResource("classpath:static/user.jpg");
+            profileImage = (MultipartFile) resource;
+        }
+
+        UserImage userImage = userImageServiceImpl.saveImage(profileImage, savedUser.getId());
 
         // 유저의 이미지 이름을 고유한 이름으로 업데이트
-        savedUser.updateProfileImage(profileImageUrl);
+        user.updateProfileImage(userImage);
 
-        return UserResponseDto.toDto(savedUser);
+        return UserResponseDto.ToDtoForMine(savedUser);
     }
 
     public List<UserResponseDto> getAllUsers() {
-        return userRepository.findAll().stream().map(UserResponseDto::toDto).toList();
+        return userRepository.findAll().stream().map(UserResponseDto::ToDtoForMine).toList();
     }
 
     public UserResponseDto getUserById(Long id) {
 
         User user = userRepository.findByIdOrElseThrow(id);
 
-        return UserResponseDto.toDto(user);
+        return UserResponseDto.ToDtoForMine(user);
     }
 
-    public OtherUserResponseDto getOtherUserById(Long id) {
-
-        User user = userRepository.findByIdOrElseThrow(id);
-
-        return OtherUserResponseDto.toDto(user);
-    }
 
     @Transactional
-    public UserResponseDto updateUserById(Long id, String PresentPassword, String ChangePassword, String userNickname, String phoneNumber, MultipartFile profileImage) {
+    public UserResponseDto updateUserById(Long id, String presentPassword, String ChangePassword, String userNickname, String phoneNumber, MultipartFile profileImage) {
         User user = userRepository.findByIdOrElseThrow(id);
 
         // 비밀번호 일치 확인
-        if(passwordEncoder.matches(PresentPassword, user.getPassword())){
+        if(passwordEncoder.matches(presentPassword, user.getPassword())){
             throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
         }
 
@@ -101,13 +103,13 @@ public class UserService {
 
         // 유저 프로필 이미지 변경
         if(profileImage != null && !profileImage.isEmpty()){
-            String profileImageUrl = userImageService.updateUserImage(profileImage, user);
-            user.updateProfileImage(profileImageUrl);
+            UserImage userImage = userImageServiceImpl.updateImage(profileImage, user);
+            user.updateProfileImage(userImage);
         }
 
         User savedUser = userRepository.save(user);
 
-        return UserResponseDto.toDto(savedUser);
+        return UserResponseDto.ToDtoForMine(savedUser);
     }
 
     @Transactional
@@ -137,10 +139,12 @@ public class UserService {
     public User login(String email, String password) {
         User user = userRepository.findUserByEmailOrElseThrow(email);
 
+        // 탈퇴 여부 확인
         if(user.getUserStatus().equals(UserStatus.DELETE)){
             throw new BusinessException(ExceptionType.DELETED_USER);
         }
 
+        // 비밀번호 일치 여부 확인
         if(passwordEncoder.matches(password, user.getPassword())){
             throw new BusinessException(ExceptionType.PASSWORD_NOT_CORRECT);
         }

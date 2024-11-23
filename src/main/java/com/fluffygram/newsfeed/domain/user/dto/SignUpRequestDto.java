@@ -23,8 +23,6 @@ public class SignUpRequestDto {
     @NotBlank
     private final String phoneNumber;
 
-
-
     public SignUpRequestDto(String email, String password, String userNickname, String phoneNumber) {
         this.email = email;
         this.password = password;
