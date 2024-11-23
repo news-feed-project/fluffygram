@@ -9,11 +9,12 @@ import lombok.Getter;
 @Entity
 @Getter
 @Table(name= "comments")
-public class Comments extends BaseEntity {
+public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "comment")
     private String comment;
 
     //연관관계 - N:1
@@ -26,13 +27,17 @@ public class Comments extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;    //게시물 id(외래키)
 
-    public Comments(String comment, User user, Board board) {
+    public Comment(String comment, User user, Board board) {
         this.comment = comment;
         this.user = user;
         this.board = board;
     }
 
-    public Comments() {
+    public Comment() {
 
+    }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
     }
 }

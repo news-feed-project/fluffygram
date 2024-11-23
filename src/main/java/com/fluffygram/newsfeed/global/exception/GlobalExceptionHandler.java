@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     // @valid 유효성 검사 예외처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
 
         // 유효성 검사 오류 메시지를 필드별로 수집
         Map<String, String> errors = new HashMap<>();
@@ -33,7 +34,7 @@ public class GlobalExceptionHandler {
     }
 
     // 비지니스 로직 예외처리
-    @ExceptionHandler(BusinessException.class)
+    @ExceptionHandler({BusinessException.class, NotFountByIdException.class, NotMatchByUserIdException.class, BadRequestException.class, WrongAccessException.class})
     public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException ex) {
         ExceptionType exceptionType = ex.getExceptionType();
 

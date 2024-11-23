@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.domain.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ public class UpdateUserRequestDto {
     @Size(min = 8, max = 40)
     private final String presentPassword;
 
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,}$")
     private final String changePassword;
 
     private final String userNickname;
