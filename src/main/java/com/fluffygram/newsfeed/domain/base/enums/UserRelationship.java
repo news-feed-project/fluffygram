@@ -1,4 +1,4 @@
-package com.fluffygram.newsfeed.domain.user.enums;
+package com.fluffygram.newsfeed.domain.base.enums;
 
 public enum UserRelationship {
     MINE, OTHER, FRIENDS

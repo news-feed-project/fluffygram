@@ -1,14 +1,23 @@
 package com.fluffygram.newsfeed.domain.board.service;
 
-import com.fluffygram.newsfeed.domain.board.dto.BoardListResponseDto;
+import com.fluffygram.newsfeed.domain.Image.entity.Image;
+import com.fluffygram.newsfeed.domain.Image.repository.ImageRepository;
+import com.fluffygram.newsfeed.domain.Image.service.ImageService;
+import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
+import com.fluffygram.newsfeed.domain.board.controller.PaginationCriteria;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
+import com.fluffygram.newsfeed.domain.board.repository.BoardSpecification;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
-import jakarta.validation.constraints.NotBlank;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,28 +27,51 @@ public class BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
-    //--로그인 세션 사용하기
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     //게시물 생성(저장)
-    public BoardResponseDto save(Long id, String title, String contents){
+    public BoardResponseDto save(Long userId, String title, String contents, List<MultipartFile> boardImages, Long loginUserId) {
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인
+        if(!loginUserId.equals(userId)) {
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
+        }
         //사용자 id로 사용자 조회
-        User findUserById = userRepository.findByIdOrElseThrow(id);
+        User findUserById = userRepository.findByIdOrElseThrow(userId);
 
-        Board board = new Board(id, title, contents, findUserById);
+        Board board = new Board(title, contents, findUserById);
 
         //게시물 저장
         Board saveBoard = boardRepository.save(board);
 
-//        --.toDto(saveBoard) 사용하기
-//        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findUserById.getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
-        return BoardResponseDto.toDto(saveBoard);
+        // 이미지들 저장
+        imageService.saveImages(boardImages, saveBoard.getId());
+
+        List<Image> images = imageService.getImages(saveBoard.getId(), ImageStatus.BOARD);
+
+        return BoardResponseDto.toDto(saveBoard, images);
     }
 
-    //게시물 전체 List 조회
-    public List<BoardListResponseDto> findAllBoard() {
-        return boardRepository.findAll()
-                .stream()
-                .map(BoardListResponseDto::toDto)
+    public List<BoardResponseDto> findAllBoard(Pageable pageable, PaginationCriteria criteria) {
+        Specification<Board> spec = Specification.where(null);
+
+        // dateType에 따른 정렬 조건
+        if (criteria.getDateType() != null) {
+            spec = spec.and(BoardSpecification.filterByDateType(criteria.getDateType()));
+        }
+
+        // likeManySort 조건
+        if ("yes".equals(criteria.getLikeManySort())) {
+            spec = spec.and(BoardSpecification.filterByLikeManySort(criteria.getLikeManySort()));
+        }
+
+        // modifyAt 범위 조건
+        if (criteria.getStartAt() != null && criteria.getEndAt() != null) {
+            spec = spec.and(BoardSpecification.filterByModifyAtRange(criteria.getStartAt(), criteria.getEndAt()));
+        }
+
+        return boardRepository.findAll(spec, pageable).stream()
+                .map(BoardResponseDto::toDtoForAll)
                 .toList();
     }
 
@@ -48,40 +80,56 @@ public class BoardService {
         //게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
-        //사용자 id로 사용자 조회 -> 사용자 id로 조회하고있지 않다
-//        User findUserById = userRepository.findByIdOrElseThrow(id);
+        // 이미지들 가져오기
+        List<Image> images = imageService.getImages(id, ImageStatus.BOARD);
 
-        return new BoardResponseDto(findBoard.getId(),findBoard.getTitle(),findBoard.getContents(), findBoard.getUser().getUserNickname(), findBoard.getCreatedAt(),findBoard.getModifiedAt());
+        return BoardResponseDto.toDto(findBoard, images);
     }
 
     //게시물 id로 특정 게시물 수정
-    public BoardResponseDto updateBoard(Long id, String title, String contents) {
+    public BoardResponseDto updateBoard(Long id, String title, String contents, Long loginUserId, List<MultipartFile> boardImages) {
         //게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
-//        //사용자 id로 사용자 조회
-//        User findUserById = userRepository.findByIdOrElseThrow(id);
-
-        //--entity로 옮기기
-        if(title != null){
-            findBoard.updateTitle(title);
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인
+        if(!loginUserId.equals(findBoard.getUser().getId())) {
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
-        if(contents != null){
-            findBoard.updateContents(contents);
+        // 제목 및 내용 수정하기
+        findBoard = findBoard.updateBoard(title, contents);
+
+        // 이미지 파일 수정하기
+        List<Image> images = imageService.updateImages(boardImages, id);
+
+        if (images == null){
+            images = imageRepository.findAllByStatusIdAndStatus(id, ImageStatus.BOARD).stream().toList();
         }
 
         //수정된 게시물 저장하기
         Board saveBoard = boardRepository.save(findBoard);
-        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findBoard.getUser().getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
+
+        return BoardResponseDto.toDto(saveBoard, images);
     }
     
     //게시물 id로 특정 게시물 삭제
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, Long loginUserId) {
         //게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
+        // 로그인한 사용자와 아이디(id) 일치 여부 확인
+        if(!loginUserId.equals(findBoard.getUser().getId())) {
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
+        }
+
+        //게시물 이미지 데이터 삭제
+        imageService.deleteImage(id, ImageStatus.BOARD);
+
+        // 제시물 삭제
         boardRepository.delete(findBoard);
+
+        // 게시물 이미지 데이터 삭제
+        imageRepository.deleteAll(imageRepository.findAllByStatusIdAndStatus(id, ImageStatus.BOARD));
     }
     
 }

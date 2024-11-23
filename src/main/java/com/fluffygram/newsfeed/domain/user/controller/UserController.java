@@ -2,13 +2,14 @@ package com.fluffygram.newsfeed.domain.user.controller;
 
 import com.fluffygram.newsfeed.domain.user.dto.*;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import com.fluffygram.newsfeed.domain.user.enums.UserRelationship;
 import com.fluffygram.newsfeed.domain.user.service.UserService;
 import com.fluffygram.newsfeed.global.config.Const;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,8 @@ public class UserController {
      *
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam(required = false) MultipartFile profileImage,
+                                                  @Valid @ModelAttribute SignUpRequestDto requestDto){
         UserResponseDto userResponseDto = userService.signUp(
                         requestDto.getEmail(),
                         requestDto.getPassword(),
@@ -53,8 +55,8 @@ public class UserController {
      *
      */
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto> userResponseDtoList = userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers(@PageableDefault() Pageable pageable) {
+        List<UserResponseDto> userResponseDtoList = userService.getAllUsers(pageable);
 
         return new ResponseEntity<>(userResponseDtoList, HttpStatus.OK);
     }
@@ -73,14 +75,7 @@ public class UserController {
         HttpSession session = request.getSession(false);
         User LoginUser = (User) session.getAttribute(Const.LOGIN_USER);
 
-        UserResponseDto userResponseDto = userService.getUserById(id);
-        if(id.equals(LoginUser.getId())){
-            userResponseDto.setStatus(UserRelationship.OTHER.toString());
-        }
-        else {
-            userResponseDto.setStatus(UserRelationship.OTHER.toString());
-        }
-
+        UserResponseDto userResponseDto = userService.getUserById(id, LoginUser.getId());
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
@@ -97,9 +92,21 @@ public class UserController {
      *
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateUserRequestDto requestDto){
-        UserResponseDto userResponseDto = userService.updateUserById(id,
-                requestDto.getPresentPassword(), requestDto.getChangePassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), profileImage);
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id,
+                                                      @RequestParam(required = false) MultipartFile profileImage,
+                                                      @Valid @ModelAttribute UpdateUserRequestDto requestDto,
+                                                      HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+
+        UserResponseDto userResponseDto = userService.updateUserById(
+                id,
+                requestDto.getPresentPassword(),
+                requestDto.getChangePassword(),
+                requestDto.getUserNickname(),
+                requestDto.getPhoneNumber(),
+                profileImage,
+                user.getId());
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }

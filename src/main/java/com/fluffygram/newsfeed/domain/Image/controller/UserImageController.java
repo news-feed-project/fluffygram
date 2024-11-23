@@ -1,56 +1,52 @@
 package com.fluffygram.newsfeed.domain.Image.controller;
 
 import com.fluffygram.newsfeed.domain.Image.dto.ImageResponseDto;
-import com.fluffygram.newsfeed.domain.Image.entity.UserImage;
-import com.fluffygram.newsfeed.domain.Image.service.UserImageServiceImpl;
+import com.fluffygram.newsfeed.domain.Image.entity.Image;
+import com.fluffygram.newsfeed.domain.Image.service.ImageService;
+import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/userimagefiles")
+@RequestMapping("/imagefiles")
 @RequiredArgsConstructor
 public class UserImageController {
 
-    private final UserImageServiceImpl userImageServiceImpl;
+    private final ImageService imageService;
 
     @PostMapping("/users/{userId}")
     public ResponseEntity<ImageResponseDto> saveImage(@RequestParam MultipartFile file, @PathVariable Long userId) {
-        UserImage userImage = userImageServiceImpl.saveImage(file, userId);
+        Image image = imageService.saveImage(file, userId);
 
-        ImageResponseDto imageResponseDto = new ImageResponseDto(userImage.getId(), userImage.getDBFileName(), userImage.getCreatedAt(), userImage.getModifiedAt());
+        ImageResponseDto imageResponseDto = new ImageResponseDto(image.getId(), image.getDBFileName(), image.getCreatedAt(), image.getModifiedAt());
 
         return new ResponseEntity<>(imageResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/{imageName}")
-    public ResponseEntity<Resource> getUserImage(@PathVariable String imageName) {
-        Resource resource = userImageServiceImpl.getImage(imageName);
+    @GetMapping("/users")
+    public ResponseEntity<String> getUserImage(@RequestParam Long userId) {
+        String base64Image = imageService.getImage(userId);
 
         // HTTP 응답 생성 (Content-Disposition: inline)
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_TYPE, "image/jpeg") // 기본 MIME 타입
-                .body(resource);
+        return ResponseEntity.ok().body(base64Image);
     }
 
     @PatchMapping("/users/{userId}")
     public ResponseEntity<ImageResponseDto> UpdateImage(@RequestParam MultipartFile file, @PathVariable Long userId) {
-        UserImage userImage = userImageServiceImpl.updateImage(file, userId);
+        Image image = imageService.updateImage(file, userId);
 
-        ImageResponseDto imageResponseDto = new ImageResponseDto(userImage.getId(), userImage.getDBFileName(), userImage.getCreatedAt(), userImage.getModifiedAt());
+        ImageResponseDto imageResponseDto = new ImageResponseDto(image.getId(), image.getDBFileName(), image.getCreatedAt(), image.getModifiedAt());
 
         return new ResponseEntity<>(imageResponseDto, HttpStatus.OK);
     }
 
 
-    @DeleteMapping("/{imageName}")
-    public ResponseEntity<Void> deleteUserImage(@PathVariable String imageName) {
-        userImageServiceImpl.deleteImage(imageName);
-
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUserImage(@RequestParam Long imageId) {
+        imageService.deleteImage(imageId, ImageStatus.ORPHANAGE);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

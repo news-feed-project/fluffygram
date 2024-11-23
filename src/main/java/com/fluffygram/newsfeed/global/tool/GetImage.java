@@ -1,32 +1,35 @@
 package com.fluffygram.newsfeed.global.tool;
 
-import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
+import com.fluffygram.newsfeed.global.exception.WrongAccessException;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Base64;
 
 
 public class GetImage {
 
-    public static Resource getImage(Path path, String imageUrl) {
-        Resource resource;
+    public static String getImage(String path, String imageUrl) throws WrongAccessException {
 
         try {
-            // 파일 경로 생성
-            Path filePath = path.resolve(imageUrl).normalize();
+            // 1. 로컬에 저장된 이미지 파일 경로 설정 및 파일 불러오기
+            File imgFile = new File(path + "/" + imageUrl);
 
-            // 파일을 Resource 객체로 변환
-            resource = new UrlResource(filePath.toUri());
-            if (!resource.exists()) {
-                throw new BusinessException(ExceptionType.FILE_NOT_FOUND);
+            if (!imgFile.exists()) {
+                throw new WrongAccessException(ExceptionType.FILE_NOT_FOUND);
             }
+
+            // 2. 파일을 Base64로 변환
+            byte[] fileContent = Files.readAllBytes(imgFile.toPath());
+            String base64Image = Base64.getEncoder().encodeToString(fileContent);
+
+            return "data:image/jpeg;base64," + base64Image;
         }
-        catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage());
+        catch (IOException e) {
+            throw new WrongAccessException(ExceptionType.FAIL_FILE_DOWNLOADED);
         }
 
-        return resource;
     }
 }
