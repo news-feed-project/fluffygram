@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +33,9 @@ public class UserController {
      *
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam MultipartFile profileImage, @Valid @ModelAttribute SignUpRequestDto requestDto){
-        UserResponseDto userResponseDto =
-                userService.signUp(
+    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam(required = false) MultipartFile profileImage,
+                                                  @Valid @ModelAttribute SignUpRequestDto requestDto){
+        UserResponseDto userResponseDto = userService.signUp(
                         requestDto.getEmail(),
                         requestDto.getPassword(),
                         requestDto.getUserNickname(),
@@ -53,8 +55,8 @@ public class UserController {
      *
      */
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto> userResponseDtoList = userService.getAllUsers();
+    public ResponseEntity<List<UserResponseDto>> getAllUsers(@PageableDefault() Pageable pageable) {
+        List<UserResponseDto> userResponseDtoList = userService.getAllUsers(pageable);
 
         return new ResponseEntity<>(userResponseDtoList, HttpStatus.OK);
     }
@@ -68,28 +70,14 @@ public class UserController {
      * @return ResponseEntity<UserResponseDto>  사용자 정보 및 http 상태 전달
      *
      */
-    @GetMapping("/mypage/{id}")
-    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
-        UserResponseDto userResponseDto = userService.getUserById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        User LoginUser = (User) session.getAttribute(Const.LOGIN_USER);
+
+        UserResponseDto userResponseDto = userService.getUserById(id, LoginUser.getId());
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
-    }
-
-    /**
-     *  다른 사용자 프로필 조회 API
-     *  다른 사용자의 프로필을 조회할 때 사용
-     *  민감한 정보 제외
-     *
-     * @param id    사용자 id
-     *
-     * @return ResponseEntity<OtherUserResponseDto>  다른 사용자 정보 및 http 상태 전달
-     *
-     */
-    @GetMapping("/others/{id}")
-    public ResponseEntity<OtherUserResponseDto> getOtherUser(@PathVariable Long id) {
-        OtherUserResponseDto otherUserResponseDto = userService.getOtherUserById(id);
-
-        return new ResponseEntity<>(otherUserResponseDto, HttpStatus.OK);
     }
 
     /**
@@ -104,9 +92,21 @@ public class UserController {
      *
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestParam MultipartFile profileImage, @Valid @ModelAttribute UpdateUserRequestDto requestDto){
-        UserResponseDto userResponseDto = userService.updateUserById(id,
-                requestDto.getPresentPassword(), requestDto.getChangePassword(), requestDto.getUserNickname(), requestDto.getPhoneNumber(), profileImage);
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id,
+                                                      @RequestParam(required = false) MultipartFile profileImage,
+                                                      @Valid @ModelAttribute UpdateUserRequestDto requestDto,
+                                                      HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+
+        UserResponseDto userResponseDto = userService.updateUserById(
+                id,
+                requestDto.getPresentPassword(),
+                requestDto.getChangePassword(),
+                requestDto.getUserNickname(),
+                requestDto.getPhoneNumber(),
+                profileImage,
+                user.getId());
 
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }

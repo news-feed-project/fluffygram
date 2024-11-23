@@ -2,17 +2,14 @@ package com.fluffygram.newsfeed.domain.board.entity;
 
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
+import com.fluffygram.newsfeed.domain.comment.entity.Comment;
 import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -23,39 +20,45 @@ public class Board extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;//게시물 id
 
+    @Column(length = 20, nullable = false)
+    private String title;//게시물 제목
+
+    @Column(length = 1000)
+    private String contents;//게시물 내용
+
     //연관관계 - N:1
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;//사용자 id(외래키)
 
-    @Column(length = 20, nullable = false)
-    private String title;//게시물 제목
+    //양방향관계 - 1:N
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> commentList = new ArrayList<>();
 
-    @Column(length = 1000, nullable = true)
-    private String contents;//게시물 내용
+    //양방향관계 - 1:N
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     //게시글 생성
-    public Board(User user, String title, String contents) {
-        this.user = user;
+    public Board(String title, String contents, User user) {
         this.title = title;
         this.contents = contents;
+        this.user = user;
     }
 
     public Board() {
     }
 
-    //게시물 제목 수정
-    public void updateTitle(String title) {
-        this.title = title;
-    }
-    //게시물 내용 수정
-    public void updateContents(String contents) {
+    //게시물 제목 및 내용 수정
+    public Board updateBoard(String title, String contents) {
+        if(title != null){
+            this.title = title;
+        }
 
-        this.contents = contents;
-    }
+        if(contents != null){
+            this.contents = contents;
+        }
 
-    public void setUser(User user) {
-        this.user = user;
+        return this;
     }
-
 }

@@ -2,7 +2,7 @@ package com.fluffygram.newsfeed.domain.friend.entity;
 
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,33 +14,35 @@ import java.time.LocalDateTime;
 @Table(name = "Friend")
 public class Friend {
 
+    // @NotBlank 는 문자열만??
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @NotBlank
+    @NotNull
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "send_user_id")
-    @NotBlank
+    @NotNull
     private User sendUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "received_user_id")
-    @NotBlank
+    @NotNull
     private User receivedUser;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "friend_status", columnDefinition = "ENUM('REQUESTED', 'ACCEPTED', 'NOT_FRIEND') DEFAULT 'NOT_FRIEND'")
-    @NotBlank
+    @NotNull
     private FriendStatus friendStatus = FriendStatus.NOT_FRIEND;
 
     @Column(name = "request_at")
-    @NotBlank
+    @NotNull
     private LocalDateTime requestAt;
 
     @Column(name = "accept_at")
-    @NotBlank
+    @NotNull
     private LocalDateTime acceptAt;
 
     public enum FriendStatus {

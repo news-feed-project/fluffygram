@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.global.tool;
 
-import org.springframework.stereotype.Component;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.WrongAccessException;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
-@Component
+
 public class UploadImage {
 
     public static void FileAndDataUploadController(Path path) throws IOException {
@@ -19,7 +20,7 @@ public class UploadImage {
         }
     }
 
-    static public String uploadUserImage(Path path, MultipartFile file) {
+    public static String uploadUserImage(Path path, MultipartFile file) throws WrongAccessException {
         String uniqueFilename;
 
         if (file.isEmpty()) {
@@ -32,14 +33,14 @@ public class UploadImage {
         // 타입에 따른 확장자 결정
         if (ObjectUtils.isEmpty(contentType)) {
             // 타입 없으면 null
-            throw new RuntimeException("잘못된 확장자 입니다.");
+            throw new WrongAccessException(ExceptionType.FAIL_FILE_UPLOADED);
         } else {
             if (contentType.contains("image/jpeg")) {
                 originalFileExtension = ".jpg";
             } else if (contentType.contains("image/png")) {
                 originalFileExtension = ".png";
             } else {
-                throw new RuntimeException("잘못된 이미지 확장자 입니다.");
+                throw new WrongAccessException(ExceptionType.FAIL_FILE_UPLOADED);
             }
         }
 
@@ -56,7 +57,7 @@ public class UploadImage {
             file.transferTo(filePath.toFile());
 
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new WrongAccessException(ExceptionType.FAIL_FILE_UPLOADED);
 
         }
         return uniqueFilename;
