@@ -15,24 +15,6 @@ public class AccessWrongValid {
 
     }
 
-    public void validateFriendRequestDto(Long loginUserId, FriendRequestDto requestDto) {
 
-        if (loginUserId == null) {
-            throw new BusinessException(ExceptionType.USER_NOT_FOUND);
-        }
-        if (!loginUserId.equals(requestDto.getSendUserId()) || loginUserId.equals(requestDto.getReceivedUserId())) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
-    }
-
-    public void validateFriendRequestByUserId(Long loginUserId, long userId) {
-
-        if (loginUserId == null) {
-            throw new BusinessException(ExceptionType.USER_NOT_FOUND);
-        }
-        if (!loginUserId.equals(userId)) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
-        }
-    }
 
 }
