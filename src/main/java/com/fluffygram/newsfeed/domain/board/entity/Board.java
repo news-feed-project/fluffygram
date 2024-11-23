@@ -2,6 +2,7 @@ package com.fluffygram.newsfeed.domain.board.entity;
 
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
+import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,11 +35,10 @@ public class Board extends BaseEntity {
     private String contents;//게시물 내용
 
     //게시글 생성
-    public Board(Long id, String title, String contents, User user) {
-        this.id = id;
+    public Board(User user, String title, String contents) {
+        this.user = user;
         this.title = title;
         this.contents = contents;
-        this.user = user;
     }
 
     public Board() {
@@ -50,6 +50,12 @@ public class Board extends BaseEntity {
     }
     //게시물 내용 수정
     public void updateContents(String contents) {
+
         this.contents = contents;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 }

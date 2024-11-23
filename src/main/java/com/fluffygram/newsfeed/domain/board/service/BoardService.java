@@ -21,17 +21,16 @@ public class BoardService {
     //--로그인 세션 사용하기
 
     //게시물 생성(저장)
-    public BoardResponseDto save(Long id, String title, String contents){
+    public BoardResponseDto save(Long userId, String title, String contents){
         //사용자 id로 사용자 조회
-        User findUserById = userRepository.findByIdOrElseThrow(id);
+        User findUserById = userRepository.findByIdOrElseThrow(userId);
 
-        Board board = new Board(id, title, contents, findUserById);
+        Board board = new Board(findUserById, title, contents);
+        board.setUser(findUserById);
 
         //게시물 저장
         Board saveBoard = boardRepository.save(board);
 
-//        --.toDto(saveBoard) 사용하기
-//        return new BoardResponseDto(saveBoard.getId(), saveBoard.getTitle(), saveBoard.getContents(), findUserById.getUserNickname(), saveBoard.getCreatedAt(), saveBoard.getModifiedAt());
         return BoardResponseDto.toDto(saveBoard);
     }
 
