@@ -54,7 +54,7 @@ public class CommentService {
         return CommentResponseDto.toDto(comment);
     }
 
-    public  void UpdateComments(Long id, String commentContents, Long loginUserId){
+    public CommentResponseDto UpdateComments(Long id, String commentContents, Long loginUserId){
         Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인 및 게시물 작성자 일치 여부 확인
@@ -63,6 +63,10 @@ public class CommentService {
         }
 
         comment.updateComment(commentContents);
+
+        commentRepository.save(comment);
+
+        return CommentResponseDto.toDto(comment);
     }
 
     public void deleteComment(Long id, Long loginUserId) {
