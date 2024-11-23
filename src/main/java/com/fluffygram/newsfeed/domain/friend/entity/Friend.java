@@ -2,10 +2,14 @@ package com.fluffygram.newsfeed.domain.friend.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import com.fluffygram.newsfeed.domain.user.entity.User;
+import com.fluffygram.newsfeed.global.exception.BusinessException;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
@@ -52,11 +56,17 @@ public class Friend extends BaseEntity {
 
     // 생성자를 통해 "친구요청상태" / "수락상태" 관리
     public void acceptFriendRequest() {
+        if ( this.friendStatus == FriendStatus.ACCEPTED ) {
+            throw new IllegalStateException("이미 친구입니다.");
+        }
         this.friendStatus = FriendStatus.ACCEPTED;
     }
 
     // 친구관계 삭제시. NOT_FRIEND
     public void rejectFriendRequest() {
+        if ( this.friendStatus == FriendStatus.NOT_FRIEND ) {
+            throw new IllegalStateException("이미 친구가 아닙니다.");
+        }
         this.friendStatus = FriendStatus.NOT_FRIEND;
     }
 

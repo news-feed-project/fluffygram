@@ -5,8 +5,6 @@ import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.service.FriendService;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.config.Const;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
-import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,7 @@ public class FriendController {
     private final FriendService friendService;
 
     /**
-     * 친구 요청 API
+     * 친구 요청 보내기 API
      *
      * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
      * @param requestDto 요청 Dto
@@ -37,11 +35,6 @@ public class FriendController {
 
         // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
-
-        // 로그인되지 않은 경우 예외 처리
-        if (user == null) {
-            throw new BusinessException(ExceptionType.NOT_LOGIN);
-        }
 
         Long loginUserId = user.getId();
 
@@ -65,11 +58,6 @@ public class FriendController {
         // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        // 로그인되지 않은 경우 예외 처리
-        if (user == null) {
-            throw new BusinessException(ExceptionType.NOT_LOGIN);
-        }
-
         Long loginUserId = user.getId();
 
         friendService.acceptFriendRequest(loginUserId, requestDto.getReceivedUserId());
@@ -91,11 +79,6 @@ public class FriendController {
 
         // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
-
-        // 로그인되지 않은 경우 예외 처리
-        if (user == null) {
-            throw new BusinessException(ExceptionType.NOT_LOGIN);
-        }
 
         Long loginUserId = user.getId();
 
@@ -119,11 +102,6 @@ public class FriendController {
         // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        // 로그인되지 않은 경우 예외 처리
-        if (user == null) {
-            throw new BusinessException(ExceptionType.NOT_LOGIN);
-        }
-
         Long loginUserId = user.getId();
 
         friendService.deleteFriend(loginUserId, requestDto.getReceivedUserId());
@@ -144,11 +122,6 @@ public class FriendController {
 
         // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
-
-        // 로그인되지 않은 경우 예외 처리
-        if (user == null) {
-            throw new BusinessException(ExceptionType.NOT_LOGIN);
-        }
 
         Long loginUserId = user.getId();
 

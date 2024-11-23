@@ -8,8 +8,10 @@ import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +24,10 @@ public class FriendService {
     private final UserRepository userRepository;
 
     /**
-     * 친구 요청 저장
+     * 친구 요청 보내기
      *
-     * @param loginUserId       요청을 보낸 사용자 ID
-     * @param receivedUserId   요청을 받은 사용자 ID
+     * @param loginUserId       요청을 보낼 사용자 ID
+     * @param receivedUserId   요청을 받을 사용자 ID
      *
      */
     public void sendFriendRequest(long loginUserId, long receivedUserId) {
@@ -38,7 +40,8 @@ public class FriendService {
         User receivedUser = userRepository.findByIdOrElseThrow(receivedUserId);
 
         // 중복 여부 확인
-        boolean isDuplicate = friendRepository.existsBySendUserAndReceivedUser(sendUser, receivedUser);
+        boolean isDuplicate = friendRepository.existsBySendUserAndReceivedUser(sendUser, receivedUser)
+                || friendRepository.existsBySendUserAndReceivedUser(receivedUser, sendUser);
 
         if (isDuplicate) {
             throw new BusinessException(ExceptionType.EXIST_USER);
@@ -46,10 +49,8 @@ public class FriendService {
 
 
         Friend friend = new Friend(sendUser, receivedUser, Friend.FriendStatus.REQUESTED);
-        Friend friend2 = new Friend(receivedUser, sendUser, Friend.FriendStatus.REQUESTED);
 
         friendRepository.save(friend);
-        friendRepository.save(friend2);
     }
 
     /**
@@ -66,11 +67,9 @@ public class FriendService {
             throw new BusinessException(ExceptionType.USER_NOT_MATCH);
         }
 
-        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
-        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
+        Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, receivedUserId);
 
         friend.acceptFriendRequest();
-        friend2.acceptFriendRequest();
     }
 
     /**
@@ -87,15 +86,13 @@ public class FriendService {
             throw new BusinessException(ExceptionType.USER_NOT_MATCH);
         }
 
-        Friend friend = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
-        Friend friend2 = friendRepository.findFriendBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
+        Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, receivedUserId);
 
         friend.rejectFriendRequest();
-        friend2.rejectFriendRequest();
     }
 
     /**
-     * 친구 삭제
+     * 친구 데이터베이스에서 삭제
      *
      * @param loginUserId       요청을 보낸 사용자 ID
      * @param receivedUserId   요청을 받은 사용자 ID
@@ -108,13 +105,16 @@ public class FriendService {
             throw new BusinessException(ExceptionType.USER_NOT_MATCH);
         }
 
-        Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(
-                loginUserId, receivedUserId);
-        Friend friend2 = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(
-                receivedUserId, loginUserId);
+        if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId) != null) {
+            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
+            friendRepository.delete(friend);
+        } else if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId) != null) {
+            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
+            friendRepository.delete(friend);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "데이터를 찾을수 없습니다.");
+        }
 
-        friendRepository.delete(friend);
-        friendRepository.delete(friend2);
     }
 
     /**
@@ -128,7 +128,12 @@ public class FriendService {
         List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(userId, Friend.FriendStatus.ACCEPTED);
 
         return friends.stream()
-                .map(friend -> new FriendResponseDto(friend.getReceivedUser())) // 친구의 ID만 반환
-                .collect(Collectors.toList());
+                .map(friend -> {
+                    User friendUser = friend.getSendUser().getId().equals(userId)
+                            ? friend.getReceivedUser() // sendUser 가 userId일 때는 receivedUser
+                            : friend.getSendUser(); // receivedUser 가 userId일 때는 sendUser
+                    return new FriendResponseDto(friendUser);  // FriendResponseDto 생성
+                })
+                .collect(Collectors.toList());  // 결과 리스트 반환
     }
 }
