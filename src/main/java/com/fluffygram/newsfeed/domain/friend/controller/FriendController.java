@@ -1,9 +1,10 @@
 package com.fluffygram.newsfeed.domain.friend.controller;
 
-import com.fluffygram.newsfeed.domain.base.Valid.AccessWrongValid;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendRequestDto;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.service.FriendService;
+import com.fluffygram.newsfeed.domain.user.entity.User;
+import com.fluffygram.newsfeed.global.config.Const;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,9 @@ import java.util.List;
 public class FriendController {
 
     private final FriendService friendService;
-    private final AccessWrongValid accessWrongValid;
 
     /**
-     * 친구 요청 API
+     * 친구 요청 보내기 API
      *
      * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
      * @param requestDto 요청 Dto
@@ -33,7 +33,10 @@ public class FriendController {
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
 
-        Long loginUserId = (Long) session.getAttribute("userId");
+        // 세션에서 로그인된 사용자 가져오기
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+
+        Long loginUserId = user.getId();
 
         friendService.sendFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -52,7 +55,10 @@ public class FriendController {
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
 
-        Long loginUserId = (Long) session.getAttribute("userId");
+        // 세션에서 로그인된 사용자 가져오기
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+
+        Long loginUserId = user.getId();
 
         friendService.acceptFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -71,7 +77,10 @@ public class FriendController {
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
 
-        Long loginUserId = (Long) session.getAttribute("userId");
+        // 세션에서 로그인된 사용자 가져오기
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+
+        Long loginUserId = user.getId();
 
         friendService.rejectFriendRequest(loginUserId, requestDto.getReceivedUserId());
 
@@ -90,7 +99,10 @@ public class FriendController {
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
 
-        Long loginUserId = (Long) session.getAttribute("userId");
+        // 세션에서 로그인된 사용자 가져오기
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
+
+        Long loginUserId = user.getId();
 
         friendService.deleteFriend(loginUserId, requestDto.getReceivedUserId());
 
@@ -101,21 +113,21 @@ public class FriendController {
      * 전체친구조회 API
      *
      * @param session    현재 세션에서 로그인한 사용자의 ID 가져옴
-     * @param userId 요청자의 Id
+     *
      * @return 친구의 Id를 List로 반환
      */
-    @GetMapping("/{userId}")
+    @GetMapping
     public ResponseEntity<List<FriendResponseDto>> findAllFriends(
-            HttpSession session,
-            @PathVariable Long userId) {
+            HttpSession session) {
 
-        Long loginUserId = (Long) session.getAttribute("userId");
+        // 세션에서 로그인된 사용자 가져오기
+        User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        accessWrongValid.validateFriendRequestByUserId(loginUserId, userId);
+        Long loginUserId = user.getId();
 
-        List<FriendResponseDto> friends = friendService.findAllFriends(userId);
+        List<FriendResponseDto> result = friendService.findAllFriends(loginUserId);
 
-        return new ResponseEntity<>(friends, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
 
