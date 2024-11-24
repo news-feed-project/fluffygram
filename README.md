@@ -54,7 +54,19 @@
 
 
 ## 📅 와이어 프레임
+<details>
+<summary>와이어 프레임</summary>
 
+![image](https://github.com/user-attachments/assets/70632c8e-55c6-4c0c-9501-abe9b8194a1d)
+![image](https://github.com/user-attachments/assets/e258d084-2ca2-46f8-886d-8bba94ae4c12)
+![image](https://github.com/user-attachments/assets/7b208f71-86e6-4ebc-b715-36fe5e82aad1)
+![image](https://github.com/user-attachments/assets/6891a9d1-5d89-458e-84af-55c9cfc7ea0f)
+![image](https://github.com/user-attachments/assets/fa1a7872-4416-4f0a-882b-50ace256d079)
+![image](https://github.com/user-attachments/assets/04812178-81a8-4331-bcfa-00d00a91d51d)
+
+
+
+</details>
 
 ## ⚙️ ERD
 <details>
