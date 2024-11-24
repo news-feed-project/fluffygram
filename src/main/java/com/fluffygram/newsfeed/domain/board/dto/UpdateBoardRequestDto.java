@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class UpdateBoardRequestDto {
 
-    @NotBlank
+
     private final String title;//게시물 제목
 
     private final String contents;//게시물 내용
