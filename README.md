@@ -81,37 +81,51 @@
 <summary>API 명세서</summary>
 <br/>
 
+
 ## user
 ![image](https://github.com/user-attachments/assets/77ea07e7-38fd-4484-a47e-fa4f497e5803)
 ![image](https://github.com/user-attachments/assets/95f57699-3c8d-4d7c-b9ba-7d5d4aabba21)
 
 
 
-## comment
 
+## comment
 ![image](https://github.com/user-attachments/assets/9b37ae68-7b7d-45f5-a0e0-e0f5d74d6093)
+
+
+
 
 
 ## boardlike
 ![image](https://github.com/user-attachments/assets/4280204d-b5ea-4e24-8343-46f415b9c752)
 
 
-## friend
 
+
+
+## friend
 ![image](https://github.com/user-attachments/assets/1dc8caa1-a5ec-4859-9d67-62f866ac5ea3)
 
 
-## board
 
+
+
+## board
 ![image](https://github.com/user-attachments/assets/ec9eea73-87ef-4c06-a1b6-0e24fbf9024c)
 
-## image_file
 
+
+
+
+## image_file
 ![image](https://github.com/user-attachments/assets/622e5b1e-6ac3-47f8-b642-f74ab63c4abb)
 
 
-## commentLike
 
+
+
+
+## commentLike
 ![image](https://github.com/user-attachments/assets/e22eaf84-6ee7-45d1-96af-d728447f2d40)
 
 
