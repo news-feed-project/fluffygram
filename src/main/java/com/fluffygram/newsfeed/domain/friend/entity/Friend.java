@@ -29,14 +29,13 @@ public class Friend extends BaseEntity {
     private User receivedUser;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "friend_status", columnDefinition = "ENUM('REQUESTED', 'ACCEPTED', 'NOT_FRIEND') DEFAULT 'NOT_FRIEND'")
+    @Column(name = "friend_status", columnDefinition = "ENUM('REQUESTED', 'ACCEPTED')")
     @NotNull
-    private FriendStatus friendStatus = FriendStatus.NOT_FRIEND;
+    private FriendStatus friendStatus;
 
     public enum FriendStatus {
         REQUESTED, // 요청중상태
-        ACCEPTED, // 친구상태
-        NOT_FRIEND // 친구아님상태
+        ACCEPTED // 친구상태
     }
 
     public Friend() { }
