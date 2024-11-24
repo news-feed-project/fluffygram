@@ -18,7 +18,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     Optional<Friend> findByReceivedUserIdAndSendUserId(long loginUserId, long receivedUserId);
 
     // sendUserId와 receivedUserId로 Friend 엔티티를 조회
-    Optional<Friend> findBySendUserIdAndReceivedUserId(Long loginUserId, long receivedUserId);
+    Optional<Friend> findBySendUserIdAndReceivedUserId(Long loginUserId, long deleteUserId);
 
     // sendUserId와 friendStatus로 Friend 리스트 조회
     List<Friend> findBySendUserIdAndFriendStatus(Long loginUserId, Friend.FriendStatus friendStatus);
@@ -31,15 +31,15 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
 
     // 친구수락 메서드. 로그인한 유저가 DB ReceivedUserId에 있어야 정상동작. 요청 받은사람이 수락가능.
-    default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long loginUserId, long receivedUserId) {
-        return findByReceivedUserIdAndSendUserId(loginUserId, receivedUserId)
+    default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long loginUserId, long sendUserId) {
+        return findByReceivedUserIdAndSendUserId(loginUserId, sendUserId)
                 .orElseThrow(() -> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
     }
 
     // sendUserId와 receivedUserId로 Friend 조회, 없으면 예외 발생
     default Friend findBySendUserIdAndReceivedUserIdOrThrow(
-            Long loginUserId, long receivedUserId) {
-        return findBySendUserIdAndReceivedUserId(loginUserId, receivedUserId)
+            Long loginUserId, long deleteUserId) {
+        return findBySendUserIdAndReceivedUserId(loginUserId, deleteUserId)
                 .orElseThrow( ()-> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
     }
 

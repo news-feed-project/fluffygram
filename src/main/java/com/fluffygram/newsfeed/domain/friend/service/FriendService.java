@@ -56,15 +56,15 @@ public class FriendService {
 
     // 친구 요청 수락
     @Transactional
-    public void acceptFriendRequest(long loginUserId, long receivedUserId) {
+    public void acceptFriendRequest(long loginUserId, long sendUserId) {
 
         // 로그인되어있는 ID와 수락받는 ID가 같을때 예외처리.
-        if (loginUserId == receivedUserId) {
+        if (loginUserId == sendUserId) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         // 친구수락은 요청받은 사람이 수락할수 있음.
-        Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, receivedUserId);
+        Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, sendUserId);
 
         // 친구요청상태 ACCEPT 로 변경.
         friend.acceptFriendRequest();
@@ -72,21 +72,21 @@ public class FriendService {
 
     // 친구 거절 및 친구 삭제
     @Transactional
-    public void deleteFriend(Long loginUserId, long receivedUserId) {
+    public void deleteFriend(Long loginUserId, long deleteUserId) {
 
         // 내가 나를 삭제할때 에러처리.
-        if (loginUserId == receivedUserId) {
+        if (loginUserId == deleteUserId) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
         //아이디 1번이 -> 3번 요청함
         //로그인은 3번이 하고있음 receivedUserId : 1번 얘를 삭제하려고 함
         //isPresent 있으면 true 없으면 false
-        if (friendRepository.findBySendUserIdAndReceivedUserId(loginUserId, receivedUserId).isPresent()) {
-            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
+        if (friendRepository.findBySendUserIdAndReceivedUserId(loginUserId, deleteUserId).isPresent()) {
+            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, deleteUserId);
             friendRepository.delete(friend);
 
-        } else if (friendRepository.findBySendUserIdAndReceivedUserId(receivedUserId, loginUserId).isPresent()) {
-            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
+        } else if (friendRepository.findBySendUserIdAndReceivedUserId(deleteUserId, loginUserId).isPresent()) {
+            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(deleteUserId, loginUserId);
             friendRepository.delete(friend);
         } else {
             throw new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND);
