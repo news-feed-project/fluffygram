@@ -34,13 +34,8 @@ public class CommentLikeController {
         //Session에서 "LOGIN_USER"를 Key로 가진 Value를 가져온다.
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        //요청 데이터 유효성 검증 url 댓글 id가 body에서 요청한 값이랑 다를 경우
-//        if (!commentId.equals(requestDto.getCommentId())) {
-//            throw new IllegalArgumentException("commentId가 일치하지 않습니다.");
-//        }
-
-        //댓글 id가 없을 경우
-        if (!commentId.equals(requestDto.getCommentId())) {
+        //요청 데이터 유효성 검증 url 댓글 id가 body에서 요청한 값이랑 다를 경우 ,댓글 id가 없을 경우
+        if (!commentId.equals(commentId)){
             throw new NotMatchByUserIdException(ExceptionType.COMMENT_NOT_FOUND);
         }
 
@@ -48,7 +43,7 @@ public class CommentLikeController {
                 commentLikeService.toggleLike(
                         user.getId(), //유저 확인
                         requestDto.getUserId(),
-                        requestDto.getCommentId()
+                        commentId
                 );
 
         return  new ResponseEntity<>(commentLikeResponseDto, HttpStatus.CREATED);

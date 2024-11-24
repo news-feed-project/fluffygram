@@ -7,7 +7,6 @@ import lombok.Getter;
 public class UpdateBoardRequestDto {
 
     private final String title;//게시물 제목
-
     private final String contents;//게시물 내용
 
     public UpdateBoardRequestDto(String title, String contents) {
