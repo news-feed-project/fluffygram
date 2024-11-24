@@ -8,7 +8,6 @@ import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-
 public interface BoardLikeRepository extends JpaRepository<BoardLike, Long> {
     //조회 - 좋아요id가 없을 경우 예외처리
     default BoardLike findBoardLikeByIdOrElseThrow(Long id) {

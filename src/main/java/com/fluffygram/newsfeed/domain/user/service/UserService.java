@@ -61,7 +61,7 @@ public class UserService {
     }
 
     public List<UserResponseDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).stream().map(UserResponseDto::ToDtoForMine).toList();
+        return userRepository.findAll(pageable).stream().map(UserResponseDto::ToDtoForAll).toList();
     }
 
     public UserResponseDto getUserById(Long id, Long loginUserId) {
