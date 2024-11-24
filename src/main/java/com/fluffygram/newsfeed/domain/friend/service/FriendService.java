@@ -41,7 +41,7 @@ public class FriendService {
         User sendUser = userRepository.findByIdOrElseThrow(loginUserId);
         User receivedUser = userRepository.findByIdOrElseThrow(receivedUserId);
 
-        // 탈퇴되어있는 유저에게는 친구요청을 보낼수없다.
+        // 탈퇴한 유저 여부 확인
         if(receivedUser.getUserStatus().equals(UserStatus.DELETE)){
             throw new WrongAccessException(ExceptionType.DELETED_USER);
         }
@@ -97,14 +97,13 @@ public class FriendService {
         if (loginUserId == receivedUserId) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
-        // 현재 사용자가 보낸 친구 요청이 있는지 확인.
-        // 그 데이터 삭제.
+        //아이디 1번이 -> 3번 요청함
+        //로그인은 3번이 하고있음 receivedUserId : 1번 얘를 삭제하려고 함
+        //isPresent 있으면 true 없으면 false
         if (friendRepository.findBySendUserIdAndReceivedUserId(loginUserId, receivedUserId).isPresent()) {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
             friendRepository.delete(friend);
 
-            // 상대방이 현재사용자에게 보낸 친구 요청이 있는지 확인.
-            // 그 데이터 삭제.
         } else if (friendRepository.findBySendUserIdAndReceivedUserId(receivedUserId, loginUserId).isPresent()) {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
             friendRepository.delete(friend);

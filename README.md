@@ -41,6 +41,50 @@
 <summary>API 명세서</summary>
 <br/>
 
+#### user
+
+
+|    기능    | method |URL|
+|:--------:|:------:|:---:|
+|  사용자 생성   | POST  |/users/signup|
+| 사용자 전체 조회 | GET  |/users|
+| 사용자 단건 조회 | GET  |/users/mypage/{Id}|
+|  다른 사용자 프로필 조회   | GET  |/users/others{Id}|
+|  사용자 정보 수정   | PATCH  |/users/{Id}|
+| 사용자 삭제 | DELETE  |/users/{Id}|
+|  로그인   | POST  |/users/login|
+|  로그아웃   | POST  |/users/logout|
+
+<details>
+<summary> 사용자 생성</summary>
+
+  
+|  기능  | method |URL|
+|:----:|:------:|:---:|
+| 사용자 생성 | POST  |/users/signup|
+
+#### Request Eelements
+|    파라미터    |   타입    | 필수 여부 |           설명           |
+|:----------:|:-------:|:-----:|:----------------------:|
+|   email    | String  |   Y   |         이메일          |
+|  password  | String  |   Y   |         비밀번호          |
+|  userNickname   | String  |   Y   |         유저 닉네임         |
+|  phoneNumber  | String  |   Y   |         전화번호          |
+|  profileImage   | String  |   N   |         사진첨부         |
+
+#### Respons Eelements
+| 파라미터  |   타입    | 필수 여부 |     설명 |
+|:-----:|:-------:|:-----:|:------:|
+| id | Integer |   Y   |         ID          |
+|   email    | String  |   Y   |         이메일          |
+|  userNickname  | String  |   Y   |         유저 닉네임          |
+| profileImage | String |   N   |   사진 첨부   |
+| create_at |  String   |   Y   | 일정 작성 일자 (datetime) |
+| modify_at |  String   |   Y   | 일정 최종 수정 일자 (datetime) |
+
+
+
+
 #### Schedule
 |    기능    | method |URL|
 |:--------:|:------:|:---:|
