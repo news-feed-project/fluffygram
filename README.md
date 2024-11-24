@@ -44,16 +44,209 @@
 #### user
 
 
-|    기능    | method |URL|
-|:--------:|:------:|:---:|
-|  사용자 생성   | POST  |/users/signup|
-| 사용자 전체 조회 | GET  |/users|
-| 사용자 단건 조회 | GET  |/users/mypage/{Id}|
-|  다른 사용자 프로필 조회   | GET  |/users/others{Id}|
-|  사용자 정보 수정   | PATCH  |/users/{Id}|
-| 사용자 삭제 | DELETE  |/users/{Id}|
-|  로그인   | POST  |/users/login|
-|  로그아웃   | POST  |/users/logout|
+<table>
+    <tr>
+      <th scope="col">기능</td>
+      <th scope="col">Method</td>
+      <th scope="col">URL</th>
+      <th scope="col">Request</td>
+      <th scope="col">Response</td>
+      <th scope="col">요쳥 변수</td>
+      <th scope="col">request</td>
+      <th scope="col">응답 변수</td>
+      <th scope="col">response</td>
+      <th scope="col">상태 코드</td>
+    </tr>
+    <tr>
+      <td>사용자 생성</td>
+      <td>POST </td>
+      <td>/users/signup</td>
+      <td></td>
+      <td></td>
+      <td>String email : 필수 0<br>
+        String password : 필수 0<br>
+       String userNicname : 필수 0<br>
+      String phoneNumber : 필수 0<br>
+      String profileImage : 필수 x</td>
+      <td>requestBody(JSON) :
+{
+      "email " : "abcde@gmail.com",<br>
+      "password" : "12345",<br>
+      "userNicname " : "닉네임",<br>
+     "phoneNumber " : "01012345678",<br>
+     "profileImage" : "fdkjf39"<br>
+ }</td>
+ 
+      <td>requestBody(JSON) :
+{<br>
+      "email " : "abcde@gmail.com",<br>
+      "password" : "12345",<br>
+      "userNicname " : "닉네임",<br>
+     "phoneNumber " : "01012345678",<br>
+     "profileImage" : "fdkjf39"<br>
+ }</td>
+      <td>Long id : 필수 0<br>
+String email : 필수 0<br>
+String userNicname : 필수 0<br>
+String phoneNumber : 필수 0<br>
+String profileImage : 필수 x<br>
+LocalDatetime createAt : 필수 0<br>
+LocalDatetime modifyAt : 필수 0"</td>
+      <td>
+        {
+      "id" : "1",<br>
+      "email " : "abcde@gmail.com",<br>
+      "userNicname " : "닉네임",<br>
+     "phoneNumber " : "01012345678",<br>
+     "profileImage" : "fdkjf39",<br>
+    "create_at" : "2024-11-19 18:00:00",<br>
+     "modify_at" : "2024-11-19 18:00:00"<br>
+ }
+      </td>
+      <td>
+        201: 생성 성공,<br> 
+400: 잘못된 값 입력
+      </td>
+    </tr>
+    <tr>
+      <td>사용자 전체 조회</td>
+      <td>GET</td>
+      <td>/users</td>
+      <td>Cookie :<br>
+JSESSIONID= ${sessionId}</td>
+<td></td>
+<td>없음</td>
+<td>없음</td>
+      <td>list:<br>
+Long id : 필수 0<br>
+String email : 필수 0<br>
+String userNicname : 필수 0<br>
+String phoneNumber : 필수 0<br>
+String profileImage : 필수 x<br>
+LocalDatetime createAt : 필수 0<br>
+LocalDatetime modifyAt : 필수 0</td>
+      <td>[
+{
+      "id" : "1",<br>
+      "email " : "abcde@gmail.com",<br>
+      "userNicname " : "닉네임",<br>
+     "phoneNumber " : "01012345678",<br>
+     "profileImage" : "fdkjf39",<br>
+    "create_at" : "2024-11-19 18:00:00",<br>
+     "modifyAt " : "2024-11-19 18:00:00"<br>
+ },<br>
+{<br>
+      "id" : "1",<br>
+      "email " : "efgh@gmail.com",<br>
+      "userNicname " : "닉네임2",<br>
+     "phoneNumber " : "01012349876",<br>
+     "profileImage" : "glwjfq",<br>
+    "create_at" : "2024-11-19 18:00:00",<br>
+     "modify_at" : "2024-11-19"<br>
+ }<br>
+]</td>
+<td>200 : 정상<br>
+400 : 잘못된 값 입력<br>
+401 : 권한 없음 (로그인 인증 안됨)<br>
+404 : 해당 데이터 없음</td>
+    </tr>
+    <tr>
+      <td>사용자 단건 조회</td> 
+      <td>GET</td>
+      <td>/users/mypage/{id}</td>
+      <td>Cookie :<br>
+      JESSIONID = ${sessionId}</td>
+      <td></td>
+      <td>Long id : 필수 0</td>
+      <td>PathVariable(param)<br>
+{<br>
+"id" : 1<br>
+}</td>
+      <td>Long id : 필수 0<br>
+String email : 필수 0<br>
+String userNicname : 필수 0<br>
+String phoneNumber : 필수 0<br>
+String profileImage : 필수 x<br>
+LocalDatetime createAt : 필수 0<br>
+LocalDatetime modifyAt : 필수 0</td>
+      <td>
+        {<br>
+      "id" : "1",<br>
+      "email " : "abcde@gmail.com",<br>
+      "userNicname " : "닉네임",<br>
+     "phoneNumber " : "01012345678",<br>
+     "profileImage" : "fdkjf39",<br>
+    "create_at" : "2024-11-19 18:00:00",<br>
+     "modify_at" : "2024-11-19 18:00:00"<br>
+ }
+      </td>
+      <td>
+        200 : 정상<br>
+400 : 잘못된 값 입력<br>
+401 : 권한 없음 (로그인 인증 안됨)<br>
+404 : 해당 데이터 없음<br>
+      </td>
+    </tr>
+    <tr>
+      <td>다른 사용자 프로필 조회</td>
+      <td>GET</td>
+      <td>/users/others/{id}</td>
+      <td>Cookie :<br>
+      JSESSIONID=${sessionId}</td>
+      <td></td>
+      <td>Long id : 필수 0</td>
+      <td>
+        PathVariable(param<br>
+{<br>
+"id" : 1<br>
+}
+      </td>
+      <td>
+      Long id : 필수 0<br>
+String userNicname : 필수 0<br>
+String profileImage : 필수 x<br>
+LocalDatetime createAt : 필수 0<br>
+LocalDatetime modifyAt : 필수 0<br>
+      </td>
+      <td>{<br>
+      "id" : "1",<br>
+      "userNicname " : "닉네임수정",<br>
+     "profileImage" : "fdkjf39",<br>
+    "create_at" : "2024-11-19 18:00:00",<br>
+     "modify_at" : "2024-11-19 18:00:00"<br>
+ }</td>
+      <td>
+        200 : 정상<br>
+400 : 잘못된 값 입력<br>
+404 : 해당 데이터 없음<br>
+      </td>
+    </tr>
+    <tr>
+      <td>사용자 삭제</td>
+      <td>Delete</td>
+      <td>/users/{id}</td>
+      <td>Cookie :<br>
+      JSESSIONID = ${sessionId}</td>
+      <td></td>
+      <td>Long id : 필수 0<br>
+String password : 필수 0</td>
+      
+      <td>PathVariable(param)<br>
+{<br>
+"id" : 1<br>
+},<br>
+requestBody(JSON) :<br>
+{<br>
+     "password" : "!a123456"<br>
+ }</td>
+ <td></td>
+ <td></td>
+ <td>204 : 내용없음<br>
+400 : 잘못된 값 입력<br>
+401 : 권한 없음 (로그인 인증 안됨)<br>
+404 : 해당 데이터 없음</td>
+    </tr>
+  </table>
 
 <details>
 <summary> 사용자 생성</summary>
