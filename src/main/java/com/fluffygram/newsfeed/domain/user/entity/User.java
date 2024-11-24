@@ -37,7 +37,7 @@ public class User extends BaseEntity {
     @Column(name = "user_status")
     private UserStatus userStatus;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_image")
     private Image profileImage;
 
@@ -56,10 +56,11 @@ public class User extends BaseEntity {
 
     public User updateUser(String password, String userNickname, String phoneNumber, Image profileImage) {
         // 비밀번호 업데이트
-        if(userNickname != null && !password.isEmpty()){
+        if(password != null && !password.isEmpty()){
             PasswordEncoder passwordEncoder = new PasswordEncoder();
             this.password = passwordEncoder.encode(password);
         }
+
 
         // 유저 닉네임 업데이트
         if(userNickname != null && !userNickname.isEmpty()){

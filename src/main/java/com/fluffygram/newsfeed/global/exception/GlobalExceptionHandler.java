@@ -33,8 +33,24 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ExceptionResponse> handleMethodIllegalState(IllegalStateException ex) {
+
+        // 유효성 검사 오류 메시지를 필드별로 수집
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", ex.getMessage());
+
+        // 에러 응답 생성
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), errors);
+
+        log.error("IllegalStateException] : {}", exceptionResponse.getErrors());
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
     // 비지니스 로직 예외처리
-    @ExceptionHandler({BusinessException.class, NotFountByIdException.class, NotMatchByUserIdException.class, BadRequestException.class, WrongAccessException.class})
+    @ExceptionHandler({BusinessException.class, NotFountByIdException.class, NotMatchByUserIdException.class, BadValueException.class, BadRequestException.class, WrongAccessException.class})
     public ResponseEntity<ExceptionResponse> handleBusinessException(BusinessException ex) {
         ExceptionType exceptionType = ex.getExceptionType();
 

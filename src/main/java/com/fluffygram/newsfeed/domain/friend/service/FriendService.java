@@ -5,13 +5,12 @@ import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,7 @@ public class FriendService {
     public void sendFriendRequest(long loginUserId, long receivedUserId) {
 
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         User sendUser = userRepository.findByIdOrElseThrow(loginUserId);
@@ -44,7 +43,7 @@ public class FriendService {
                 || friendRepository.existsBySendUserAndReceivedUser(receivedUser, sendUser);
 
         if (isDuplicate) {
-            throw new BusinessException(ExceptionType.EXIST_USER);
+            throw new NotMatchByUserIdException(ExceptionType.EXIST_USER);
         }
 
 
@@ -64,7 +63,7 @@ public class FriendService {
     public void acceptFriendRequest(long loginUserId, long receivedUserId) {
 
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, receivedUserId);
@@ -83,7 +82,7 @@ public class FriendService {
     public void rejectFriendRequest(Long loginUserId, long receivedUserId) {
 
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, receivedUserId);
@@ -102,8 +101,9 @@ public class FriendService {
     public void deleteFriend(Long loginUserId, long receivedUserId) {
 
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
+
 
         if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId) != null) {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
@@ -112,7 +112,7 @@ public class FriendService {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
             friendRepository.delete(friend);
         } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "데이터를 찾을수 없습니다.");
+            throw new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND);
         }
 
     }

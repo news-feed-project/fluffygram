@@ -3,15 +3,16 @@ package com.fluffygram.newsfeed.domain.like.repository;
 
 
 import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import java.util.Optional;
 
 
 public interface BoardLikeRepository extends JpaRepository<BoardLike, Long> {
     //조회 - 좋아요id가 없을 경우 예외처리
     default BoardLike findBoardLikeByIdOrElseThrow(Long id) {
-        return findById(id).orElseThrow(() -> new RuntimeException(id + "해당 좋아요가 존재하지 않습니다."));
+        return findById(id).orElseThrow(() -> new NotFountByIdException(ExceptionType.LIKE_NOT_FOUND));
     }
 
     @Query("SELECT bl FROM BoardLike bl "

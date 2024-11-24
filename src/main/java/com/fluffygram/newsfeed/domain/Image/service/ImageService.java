@@ -6,9 +6,9 @@ import com.fluffygram.newsfeed.domain.Image.entity.Image;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.tool.UploadImage;
-import com.fluffygram.newsfeed.global.config.Const;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -21,81 +21,93 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
 
-    public Image saveImage(MultipartFile profileImage, Long id) {
+    public Image saveImage(MultipartFile multipartFile, Long statusId, ImageStatus status) {
 
-        String DBfileName = UploadImage.uploadUserImage(Const.USER_IMAGE_STORAGE_PATH, profileImage);
+        String DBfileName = UploadImage.uploadUserImage(status.getPath(), multipartFile);
 
-        Image image = new Image(profileImage.getOriginalFilename(), DBfileName, Const.USER_IMAGE_STORAGE, id, ImageStatus.USER);
+        Image image = new Image(multipartFile.getOriginalFilename(), DBfileName, status.getPathUrl(), statusId, status);
 
         return imageRepository.save(image);
     }
 
-    public void saveImages(List<MultipartFile> profileImages, Long boardId) {
+    public void saveImages(List<MultipartFile> multipartFiles, Long statusId, ImageStatus status) {
+        if (multipartFiles == null || multipartFiles.isEmpty()) {
+            return;
+        }
 
-        for (MultipartFile profileImage : profileImages) {
-            String DBfileName = UploadImage.uploadUserImage(Const.BOARD_IMAGE_STORAGE_PATH, profileImage);
+        for (MultipartFile profileImage : multipartFiles) {
+            String DBfileName = UploadImage.uploadUserImage(status.getPath(), profileImage);
 
-            Image image = new Image(profileImage.getOriginalFilename(), DBfileName, Const.BOARD_IMAGE_STORAGE, boardId, ImageStatus.BOARD);
+            Image image = new Image(profileImage.getOriginalFilename(), DBfileName, status.getPathUrl(), statusId, ImageStatus.BOARD);
 
             imageRepository.save(image);
         }
-
     }
 
-    public String getImage(Long userId) {
-        User user = userRepository.findByIdOrElseThrow(userId);
+    public String getImage(Long statusId, ImageStatus status) {
+        if (status.equals(ImageStatus.USER)) {
+            User user = userRepository.findByIdOrElseThrow(statusId);
 
-        return imageRepository.getUserImage(user.getProfileImage().getDBFileName());
+            return imageRepository.getImage(user.getProfileImage().getDBFileName());
+        }
+        else {
+            return imageRepository.getImage("/defaultImage.jpg");
+        }
     }
 
     public List<Image> getImages(Long id, ImageStatus status) {
         return imageRepository.findAllByStatusIdAndStatus(id, status);
     }
 
-    public void deleteImage(Long id, ImageStatus status) {
-        if (status == ImageStatus.BOARD || status == ImageStatus.USER) {
-            imageRepository.deleteByStatusIdAndStatus(id, status);
-        } else if (status == ImageStatus.ORPHANAGE) {
-            imageRepository.deleteById(id);
-        }
-    }
-
-
-    public Image updateImage(MultipartFile multipartFile, Long id) {
+    public Image updateImage(MultipartFile multipartFile, Long statusId, ImageStatus status) {
         if (multipartFile == null){
             return null;
         }
 
-        String DBfileName = UploadImage.uploadUserImage(Const.USER_IMAGE_STORAGE_PATH, multipartFile);
+        String DBfileName = UploadImage.uploadUserImage(status.getPath(), multipartFile);
 
-        Image image = imageRepository.getImageByIdOrElseThrow(id);
+        Image image = imageRepository.getUserImageByIdOrElseThrow(statusId);
 
         image.updateFileName(multipartFile.getOriginalFilename());
         image.updateDBFileName(DBfileName);
-        image.updateFileUrl(Const.USER_IMAGE_STORAGE);
+        image.updateFileUrl(status.getPathUrl());
 
         return image;
     }
 
-    public List<Image> updateImages(List<MultipartFile> multipartFiles, Long id) {
+    @Transactional
+    public List<Image> updateImages(List<MultipartFile> multipartFiles, Long statusId, ImageStatus status) {
+        //업데이트 이미지가 없으면 기존 이미지 리턴
         if (multipartFiles == null){
-            return null;
+           return imageRepository.findAllByStatusIdAndStatus(statusId, status).stream().toList();
         }
 
-        List<Image> images = new ArrayList<>();
+
+
+        List<Image> updateImages = new ArrayList<>();
+
+        // 기존 게시물의 이미지들 정보 제거
+        imageRepository.deleteByStatusIdAndStatus(statusId, status);
 
         for (MultipartFile multipartFile : multipartFiles) {
-            String DBfileName = UploadImage.uploadUserImage(Const.USER_IMAGE_STORAGE_PATH, multipartFile);
+            String DBfileName = UploadImage.uploadUserImage(status.getPath(), multipartFile);
 
-            Image image = imageRepository.getImageByIdOrElseThrow(id);
+            Image image = new Image(multipartFile.getOriginalFilename(), DBfileName, status.getPathUrl(), statusId, status);
 
-            image.updateFileName(multipartFile.getOriginalFilename());
-            image.updateDBFileName(DBfileName);
-            image.updateFileUrl(Const.USER_IMAGE_STORAGE);
+            updateImages.add(image);
 
-            images.add(image);
+            imageRepository.save(image);
         }
 
-        return images;
+        return updateImages;
+    }
+
+    @Transactional
+    public void deleteImage(Long id, ImageStatus status) {
+        if (status != ImageStatus.ORPHANAGE) {
+            imageRepository.deleteByStatusIdAndStatus(id, status);
+        } else{
+            imageRepository.deleteById(id);
+        }
     }
 }

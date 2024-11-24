@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
@@ -29,8 +28,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             ExceptionType exceptionType = ex.getExceptionType();
 
             String errorMsg =
-                    "datetime :" + LocalDateTime.now() +
-                    ",\n" +
                     "httpStatus :" + exceptionType.getStatus().toString() +
                     ",\n" +
                     "error :" + exceptionType.getMessage();
