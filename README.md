@@ -82,6 +82,9 @@
 <br/>
 
 
+![image](https://github.com/user-attachments/assets/ad6ed912-cf7c-4429-a101-a5db52d38184)
+
+
 
 정가현	시작 전	POST	회원가입	/api/users/signup			{
 ”email” : “aaaa@gmail.com”,
