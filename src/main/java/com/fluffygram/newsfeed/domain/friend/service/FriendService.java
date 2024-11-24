@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.friend.service;
 
+import com.fluffygram.newsfeed.domain.base.enums.UserStatus;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
@@ -8,6 +9,7 @@ import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
 import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
+import com.fluffygram.newsfeed.global.exception.WrongAccessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,11 @@ public class FriendService {
 
         User sendUser = userRepository.findByIdOrElseThrow(loginUserId);
         User receivedUser = userRepository.findByIdOrElseThrow(receivedUserId);
+
+        // 탈퇴되어있는 유저에게는 친구요청을 보낼수없다.
+        if(receivedUser.getUserStatus().equals(UserStatus.DELETE)){
+            throw new WrongAccessException(ExceptionType.DELETED_USER);
+        }
 
         // 중복 여부 확인
         // ID : 1 -> ID : 2  신청한 후 ID : 2 -> ID : 1 도 신청이 되는 현상 발견 후, 넣은 로직.
@@ -77,27 +84,6 @@ public class FriendService {
     }
 
     /**
-     * 친구 요청 거절
-     *
-     * @param loginUserId       요청을 보낸 사용자 ID
-     * @param receivedUserId   요청을 받은 사용자 ID
-     *
-     */
-    @Transactional
-    public void rejectFriendRequest(Long loginUserId, long receivedUserId) {
-
-        // 로그인되어있는 유저ID와 거절하는 유저ID가 같을때 예외처리.
-        if (loginUserId == receivedUserId) {
-            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
-        }
-
-        Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, receivedUserId);
-
-        // 친구요청상태 NOT_FRIEND 로 변경.
-        friend.rejectFriendRequest();
-    }
-
-    /**
      * 친구 데이터베이스에서 삭제
      *
      * @param loginUserId       요청을 보낸 사용자 ID
@@ -113,13 +99,13 @@ public class FriendService {
         }
         // 현재 사용자가 보낸 친구 요청이 있는지 확인.
         // 그 데이터 삭제.
-        if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId) != null) {
+        if (friendRepository.findBySendUserIdAndReceivedUserId(loginUserId, receivedUserId).isPresent()) {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
             friendRepository.delete(friend);
 
             // 상대방이 현재사용자에게 보낸 친구 요청이 있는지 확인.
             // 그 데이터 삭제.
-        } else if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId) != null) {
+        } else if (friendRepository.findBySendUserIdAndReceivedUserId(receivedUserId, loginUserId).isPresent()) {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
             friendRepository.delete(friend);
         } else {
