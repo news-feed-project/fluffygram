@@ -11,7 +11,7 @@
 - `Java Development Kit : openjdk version '17.0.2'`
 - `Framework : springframework.boot version '3.3.5', Spring Data JPA`
 - `Database : MySQL version '8.0.40'`
-- `tool : figma, `
+- `tool : Figma, ERD Cloud, Slack, Github & git
 
 ## 🪧 커밋 컨벤션
 🎉 Begin: 프로젝트 시작 <br>
@@ -378,5 +378,11 @@ requestBody(JSON) :<br>
 
 </details>
 
+
+## 🌟 실행 화면
+<details>
+<summary> 🙋 회원가입</summary>
+
+</details>
 
 
