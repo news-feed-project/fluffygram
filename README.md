@@ -41,6 +41,17 @@
 <summary>API 명세서</summary>
 <br/>
 
+#### user
+기능	method	URL
+사용자 생성	POST	/users/signup
+사용자 전체 조회	GET	/users
+사용자 단건 조회	GET	/users/mypage/{Id}
+다른 사용자 프로필 조회	GET	/users/others/{Id}
+사용자 정보 수정	PATCH	/users/{Id}
+사용자 삭제	"DELETE	"	/users/{Id}
+로그인	POST	/users/login
+로그아웃	POST	/users/logout
+
 #### Schedule
 |    기능    | method |URL|
 |:--------:|:------:|:---:|
