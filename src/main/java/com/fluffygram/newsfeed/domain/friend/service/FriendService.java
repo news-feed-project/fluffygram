@@ -116,7 +116,7 @@ public class FriendService {
     /**
      * 전체친구조회
      *
-     * @param userId       요청을 보낸 사용자 ID
+     * @param loginUserId       요청을 보낸 사용자 ID
      * @return List<FriendResponseDto>
      */
     public List<FriendResponseDto> findAllFriends(Long loginUserId) {
