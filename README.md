@@ -107,7 +107,7 @@
        String userNicname : 필수 0<br>
       String phoneNumber : 필수 0<br>
       String profileImage : 필수 x</td>
-      <td>requestBody(JSON) :
+      <td>form-data :
 {
       "email " : "abcde@gmail.com",<br>
       "password" : "12345",<br>
@@ -163,7 +163,9 @@ String userNicname : 필수 0<br>
 String phoneNumber : 필수 0<br>
 String profileImage : 필수 x<br>
 LocalDatetime createAt : 필수 0<br>
-LocalDatetime modifyAt : 필수 0</td>
+LocalDatetime modifyAt : 필수 0
+String status : 필수 0<br>
+      </td>
       <td>[
 {
       "id" : "1",<br>
@@ -173,6 +175,7 @@ LocalDatetime modifyAt : 필수 0</td>
      "profileImage" : "fdkjf39",<br>
     "create_at" : "2024-11-19 18:00:00",<br>
      "modifyAt " : "2024-11-19 18:00:00"<br>
+      "status" : REGISTER<br>
  },<br>
 {<br>
       "id" : "1",<br>
@@ -182,17 +185,17 @@ LocalDatetime modifyAt : 필수 0</td>
      "profileImage" : "glwjfq",<br>
     "create_at" : "2024-11-19 18:00:00",<br>
      "modify_at" : "2024-11-19"<br>
+     "status" : DELETE<br>
  }<br>
 ]</td>
 <td>200 : 정상<br>
-400 : 잘못된 값 입력<br>
 401 : 권한 없음 (로그인 인증 안됨)<br>
 404 : 해당 데이터 없음</td>
     </tr>
     <tr>
       <td>사용자 단건 조회</td> 
       <td>GET</td>
-      <td>/users/mypage/{id}</td>
+      <td>/users/{id}</td>
       <td>Cookie :<br>
       JESSIONID = ${sessionId}</td>
       <td></td>
@@ -207,56 +210,78 @@ String userNicname : 필수 0<br>
 String phoneNumber : 필수 0<br>
 String profileImage : 필수 x<br>
 LocalDatetime createAt : 필수 0<br>
-LocalDatetime modifyAt : 필수 0</td>
+LocalDatetime modifyAt : 필수 0
+String status : 필수 0<br></td>
       <td>
         {<br>
       "id" : "1",<br>
       "email " : "abcde@gmail.com",<br>
       "userNicname " : "닉네임",<br>
-     "phoneNumber " : "01012345678",<br>
-     "profileImage" : "fdkjf39",<br>
+     "phoneNumber " : "01023120202",<br>
+     "profileImage" : "base64로 인코딩된 문자열",<br>
     "create_at" : "2024-11-19 18:00:00",<br>
      "modify_at" : "2024-11-19 18:00:00"<br>
+      "status" : OTHER<br>
  }
       </td>
       <td>
         200 : 정상<br>
-400 : 잘못된 값 입력<br>
+        400 : 잘못된 값 입력<br>
 401 : 권한 없음 (로그인 인증 안됨)<br>
 404 : 해당 데이터 없음<br>
       </td>
     </tr>
     <tr>
-      <td>다른 사용자 프로필 조회</td>
-      <td>GET</td>
-      <td>/users/others/{id}</td>
+      <td>사용자 정보 수정</td>
+      <td>PATCH</td>
+      <td>/users/{id}</td>
       <td>Cookie :<br>
       JSESSIONID=${sessionId}</td>
       <td></td>
-      <td>Long id : 필수 0</td>
+      <td>Long id : 필수 0<br>
+String presentPassword : 필수 0<br>
+String changePassword : 필수 x<br>
+String userNicname : 필수 x<br>
+String phoneNumber : 필수 x<br>
+MultipartFile profileImage : 필수 x</td>
       <td>
-        PathVariable(param<br>
+PathVariable(param)<br>
 {<br>
 "id" : 1<br>
-}
+},<br>
+form-data :<br>
+{<br>
+      "presentPassword" : "!a123456"<br>
+      "changePassword" : "!a12345678",<br>
+      "userNicname " : "닉네임수정",<br>
+     "phoneNumber " : "01012349876",<br>
+     "profileImage" : image.jpg<br>
+ }<br>
       </td>
       <td>
-      Long id : 필수 0<br>
+     Long id : 필수 0<br>
+String email : 필수 0<br>
 String userNicname : 필수 0<br>
+String phoneNumber : 필수 0<br>
 String profileImage : 필수 x<br>
 LocalDatetime createAt : 필수 0<br>
 LocalDatetime modifyAt : 필수 0<br>
+String status : 필수 0<br>
       </td>
-      <td>{<br>
+      <td>{
       "id" : "1",<br>
+      "email " : "abcde@gmail.com",<br>
       "userNicname " : "닉네임수정",<br>
+     "phoneNumber " : "01012349876",<br>
      "profileImage" : "fdkjf39",<br>
-    "create_at" : "2024-11-19 18:00:00",<br>
-     "modify_at" : "2024-11-19 18:00:00"<br>
+    "createAt" : "2024-11-19 15:50:24",<br>
+    "modifyAt" : "2024-11-19 15:50:24",<br>
+    "status" : MINE<br>
  }</td>
       <td>
         200 : 정상<br>
 400 : 잘못된 값 입력<br>
+401 : 권한 없음(로그인 인증 안)
 404 : 해당 데이터 없음<br>
       </td>
     </tr>
@@ -269,7 +294,6 @@ LocalDatetime modifyAt : 필수 0<br>
       <td></td>
       <td>Long id : 필수 0<br>
 String password : 필수 0</td>
-      
       <td>PathVariable(param)<br>
 {<br>
 "id" : 1<br>
@@ -278,12 +302,52 @@ requestBody(JSON) :<br>
 {<br>
      "password" : "!a123456"<br>
  }</td>
- <td></td>
- <td></td>
+ <td>없음</td>
+ <td>없음</td>
  <td>204 : 내용없음<br>
 400 : 잘못된 값 입력<br>
 401 : 권한 없음 (로그인 인증 안됨)<br>
 404 : 해당 데이터 없음</td>
+    </tr>
+    <tr>
+      <td>로그인</td>
+      <td>POST</td>
+      <td>/users/login</td>
+      <td></td>
+      <td>Set-Cookie :<br> 
+JSESSIONID= ${ssessionId}<br>
+      </td>
+      <td>String email : 필수 0<br>
+String password : 필수 0<br>
+      </td>
+      <td>
+        requestBody(JSON) :<br>
+{<br>
+      "email " : "abcde@gmail.com",<br>
+      "password" : "!a123456"<br>
+ }<br>
+      </td>
+        <td>없음</td>
+        <td>없음</td>
+        <td>
+          201: 생성 성공,<br>
+400 : 잘못된 값 입력,<br>
+404 : 해당 데이터 없음<br>
+        </td>
+    </tr>
+    <tr>
+      <td>로그아웃</td>
+      <td>POST</td>
+      <td>/users/logout</td>
+      <td>Cookie :<br> 
+JSESSIONID= ${sessionId}<br>
+      </td>
+      <td></td>
+      <td>없음</td>
+      <td>없음</td>
+      <td>없음</td>
+      <td>없음</td>
+      <td>200 : 정상</td>
     </tr>
   </table>
 
