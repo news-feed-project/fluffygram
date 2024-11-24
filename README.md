@@ -81,28 +81,41 @@
 <summary>API 명세서</summary>
 <br/>
 
-
+## user
 ![image](https://github.com/user-attachments/assets/ad6ed912-cf7c-4429-a101-a5db52d38184)
 
+## comment
+
+![image](https://github.com/user-attachments/assets/a94d0db1-0c84-4fdd-a05e-20be1e663774)
+
+## boardlike
+![image](https://github.com/user-attachments/assets/4280204d-b5ea-4e24-8343-46f415b9c752)
 
 
-정가현	시작 전	POST	회원가입	/api/users/signup			{
-”email” : “aaaa@gmail.com”,
-”password” : “Password123!”,
-”nickname” : “닉네임”
-}	{
-”email”:”aaaa@gmail.com”,
-”nickname”:”닉네임”
-}	201 Created
-400 Bad Request
-정가현	시작 전	POST	로그인	/api/users/login		Set-Cookie :
-JSESSIONID= ${ssessionId}	{
-”email” : “aaaa@gmail.com”,
-”password” : “Password123!”
-}		200 OK
-400 Bad Request
-401 Unauthorized
-정가현	시작 전	POST	로그아웃	/api/users/logout	Cookie :
+## friend
+
+![image](https://github.com/user-attachments/assets/1dc8caa1-a5ec-4859-9d67-62f866ac5ea3)
+
+
+## board
+
+![image](https://github.com/user-attachments/assets/ec9eea73-87ef-4c06-a1b6-0e24fbf9024c)
+
+## image_file
+
+![image](https://github.com/user-attachments/assets/622e5b1e-6ac3-47f8-b642-f74ab63c4abb)
+
+
+## commentLike
+
+![image](https://github.com/user-attachments/assets/e22eaf84-6ee7-45d1-96af-d728447f2d40)
+
+
+
+
+
+
+	POST	로그아웃	/api/users/logout	Cookie :
 JSESSIONID= ${sessionId}				200 OK
 
 정가현	시작 전	GET	유저 조회	/api/users/{userId}	Cookie :
