@@ -43,7 +43,6 @@ public class BoardController {
         return  new ResponseEntity<>(boardResponseDto, HttpStatus.CREATED);
     }
 
-    //-- contents 제외한 dto 로 변경
     //게시물 전체 List 조회
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> findAllBoard(@PageableDefault() Pageable pageable,
