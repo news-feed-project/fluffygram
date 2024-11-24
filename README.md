@@ -81,6 +81,144 @@
 <summary>API 명세서</summary>
 <br/>
 
+
+
+정가현	시작 전	POST	회원가입	/api/users/signup			{
+”email” : “aaaa@gmail.com”,
+”password” : “Password123!”,
+”nickname” : “닉네임”
+}	{
+”email”:”aaaa@gmail.com”,
+”nickname”:”닉네임”
+}	201 Created
+400 Bad Request
+정가현	시작 전	POST	로그인	/api/users/login		Set-Cookie :
+JSESSIONID= ${ssessionId}	{
+”email” : “aaaa@gmail.com”,
+”password” : “Password123!”
+}		200 OK
+400 Bad Request
+401 Unauthorized
+정가현	시작 전	POST	로그아웃	/api/users/logout	Cookie :
+JSESSIONID= ${sessionId}				200 OK
+
+정가현	시작 전	GET	유저 조회	/api/users/{userId}	Cookie :
+JSESSIONID= ${sessionId}			{
+”nickname” : “닉네임”,
+”userImage” : “http://url”,
+”selfComment” : “자기소개내용”,
+”postCount” : “10”,
+”friendCount” : “10”
+}	200 OK
+404 Not Found
+정가현	시작 전	PATCH	유저 수정	/api/users/{userId}	Cookie :
+JSESSIONID= ${sessionId}		{
+”nickname” : “닉네임”,
+”userImage” : “http://url”,
+”selfComment” : “String(30)”,
+”oldPassword” : “Password123!”,
+”newPassword” : “NewPassword2!”
+}	{
+”nickname” : “닉네임”,
+”userImage” : “http://url”,
+”selfComment” : “자기소개내용”,
+”postCount” : “10,
+”friendCount” : “10”
+}	200 OK
+404 Not Found
+정가현	시작 전	DELETE	유저 삭제	/api/users/withdraw	Cookie :
+JSESSIONID= ${sessionId}		{
+”password” : “Password123!”
+}		204 No Content
+400 Bad Request
+김태훈	완료	POST	게시글 작성	/api/boards	Cookie :
+JSESSIONID= ${sessionId}		{
+”postImage” : “http://url”,
+”postBody” : “String(255)”
+}	{
+”id” : “1”,
+”postImage” : “http://url”,
+”postBody” : “내용”,
+”createdAt” : “datetime”
+}	201 Created
+김태훈	완료	GET	게시글 조회	/api/boards?page=0&sort=createdAt	Cookie :
+JSESSIONID= ${sessionId}			{
+”boards” : [
+{
+”id” : “1”,
+”userId” : “1”,
+”postImage” : “http://url”,
+”postBody” : “내용”,
+”createdAt” : “datetime”
+
+},
+{
+”id” : “2”,
+”userId” : “2”,
+”postImage” : “http://url”,
+”postBody” : “내용”,
+”createdAt” : “datetime”
+
+}
+…
+]
+}	200 OK
+김태훈	완료	PATCH	게시글 수정	/api/boards/{board_id}	Cookie :
+JSESSIONID= ${sessionId}		{
+”postImage” : “String(255)”,
+”postBody” : “String(255)”
+}	{
+”id” : “1”,
+”postImage” : “http://url”,
+”postBody” : “수정된 내용”,
+”createdAt” : “datetime”
+}	200 OK
+400 Bad Request
+401 Unauthorized
+404 Not Found
+김태훈	완료	DELETE	게시글 삭제	/api/boards/{board_id}	Cookie :
+JSESSIONID= ${sessionId}				204 No Content
+401 Unauthorized
+404 Not Found
+정가현	시작 전	POST	게시글 좋아요 반응	/api/boards/{board_id}/like	Cookie :
+JSESSIONID= ${sessionId}				200 OK
+400 Bad Request
+404 Not Found
+정가현	시작 전	DELETE	게시글 좋아요 삭제	/api/boards/{board_id}/like	Cookie :
+JSESSIONID= ${sessionId}				200 OK
+400 Bad Request
+404 Not Found
+정선우	시작 전	GET	친구 목록 조회	/api/friends/{user_id}
+
+user_id : 조회하고자 하는 유저 아이디	Cookie :
+JSESSIONID= ${sessionId}
+
+로그인된 사용자만 접근 가능
+
+user_id와 관계 설정을 위해 사용됨			[
+{
+”userId”: 12
+"userName": "홍길동",
+"userImage": "http://url",
+"friendStatus": "NO_RELATION",
+"representFriendName": "김순삼",
+"relationFriendCount": 3
+},
+{
+”userId”: 11
+"userName": "박길동",
+"userImage": "http://url",
+"friendStatus": "RELATION",
+"representFriend": "박동구",
+"relationFriendCount": 2
+}
+]
+	200 OK
+404 Not Found
+
+
+
+
 ### user
 
 <table>
