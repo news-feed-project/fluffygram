@@ -34,19 +34,19 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
                 .orElseThrow( ()-> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
     }
 
-    default List<Friend> findBySendUserAndFriendStatusOrThrow(Long userId, Friend.FriendStatus friendStatus) {
+    default List<Friend> findBySendUserAndFriendStatusOrThrow(Long loginUserId, Friend.FriendStatus friendStatus) {
 
         // 결과를 담을 리스트
         List<Friend> friends = new ArrayList<>();
 
         // sendUser로 찾은 친구들
-        List<Friend> sendUserFriends = findBySendUserIdAndFriendStatus(userId, friendStatus);
+        List<Friend> sendUserFriends = findBySendUserIdAndFriendStatus(loginUserId, friendStatus);
         if (sendUserFriends != null && !sendUserFriends.isEmpty()) {
             friends.addAll(sendUserFriends);  // sendUser 조건에 맞는 친구들 추가
         }
 
         // receivedUser로 찾은 친구들
-        List<Friend> receivedUserFriends = findByReceivedUserIdAndFriendStatus(userId, friendStatus);
+        List<Friend> receivedUserFriends = findByReceivedUserIdAndFriendStatus(loginUserId, friendStatus);
         if (receivedUserFriends != null && !receivedUserFriends.isEmpty()) {
             friends.addAll(receivedUserFriends);  // receivedUser 조건에 맞는 친구들 추가
         }

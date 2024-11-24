@@ -119,15 +119,15 @@ public class FriendService {
      * @param userId       요청을 보낸 사용자 ID
      * @return List<FriendResponseDto>
      */
-    public List<FriendResponseDto> findAllFriends(Long userId) {
+    public List<FriendResponseDto> findAllFriends(Long loginUserId) {
 
         // userId가 보낸 친구 요청 중 ACCEPTED 상태인 친구 목록 조회
-        List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(userId, Friend.FriendStatus.ACCEPTED);
+        List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(loginUserId, Friend.FriendStatus.ACCEPTED);
 
         return friends.stream()
                 .map(friend -> {
                     // 친구 요청의 상대방 정보를 userId 기준으로 가져옴
-                    User friendUser = friend.getSendUser().getId().equals(userId)
+                    User friendUser = friend.getSendUser().getId().equals(loginUserId)
                             ? friend.getReceivedUser() // userId가 보낸 경우 상대는 receivedUser
                             : friend.getSendUser(); // userId가 받은 경우 상대는 sendUser
                     return new FriendResponseDto(friendUser);  // FriendResponseDto 객체 생성
