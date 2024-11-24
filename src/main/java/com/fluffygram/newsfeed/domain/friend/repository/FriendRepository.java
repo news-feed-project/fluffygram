@@ -44,7 +44,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     }
 
     // sendUser와 receivedUser 기준으로 friendStatus에 해당하는 Friend 리스트를 조회, 없으면 빈 리스트 반환
-    default List<Friend> findBySendUserAndFriendStatusOrThrow(Long loginUserId, Friend.FriendStatus friendStatus) {
+    default List<Friend> findFriendsByUserAndStatus(Long loginUserId, Friend.FriendStatus friendStatus) {
 
         // 결과를 담을 리스트
         List<Friend> friends = new ArrayList<>();

@@ -109,7 +109,7 @@ public class FriendService {
     public List<FriendResponseDto> findAllFriends(Long loginUserId) {
 
         // userId가 보낸 친구 요청 중 ACCEPTED 상태인 친구 목록 조회
-        List<Friend> friends = friendRepository.findBySendUserAndFriendStatusOrThrow(loginUserId, Friend.FriendStatus.ACCEPTED);
+        List<Friend> friends = friendRepository.findFriendsByUserAndStatus(loginUserId, Friend.FriendStatus.ACCEPTED);
 
         return friends.stream()
                 .map(friend -> {
