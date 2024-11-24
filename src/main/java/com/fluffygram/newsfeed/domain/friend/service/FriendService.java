@@ -70,13 +70,7 @@ public class FriendService {
         friend.acceptFriendRequest();
     }
 
-    /**
-     * 친구 데이터베이스에서 삭제
-     *
-     * @param loginUserId       요청을 보낸 사용자 ID
-     * @param receivedUserId   요청을 받은 사용자 ID
-     *
-     */
+    // 친구 거절 및 친구 삭제
     @Transactional
     public void deleteFriend(Long loginUserId, long receivedUserId) {
 
@@ -100,12 +94,7 @@ public class FriendService {
 
     }
 
-    /**
-     * 전체친구조회
-     *
-     * @param loginUserId       요청을 보낸 사용자 ID
-     * @return List<FriendResponseDto>
-     */
+    // 전체친구조회
     public List<FriendResponseDto> findAllFriends(Long loginUserId) {
 
         // userId가 보낸 친구 요청 중 ACCEPTED 상태인 친구 목록 조회
