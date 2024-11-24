@@ -5,6 +5,8 @@ import com.fluffygram.newsfeed.domain.like.dto.CommentLikeResponseDto;
 import com.fluffygram.newsfeed.domain.like.service.CommentLikeService;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.config.Const;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +35,13 @@ public class CommentLikeController {
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
         //요청 데이터 유효성 검증 url 댓글 id가 body에서 요청한 값이랑 다를 경우
+//        if (!commentId.equals(requestDto.getCommentId())) {
+//            throw new IllegalArgumentException("commentId가 일치하지 않습니다.");
+//        }
+
+        //댓글 id가 없을 경우
         if (!commentId.equals(requestDto.getCommentId())) {
-            throw new IllegalArgumentException("commentId가 일치하지 않습니다.");
+            throw new NotMatchByUserIdException(ExceptionType.COMMENT_NOT_FOUND);
         }
 
         CommentLikeResponseDto commentLikeResponseDto =
