@@ -1,15 +1,15 @@
 package com.fluffygram.newsfeed.domain.like.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
 public class BoardLikeRequestDto {
 
-    @NotBlank
+    @NotNull
     private final Long userId; //사용자 id
 
-    @NotBlank
+    @NotNull
     private final Long boardId; //게시물 id
 
     //좋아요를 한 사용자id와 게시글 id 전달받기

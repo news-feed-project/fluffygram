@@ -13,7 +13,7 @@ import com.fluffygram.newsfeed.domain.comment.entity.Comment;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     default Comment findCommentsByIdOrElseThrow(long id) {
-        return findById(id).orElseThrow(() -> new NotFountByIdException(ExceptionType.USER_NOT_FOUND));
+        return findById(id).orElseThrow(() -> new NotFountByIdException(ExceptionType.COMMENT_NOT_FOUND));
     }
 
     Page<Comment> findCommentByBoardIdOrderByCreatedAtDesc(Pageable pageable, Long boardId);

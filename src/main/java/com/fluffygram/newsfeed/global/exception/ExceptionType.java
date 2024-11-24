@@ -13,6 +13,7 @@ public enum ExceptionType {
     USER_NOT_MATCH(HttpStatus.BAD_REQUEST, "잘못된 유저의 정보에 접근하고 있습니다."),
     FILE_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 파일을 찾을 수 없습니다."),
     BOARD_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 게시물을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 댓글을 찾을 수 없습니다."),
     BAD_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호는 영문자, 숫자, 특수문자를 포함하며 8자 이상이어야 합니다."),
     NOT_LOGIN(HttpStatus.UNAUTHORIZED, "로그인을 해주세요."),
     ALREADY_LOGIN(HttpStatus.UNAUTHORIZED, "이미 로그인한 사용자입니다."),
