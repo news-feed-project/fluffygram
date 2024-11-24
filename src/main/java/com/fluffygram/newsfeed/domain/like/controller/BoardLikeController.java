@@ -5,8 +5,11 @@ import com.fluffygram.newsfeed.domain.like.dto.BoardLikeResponseDto;
 import com.fluffygram.newsfeed.domain.like.service.BoardLikeService;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.config.Const;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +28,7 @@ public class BoardLikeController {
 
     //게시글 좋아요 토글(활성화, 비활성화)
     @PostMapping
-    public ResponseEntity<BoardLikeResponseDto> toggleLike(@PathVariable Long boardId, @RequestBody BoardLikeRequestDto requestDto, HttpServletRequest request){
+    public ResponseEntity<BoardLikeResponseDto> toggleLike(@PathVariable Long boardId, @Valid @RequestBody BoardLikeRequestDto requestDto, HttpServletRequest request){
         //로그인 된 id 가져오기
         //session이 있으면 가져오고 없으면 null return
         HttpSession session = request.getSession(false);
@@ -34,7 +37,7 @@ public class BoardLikeController {
 
         //요청 데이터 유효성 검증 url 게시물 id가 body에서 요청한 값이랑 다를 경우
         if (!boardId.equals(requestDto.getBoardId())) {
-            throw new IllegalArgumentException("boardId가 일치하지 않습니다.");
+            throw new NotMatchByUserIdException(ExceptionType.BOARD_NOT_FOUND);
         }
 
         BoardLikeResponseDto boardLikeResponseDto =

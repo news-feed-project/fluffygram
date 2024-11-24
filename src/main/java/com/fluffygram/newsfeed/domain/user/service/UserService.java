@@ -50,7 +50,7 @@ public class UserService {
         }
 
         // 이미지 저장
-        Image image = imageService.saveImage(profileImage, savedUser.getId());
+        Image image = imageService.saveImage(profileImage, savedUser.getId(), ImageStatus.USER);
 
         // 유저의 이미지 이름을 고유한 이름으로 업데이트
         user.updateProfileImage(image);
@@ -61,7 +61,7 @@ public class UserService {
     }
 
     public List<UserResponseDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).stream().map(UserResponseDto::ToDtoForMine).toList();
+        return userRepository.findAll(pageable).stream().map(UserResponseDto::ToDtoForAll).toList();
     }
 
     public UserResponseDto getUserById(Long id, Long loginUserId) {
@@ -95,13 +95,21 @@ public class UserService {
             throw new BadValueException(ExceptionType.PASSWORD_NOT_CORRECT);
         }
 
+        // 비밀번호 조건에 맞는지 확인
+        if(!changePassword.isEmpty()){
+            // 정규식에 맞는지 확인
+            if(!changePassword.matches("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,40}$")){
+                throw new BadValueException(ExceptionType.BAD_PASSWORD);
+            }
+        }
+
         // 동일한 비밀번호 변경 시도 확인
         if(!passwordEncoder.matches(changePassword, user.getPassword())){
             throw new BadValueException(ExceptionType.PASSWORD_SAME);
         }
 
         // 이미지 파일 저장하기
-        Image image = imageService.updateImage(profileImage, id);
+        Image image = imageService.updateImage(profileImage, id, ImageStatus.USER);
 
         // user 정보 변경하기
         user = user.updateUser(changePassword, userNickname, phoneNumber, image);
@@ -139,8 +147,6 @@ public class UserService {
         // 유저 닉네임을 '탈퇴한 사용자' 로 변경
         userById.updateUserNickname();
 
-
-        userRepository.save(userById);
     }
 
 

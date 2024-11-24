@@ -1,12 +1,10 @@
 package com.fluffygram.newsfeed.domain.board.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 //게시물 수정 요청
 @Getter
 public class UpdateBoardRequestDto {
-
 
     private final String title;//게시물 제목
 

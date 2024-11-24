@@ -16,18 +16,18 @@ import java.util.Optional;
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long>{
 
-    default String getUserImage(String imageUrl){
+    default String getImage(String imageUrl){
         return GetImage.getImage(Const.USER_IMAGE_STORAGE, imageUrl);
     }
 
     Optional<Image> findUserImageByStatusId(Long id);
 
-
-    default Image getImageByIdOrElseThrow(Long id){
+    default Image getUserImageByIdOrElseThrow(Long id){
         return findUserImageByStatusId(id).orElseThrow(()-> new NotFountByIdException(ExceptionType.FILE_NOT_FOUND));
     }
 
     List<Image> findAllByStatusIdAndStatus(Long id, ImageStatus status);
 
     void deleteByStatusIdAndStatus(Long id, ImageStatus status);
+
 }

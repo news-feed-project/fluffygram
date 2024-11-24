@@ -4,10 +4,15 @@ import lombok.Getter;
 
 @Getter
 public class UpdateCommentRequestDto {
-    private final String comment;
+    private String comment;
+
+    public UpdateCommentRequestDto(){
+
+    }
 
     public UpdateCommentRequestDto(String comment) {
-    this.comment = comment;
+
+        this.comment = comment;
     }
 
 }

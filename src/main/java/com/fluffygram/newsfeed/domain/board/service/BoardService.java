@@ -30,28 +30,29 @@ public class BoardService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
 
-    //게시물 생성(저장)
+    // 게시물 생성(저장)
     public BoardResponseDto save(Long userId, String title, String contents, List<MultipartFile> boardImages, Long loginUserId) {
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!loginUserId.equals(userId)) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
-        //사용자 id로 사용자 조회
+        // 사용자 id로 사용자 조회
         User findUserById = userRepository.findByIdOrElseThrow(userId);
 
         Board board = new Board(title, contents, findUserById);
 
-        //게시물 저장
+        // 게시물 저장
         Board saveBoard = boardRepository.save(board);
 
         // 이미지들 저장
-        imageService.saveImages(boardImages, saveBoard.getId());
+        imageService.saveImages(boardImages, saveBoard.getId(), ImageStatus.BOARD);
 
         List<Image> images = imageService.getImages(saveBoard.getId(), ImageStatus.BOARD);
 
         return BoardResponseDto.toDto(saveBoard, images);
     }
 
+    //게시물 전체 조회
     public List<BoardResponseDto> findAllBoard(Pageable pageable, PaginationCriteria criteria) {
         Specification<Board> spec = Specification.where(null);
 
@@ -77,7 +78,7 @@ public class BoardService {
 
     //게시물 id로 특정 게시물 단건 조회
     public BoardResponseDto findBoardById(Long id) {
-        //게시물 조회
+        // 게시물 조회
         Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
 
         // 이미지들 가져오기
@@ -87,9 +88,9 @@ public class BoardService {
     }
 
     //게시물 id로 특정 게시물 수정
-    public BoardResponseDto updateBoard(Long id, String title, String contents, Long loginUserId, List<MultipartFile> boardImages) {
-        //게시물 조회
-        Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
+    public BoardResponseDto updateBoard(Long boardId, String title, String contents, Long loginUserId, List<MultipartFile> boardImages) {
+        // 게시물 조회
+        Board findBoard = boardRepository.findBoardByIdOrElseThrow(boardId);
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!loginUserId.equals(findBoard.getUser().getId())) {
@@ -100,36 +101,32 @@ public class BoardService {
         findBoard = findBoard.updateBoard(title, contents);
 
         // 이미지 파일 수정하기
-        List<Image> images = imageService.updateImages(boardImages, id);
+        List<Image> images = imageService.updateImages(boardImages, boardId, ImageStatus.BOARD);
 
-        if (images == null){
-            images = imageRepository.findAllByStatusIdAndStatus(id, ImageStatus.BOARD).stream().toList();
-        }
-
-        //수정된 게시물 저장하기
+        // 수정된 게시물 저장하기
         Board saveBoard = boardRepository.save(findBoard);
 
         return BoardResponseDto.toDto(saveBoard, images);
     }
     
     //게시물 id로 특정 게시물 삭제
-    public void deleteBoard(Long id, Long loginUserId) {
-        //게시물 조회
-        Board findBoard = boardRepository.findBoardByIdOrElseThrow(id);
+    public void deleteBoard(Long boardId, Long loginUserId) {
+        // 게시물 조회
+        Board findBoard = boardRepository.findBoardByIdOrElseThrow(boardId);
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
         if(!loginUserId.equals(findBoard.getUser().getId())) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
-        //게시물 이미지 데이터 삭제
-        imageService.deleteImage(id, ImageStatus.BOARD);
+        // 게시물 이미지 데이터 삭제
+        imageService.deleteImage(boardId, ImageStatus.BOARD);
 
-        // 제시물 삭제
+        // 게시물 삭제
         boardRepository.delete(findBoard);
 
         // 게시물 이미지 데이터 삭제
-        imageRepository.deleteAll(imageRepository.findAllByStatusIdAndStatus(id, ImageStatus.BOARD));
+        imageRepository.deleteAll(imageRepository.findAllByStatusIdAndStatus(boardId, ImageStatus.BOARD));
     }
     
 }
