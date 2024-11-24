@@ -36,7 +36,8 @@ public class BoardController {
         BoardResponseDto boardResponseDto = boardService.save(requestDto.getUserId(),
                 requestDto.getTitle(),
                 requestDto.getContents(),
-                boardImages, user.getId()
+                boardImages,
+                user.getId()
         );
 
         return  new ResponseEntity<>(boardResponseDto, HttpStatus.CREATED);
@@ -62,7 +63,7 @@ public class BoardController {
     }
 
     //게시물 ID로 특정 게시물 수정
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id,
                                                         @RequestParam(required = false) List<MultipartFile> boardImages,
                                                         @Valid @ModelAttribute UpdateBoardRequestDto requestDto,

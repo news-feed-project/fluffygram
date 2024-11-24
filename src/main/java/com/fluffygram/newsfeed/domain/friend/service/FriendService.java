@@ -5,13 +5,12 @@ import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +33,7 @@ public class FriendService {
 
         // 로그인되어있는 유저ID와 친구요청받는 유저ID가 같을때 예외처리.
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         User sendUser = userRepository.findByIdOrElseThrow(loginUserId);
@@ -46,7 +45,7 @@ public class FriendService {
                 || friendRepository.existsBySendUserAndReceivedUser(receivedUser, sendUser);
 
         if (isDuplicate) {
-            throw new BusinessException(ExceptionType.EXIST_USER);
+            throw new NotMatchByUserIdException(ExceptionType.EXIST_USER);
         }
 
         Friend friend = new Friend(sendUser, receivedUser, Friend.FriendStatus.REQUESTED);
@@ -67,7 +66,7 @@ public class FriendService {
 
         // 로그인되어있는 유저ID와 수락받는 유저ID가 같을때 예외처리.
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         // 친구수락은 요청받은 사람이 수락할수 있음.
@@ -89,7 +88,7 @@ public class FriendService {
 
         // 로그인되어있는 유저ID와 거절하는 유저ID가 같을때 예외처리.
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
         Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, receivedUserId);
@@ -110,9 +109,8 @@ public class FriendService {
 
         // 내가 나를 삭제할때 에러처리.
         if (loginUserId == receivedUserId) {
-            throw new BusinessException(ExceptionType.USER_NOT_MATCH);
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
-
         // 현재 사용자가 보낸 친구 요청이 있는지 확인.
         // 그 데이터 삭제.
         if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId) != null) {
@@ -125,8 +123,7 @@ public class FriendService {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
             friendRepository.delete(friend);
         } else {
-            // 위 두개의 조건 없을시 데이터 찾을수 없음.
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "데이터를 찾을수 없습니다.");
+            throw new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND);
         }
 
     }

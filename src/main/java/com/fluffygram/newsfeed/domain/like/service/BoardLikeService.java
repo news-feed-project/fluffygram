@@ -10,10 +10,9 @@ import com.fluffygram.newsfeed.domain.like.repository.BoardLikeRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,7 @@ public class BoardLikeService {
     public BoardLikeResponseDto createLike(Long loginUserId, Long userId, Long boardId) {
         //로그인한 id가 동일한 유저가 게시물에 좋아요를 눌렀는지 확인
         if(!loginUserId.equals(userId)) {
-            throw new RuntimeException("사용자가 일치하지 않습니다.");
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
 //      //게시물 조회

@@ -4,6 +4,8 @@ import com.fluffygram.newsfeed.domain.user.dto.*;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.service.UserService;
 import com.fluffygram.newsfeed.global.config.Const;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.WrongAccessException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -33,7 +35,7 @@ public class UserController {
      *
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestParam(required = false) MultipartFile profileImage,
+    public ResponseEntity<UserResponseDto> signUp(@RequestParam(required = false) MultipartFile profileImage,
                                                   @Valid @ModelAttribute SignUpRequestDto requestDto){
         UserResponseDto userResponseDto = userService.signUp(
                         requestDto.getEmail(),
@@ -148,6 +150,12 @@ public class UserController {
         User user = userService.login(requestDto.getEmail(), requestDto.getPassword());
 
         HttpSession session = request.getSession();
+
+        // 로그인 되어있는지 확인
+        if(!session.isNew()){
+            throw new WrongAccessException(ExceptionType.ALREADY_LOGIN);
+        }
+
         session.setAttribute(Const.LOGIN_USER, user);
 
         return new ResponseEntity<>(HttpStatus.OK);
