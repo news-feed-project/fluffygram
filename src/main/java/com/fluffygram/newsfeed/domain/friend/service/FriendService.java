@@ -24,16 +24,10 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
 
-    /**
-     * 친구 요청 보내기
-     *
-     * @param loginUserId       요청을 보낼 사용자 ID
-     * @param receivedUserId   요청을 받을 사용자 ID
-     *
-     */
+    // 친구 요청 보내기
     public void sendFriendRequest(long loginUserId, long receivedUserId) {
 
-        // 로그인되어있는 유저ID와 친구요청받는 유저ID가 같을때 예외처리.
+        // 로그인되어있는 ID와 친구요청받는 ID가 같을때
         if (loginUserId == receivedUserId) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
@@ -47,7 +41,7 @@ public class FriendService {
         }
 
         // 중복 여부 확인
-        // ID : 1 -> ID : 2  신청한 후 ID : 2 -> ID : 1 도 신청이 되는 현상 발견 후, 넣은 로직.
+        // 1 -> 2  신청한 후 2 -> 1 도 신청이 되는 현상 방지
         boolean isDuplicate = friendRepository.existsBySendUserAndReceivedUser(sendUser, receivedUser)
                 || friendRepository.existsBySendUserAndReceivedUser(receivedUser, sendUser);
 
@@ -57,21 +51,14 @@ public class FriendService {
 
         Friend friend = new Friend(sendUser, receivedUser, Friend.FriendStatus.REQUESTED);
 
-        // 대기상태로 DB 친구요청 저장.
         friendRepository.save(friend);
     }
 
-    /**
-     * 친구 요청 수락
-     *
-     * @param loginUserId       요청을 보낸 사용자 ID
-     * @param receivedUserId   요청을 받은 사용자 ID
-     *
-     */
+    // 친구 요청 수락
     @Transactional
     public void acceptFriendRequest(long loginUserId, long receivedUserId) {
 
-        // 로그인되어있는 유저ID와 수락받는 유저ID가 같을때 예외처리.
+        // 로그인되어있는 ID와 수락받는 ID가 같을때 예외처리.
         if (loginUserId == receivedUserId) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }

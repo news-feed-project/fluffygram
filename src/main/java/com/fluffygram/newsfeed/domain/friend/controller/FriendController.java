@@ -33,7 +33,6 @@ public class FriendController {
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
 
-        // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
         Long loginUserId = user.getId();
@@ -55,7 +54,6 @@ public class FriendController {
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
 
-        // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
         Long loginUserId = user.getId();
@@ -78,7 +76,6 @@ public class FriendController {
             HttpSession session,
             @RequestBody @Valid FriendRequestDto requestDto) {
 
-        // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
         Long loginUserId = user.getId();
@@ -99,7 +96,6 @@ public class FriendController {
     public ResponseEntity<List<FriendResponseDto>> findAllFriends(
             HttpSession session) {
 
-        // 세션에서 로그인된 사용자 가져오기
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
         Long loginUserId = user.getId();
