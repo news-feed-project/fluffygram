@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -71,9 +72,15 @@ public class BoardService {
             spec = spec.and(BoardSpecification.filterByModifyAtRange(criteria.getStartAt(), criteria.getEndAt()));
         }
 
-        return boardRepository.findAll(spec, pageable).stream()
-                .map(BoardResponseDto::toDtoForAll)
-                .toList();
+        List<BoardResponseDto> responseDtoList = new ArrayList<>();
+
+        List<Board> boards =  boardRepository.findAll(spec, pageable).toList();
+        for (Board board : boards) {
+            List<Image> images = imageService.getImages(board.getId(), ImageStatus.BOARD);
+            responseDtoList.add(BoardResponseDto.toDtoForAll(board, images));
+        }
+
+        return responseDtoList;
     }
 
     //게시물 id로 특정 게시물 단건 조회

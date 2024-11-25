@@ -35,12 +35,13 @@ public class CommentService {
         Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
 
         Comment comment = new Comment(commentContents, user, board);
-
+        
         Comment savedComment = commentRepository.save(comment);
 
         return CommentResponseDto.toDto(savedComment);
     }
 
+    //댓글 생성일 기준 내림차순
     public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {
         Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);
 
@@ -54,6 +55,7 @@ public class CommentService {
         return CommentResponseDto.toDto(comment);
     }
 
+    //댓글 수정
     public CommentResponseDto UpdateComments(Long id, String commentContents, Long loginUserId){
         Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
@@ -69,6 +71,7 @@ public class CommentService {
         return CommentResponseDto.toDto(comment);
     }
 
+    //댓글 삭제
     public void deleteComment(Long id, Long loginUserId) {
         Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
