@@ -7,7 +7,7 @@ import com.fluffygram.newsfeed.domain.friend.repository.FriendRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
-import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
+import com.fluffygram.newsfeed.global.exception.NotFoundByIdException;
 import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import com.fluffygram.newsfeed.global.exception.WrongAccessException;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,8 @@ public class FriendService {
     // 친구 요청 보내기
     public void sendFriendRequest(long loginUserId, long receivedUserId) {
 
-        // 로그인되어있는 ID와 친구요청받는 ID가 같을때
+        // 로그인 되어있는 ID와 친구요청받는 ID가 같을 때
+
         if (loginUserId == receivedUserId) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
@@ -54,19 +55,26 @@ public class FriendService {
         friendRepository.save(friend);
     }
 
-    // 친구 요청 수락
+
+    /**
+     * 친구 요청 수락
+     *
+     * @param loginUserId       요청을 보낸 사용자 ID
+     * @param sendUserId   요청을 받은 사용자 ID
+     *
+     */
     @Transactional
     public void acceptFriendRequest(long loginUserId, long sendUserId) {
 
-        // 로그인되어있는 ID와 수락받는 ID가 같을때 예외처리.
+        // 로그인되어있는 ID와 수락받는 ID가 같을 때 예외처리.
         if (loginUserId == sendUserId) {
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
-        // 친구수락은 요청받은 사람이 수락할수 있음.
+        // 친구수락은 요청받은 사람이 수락할 수 있음.
         Friend friend = friendRepository.findFriendByReceivedUserIdAndSendUserIdOrThrow(loginUserId, sendUserId);
 
-        // 친구요청상태 ACCEPT 로 변경.
+        // 친구요청상태 ACCEPT 로 변경
         friend.acceptFriendRequest();
     }
 
@@ -89,7 +97,7 @@ public class FriendService {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(deleteUserId, loginUserId);
             friendRepository.delete(friend);
         } else {
-            throw new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND);
+            throw new NotFoundByIdException(ExceptionType.FRIEND_NOT_FOUND);
         }
 
     }
@@ -103,6 +111,7 @@ public class FriendService {
         return friends.stream()
                 .map(friend -> {
                     // 친구 요청의 상대방 정보를 userId 기준으로 가져옴
+
                     User friendUser = friend.getSendUser().getId().equals(loginUserId)
                             ? friend.getReceivedUser() // userId가 보낸 경우 상대는 receivedUser
                             : friend.getSendUser(); // userId가 받은 경우 상대는 sendUser

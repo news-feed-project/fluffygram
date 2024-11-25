@@ -24,7 +24,7 @@ public class UserResponseDto {
 
     private final LocalDateTime updatedAt;
 
-    private String status;
+    private final String status;
 
 
     public UserResponseDto(Long id, String email, String userNickname, String phoneNumber, String profileImage, LocalDateTime createdAt, LocalDateTime modifiedAt, String status) {
@@ -64,13 +64,16 @@ public class UserResponseDto {
     }
 
     public static UserResponseDto ToDtoForMine(User user) {
-        String base64Image = GetImage.getImage(Const.USER_IMAGE_STORAGE, user.getProfileImage().getDBFileName());
-
+        String base64Image = GetImage.getImage(
+                Const.USER_IMAGE_STORAGE,
+                user.getProfileImage().getDBFileName()
+        );
+        // 본인인 경우
         return new UserResponseDto(
                 user.getId(),
-                user.getEmail(),
+                user.getEmail(),        // 민간한 정보 포함
                 user.getUserNickname(),
-                user.getPhoneNumber(),
+                user.getPhoneNumber(),  // 민간한 정보 포함
                 base64Image,
                 user.getCreatedAt(),
                 user.getModifiedAt(),
@@ -79,8 +82,11 @@ public class UserResponseDto {
     }
 
     public static UserResponseDto ToDtoForOther(User user) {
-        String base64Image = GetImage.getImage(Const.USER_IMAGE_STORAGE, user.getProfileImage().getDBFileName());
-
+        String base64Image = GetImage.getImage(
+                Const.USER_IMAGE_STORAGE,
+                user.getProfileImage().getDBFileName()
+        );
+        // 다른 사용자인 경우
         return new UserResponseDto(
                 user.getId(),
                 user.getUserNickname(),

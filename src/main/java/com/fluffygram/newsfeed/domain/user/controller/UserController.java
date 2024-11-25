@@ -126,7 +126,9 @@ public class UserController {
      */
     @Transactional
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> userDelete(@PathVariable Long id, @Valid @RequestBody DeleteUserRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<Void> userDelete(@PathVariable Long id,
+                                           @Valid @RequestBody DeleteUserRequestDto requestDto,
+                                           HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 

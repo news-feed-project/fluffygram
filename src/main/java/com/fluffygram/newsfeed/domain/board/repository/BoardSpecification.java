@@ -30,7 +30,11 @@ public class BoardSpecification {
     public static Specification<Board> filterByModifyAtRange(LocalDate startAt, LocalDate endAt) {
         return (root, query, criteriaBuilder) -> {
             if (startAt != null && endAt != null) {
-                return criteriaBuilder.between(root.get("modifiedAt"), startAt.atStartOfDay(), endAt.atTime(23, 59, 59));
+                return criteriaBuilder.between(
+                        root.get("modifiedAt"),
+                        startAt.atStartOfDay(),
+                        endAt.atTime(23, 59, 59));
+
             } else if (startAt != null) {
                 return criteriaBuilder.between(root.get("modifiedAt"), startAt.atStartOfDay(), LocalDateTime.now());
 

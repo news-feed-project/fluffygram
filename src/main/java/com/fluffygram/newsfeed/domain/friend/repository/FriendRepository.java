@@ -3,7 +3,7 @@ package com.fluffygram.newsfeed.domain.friend.repository;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
-import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
+import com.fluffygram.newsfeed.global.exception.NotFoundByIdException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -30,10 +30,12 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     boolean existsBySendUserAndReceivedUser(User sendUser, User receivedUser);
 
 
+
     // 친구수락 메서드. 로그인한 유저가 DB ReceivedUserId에 있어야 정상동작. 요청 받은사람이 수락가능.
     default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long loginUserId, long sendUserId) {
         return findByReceivedUserIdAndSendUserId(loginUserId, sendUserId)
                 .orElseThrow(() -> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+
     }
 
     // sendUserId와 receivedUserId로 Friend 조회, 없으면 예외 발생
@@ -41,6 +43,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
             Long loginUserId, long deleteUserId) {
         return findBySendUserIdAndReceivedUserId(loginUserId, deleteUserId)
                 .orElseThrow( ()-> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+
     }
 
     // sendUser와 receivedUser 기준으로 friendStatus에 해당하는 Friend 리스트를 조회, 없으면 빈 리스트 반환

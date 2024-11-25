@@ -19,7 +19,9 @@ public class BoardResponseDto {
     private final String title;//게시물 제목
     private String contents;//게시물 내용
     private final String userNickname;//유저 닉네임
-    private List<String> boardBase64Images;
+
+    private final List<String> boardBase64Images;
+
     private final LocalDateTime createdAt;//게시물 생성일
     private final LocalDateTime modifiedAt;//게시물 수정일
 
@@ -75,4 +77,3 @@ public class BoardResponseDto {
                 base64Images);
     }
 }
-

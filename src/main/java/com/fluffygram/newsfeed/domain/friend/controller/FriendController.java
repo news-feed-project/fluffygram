@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.friend.controller;
 
+import com.fluffygram.newsfeed.domain.friend.dto.FriendAcceptRequestDto;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendRequestDto;
 import com.fluffygram.newsfeed.domain.friend.dto.FriendResponseDto;
 import com.fluffygram.newsfeed.domain.friend.service.FriendService;
@@ -52,13 +53,13 @@ public class FriendController {
     @PutMapping("/accept")
     public ResponseEntity<Void> acceptFriendRequest(
             HttpSession session,
-            @RequestBody @Valid FriendRequestDto requestDto) {
+            @RequestBody @Valid FriendAcceptRequestDto requestDto) {
 
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
         Long loginUserId = user.getId();
 
-        friendService.acceptFriendRequest(loginUserId, requestDto.getReceivedUserId());
+        friendService.acceptFriendRequest(loginUserId, requestDto.getSendUserId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
