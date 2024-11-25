@@ -35,22 +35,15 @@ public class BoardLikeController {
         //Session에서 "LOGIN_USER"를 Key로 가진 Value를 가져온다.
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        //요청 데이터 유효성 검증 url 게시물 id가 body에서 요청한 값이랑 다를 경우
-        if (!boardId.equals(requestDto.getBoardId())) {
-            throw new NotMatchByUserIdException(ExceptionType.BOARD_NOT_FOUND);
-        }
-
         BoardLikeResponseDto boardLikeResponseDto =
                 boardLikeService.toggleLike(
-                        user.getId(), //유저 확인
+                        user.getId(),
                         requestDto.getUserId(),
-                        requestDto.getBoardId()
+                        boardId
+//                        requestDto.getBoardId()
                 );
 
         return  new ResponseEntity<>(boardLikeResponseDto, HttpStatus.CREATED);
     }
-    
-
-
 
 }

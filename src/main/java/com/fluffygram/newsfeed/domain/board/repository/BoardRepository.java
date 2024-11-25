@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecificationExecutor<Board> {
 
-    //조회 - 게시물 id가 없을 경우 예외처리
+    //게시물 id가 없을 경우 예외처리
     default Board findBoardByIdOrElseThrow(Long id) {
         return findById(id).orElseThrow(() -> new NotFoundByIdException(ExceptionType.BOARD_NOT_FOUND));
     }
