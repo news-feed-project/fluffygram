@@ -28,8 +28,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ResourceLoader resourceLoader;
 
+    /**
+     *  회원가입 서비스
+     *  사용자 정보와 이미지를 저장
+     *
+     */
     @Transactional
-    public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber, MultipartFile profileImage) {
+    public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber,
+                                  MultipartFile profileImage) {
         // 이미 존재하는 email 인지 확인
         if(userRepository.existsByEmail(email)){
             throw new BadValueException(ExceptionType.EXIST_USER);
@@ -60,21 +66,40 @@ public class UserService {
         return UserResponseDto.ToDtoForMine(savedUser);
     }
 
+    /**
+     *  사용자 전체 조회 서비스
+     *  관리자용 사용자 전체 조회
+     *
+     */
     public List<UserResponseDto> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable).stream().map(UserResponseDto::ToDtoForAll).toList();
     }
 
+    /**
+     *  사용자 단건 조회 서비스
+     *  사용자 프로필을 조회
+     *  본인과 타인의 전달하는 정보가 다르다.
+     *
+     */
     public UserResponseDto getUserById(Long id, Long loginUserId) {
         User user = userRepository.findByIdOrElseThrow(id);
 
+        // 로그인한 사용자와 조회하는 사용자 다르면 민감한 정보 제외한 정보 전달
         if (!id.equals(loginUserId)) {
             return UserResponseDto.ToDtoForOther(user);
         }
 
+        // 사용자 모든 정보 전달
         return UserResponseDto.ToDtoForMine(user);
     }
 
-
+    /**
+     *  사용자 정보 수정 서비스
+     *  본인인 경우에만 수정 가능
+     *  비밀번호는 영어 대소문자 1개, 특수기호 1개, 숫자 1개 최소 포함 8글자 이상 조건
+     *  수정값이 비어있으면 기존 내용 그대로 유지
+     *
+     */
     @Transactional
     public UserResponseDto updateUserById(Long id,
                                           String presentPassword,
@@ -114,11 +139,18 @@ public class UserService {
         // user 정보 변경하기
         user = user.updateUser(changePassword, userNickname, phoneNumber, image);
 
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(user); // 확인용
 
         return UserResponseDto.ToDtoForMine(savedUser);
     }
 
+    /**
+     *  사용자 삭제 서비스
+     *  논리적인 삭제
+     *  이미지도 논리적인 데이터만 삭제
+     *  삭제되면 사용자 이름 '탈퇴한 사용자'로 변경
+     *
+     */
     @Transactional
     public void delete(Long id, String password, Long loginUserId) {
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
@@ -149,7 +181,10 @@ public class UserService {
 
     }
 
-
+    /**
+     *  로그인 서비스
+     *
+     */
     public User login(String email, String password) {
         User user = userRepository.findUserByEmailOrElseThrow(email);
 

@@ -3,7 +3,7 @@ package com.fluffygram.newsfeed.domain.friend.repository;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
-import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
+import com.fluffygram.newsfeed.global.exception.NotFoundByIdException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -25,13 +25,13 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long receivedUserId, long sendUserId) {
         return findByReceivedUserIdAndSendUserId(receivedUserId, sendUserId)
-                .orElseThrow(() -> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundByIdException(ExceptionType.FRIEND_NOT_FOUND));
     }
 
     default Friend findBySendUserIdAndReceivedUserIdOrThrow(
             Long sendUserId, long receivedUserId) {
         return findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
-                .orElseThrow( ()-> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+                .orElseThrow( ()-> new NotFoundByIdException(ExceptionType.FRIEND_NOT_FOUND));
     }
 
     default List<Friend> findBySendUserAndFriendStatusOrThrow(Long userId, Friend.FriendStatus friendStatus) {
