@@ -8,6 +8,12 @@
 <br>
 <img src="https://github.com/user-attachments/assets/953b8b0f-564d-4560-b92c-79752cf1ca05" width="500" height="400"/>
 
+<Github 주소><br>
+한지연 : [j-hann](https://github.com/j-hann)<br>
+박시환 : [baksihwan](https://github.com/baksihwan)<br>
+김명호 : [KimMyungHo919](https://github.com/KimMyungHo919)<br>
+김세원 : [taketheking](https://github.com/taketheking)<br>
+
 ## 🚀 개발 기간
 > 2024.11.20 - 2024.11.24
 
@@ -119,7 +125,80 @@
 
 ## 🌟 실행 화면
 <details>
-<summary> 🙋회원가입</summary>
+<summary> 🙋로그인/로그아웃</summary>
+  
+![로그인](https://github.com/user-attachments/assets/e34db8a9-da0d-4da7-afb5-703a07eb14ef)
+![로그아웃](https://github.com/user-attachments/assets/41e80a63-9e32-43e6-ba09-70fd9048883e)
+
+</details>
+
+<details>
+<summary> 🙋사용자 인증 & 프로필 관리</summary>
+  
+![회원가입](https://github.com/user-attachments/assets/bb7621d7-5227-460a-b577-e2420d712422)
+![본인 유저 조회](https://github.com/user-attachments/assets/ede17a68-7f49-4fd4-bd80-1be7a575d426)
+![다른 유저 조회](https://github.com/user-attachments/assets/461cd92b-a0d5-4fd2-8d92-237e19fc468b)
+![유저 전체 조회 페이지네이션2](https://github.com/user-attachments/assets/8fbb89ca-86c2-41d2-937a-4c208e68edb7)
+![본인 유저 수정](https://github.com/user-attachments/assets/d10f9e36-b611-4124-a4c1-114845cc7409)
+
+![유저 삭제](https://github.com/user-attachments/assets/f0356c75-af2a-442a-b4ed-517fc954cbf3)
+![탈퇴한사용자](https://github.com/user-attachments/assets/e3b5895c-7258-4c61-ba99-6668d7e69edd)
+
+</details>
+
+<details>
+<summary> 🙋게시물 관리</summary>
+  
+![게시물 전체 조회](https://github.com/user-attachments/assets/98135485-a32a-4d4a-a1d0-4f9205a63648)
+![게시물 단건 조회](https://github.com/user-attachments/assets/6cda3589-30d7-4e7f-b133-b28f1f2daea9)
+![게시물저장](https://github.com/user-attachments/assets/7ecada23-09c9-4e9d-955c-3bb11ad5757b)
+
+</details>
+
+<details>
+<summary> 🙋친구 관리</summary>
+
+![친구 요청 거절](https://github.com/user-attachments/assets/393b0275-9738-4402-88e2-33f79472ac3b)
+![친구 삭제](https://github.com/user-attachments/assets/f09300e3-97fb-4857-8cda-2f7a6bd2c36a)
+![친구요청](https://github.com/user-attachments/assets/0aa7fe49-0b89-4cbf-a39e-ede863b501d5)
+![친구 전체 조회](https://github.com/user-attachments/assets/e7a4c7c6-ebce-4ce3-937a-470e438e53c8)
+![친구 요청 수락](https://github.com/user-attachments/assets/da81bf55-6ee4-4df6-b90f-1587ca7a1ec7)
+
+</details>
+
+<details>
+<summary> 🙋댓글 관리</summary>
+  
+![댓글 작성](https://github.com/user-attachments/assets/a9dcf3a2-b76f-4126-9838-dfa334541959)
+![댓글 수정](https://github.com/user-attachments/assets/07c7e574-557e-49e3-95d2-01894a34d28d)
+![댓글 삭제](https://github.com/user-attachments/assets/376dd370-4513-4511-8b3a-a7a416a88afc)
+![댓글 전체 조회](https://github.com/user-attachments/assets/ef7dff7f-87ab-47e2-9df3-4f5aefebcf93)
+
+</details>
+
+<details>
+<summary> 🙋좋아요 기능</summary>
+  
+![좋아요1](https://github.com/user-attachments/assets/b40e861a-72ce-4a6d-b1ab-82f2e2d718c2)
+![좋아요2](https://github.com/user-attachments/assets/1f195b04-af99-43ef-b113-e15f09491213)
+
+</details>
+
+<details>
+<summary> 🙋유효성 검사 & 예외처리</summary>
+  
+![좋아요 오류](https://github.com/user-attachments/assets/0a5e74da-19c0-413d-9678-7348ac1c5821)
+![좋아요 오류2](https://github.com/user-attachments/assets/a42377f7-0a8e-4623-8bd8-efb268df50a9)
+
+
+</details>
+
+<details>
+<summary> 🙋정렬 & 페이징</summary>
+  
+![페이징](https://github.com/user-attachments/assets/436903f3-fe35-461a-88d7-f273fe2ba38e)
+![페이징3](https://github.com/user-attachments/assets/0ff2cf71-1ac1-4039-b024-3960d7da148a)
+![페이징2](https://github.com/user-attachments/assets/74b38c25-0f29-4fa3-8670-20b79a062239)
 
 </details>
 
