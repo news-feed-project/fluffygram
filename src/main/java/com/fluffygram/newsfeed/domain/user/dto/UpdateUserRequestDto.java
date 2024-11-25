@@ -10,9 +10,9 @@ public class UpdateUserRequestDto {
 
     @NotBlank
     @Size(min = 8, max = 40)
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,}$")
     private final String presentPassword;
 
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*?_]).{8,}$")
     private final String changePassword;
 
     private final String userNickname;

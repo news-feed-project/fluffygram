@@ -2,10 +2,10 @@ package com.fluffygram.newsfeed.domain.friend.repository;
 
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.user.entity.User;
+import com.fluffygram.newsfeed.global.exception.ExceptionType;
+import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,27 +16,22 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     Optional<Friend> findByReceivedUserIdAndSendUserId(long receivedUserId, long sendUserId);
 
-    Optional<Friend> findBySendUserIdAndReceivedUserId(
-            Long sendUserId, long receivedUserId);
+    Optional<Friend> findBySendUserIdAndReceivedUserId(Long sendUserId, long receivedUserId);
 
-    List<Friend> findBySendUser_IdAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
+    List<Friend> findBySendUserIdAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
 
     List<Friend> findByReceivedUserIdAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
 
 
     default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long receivedUserId, long sendUserId) {
         return findByReceivedUserIdAndSendUserId(receivedUserId, sendUserId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "친구 요청을 찾을 수 없습니다."
-                ));
+                .orElseThrow(() -> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
     }
 
     default Friend findBySendUserIdAndReceivedUserIdOrThrow(
             Long sendUserId, long receivedUserId) {
         return findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
-                .orElseThrow( ()-> new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "데이터를 찾을수 없습니다."
-                ) );
+                .orElseThrow( ()-> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
     }
 
     default List<Friend> findBySendUserAndFriendStatusOrThrow(Long userId, Friend.FriendStatus friendStatus) {
@@ -45,7 +40,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
         List<Friend> friends = new ArrayList<>();
 
         // sendUser로 찾은 친구들
-        List<Friend> sendUserFriends = findBySendUser_IdAndFriendStatus(userId, friendStatus);
+        List<Friend> sendUserFriends = findBySendUserIdAndFriendStatus(userId, friendStatus);
         if (sendUserFriends != null && !sendUserFriends.isEmpty()) {
             friends.addAll(sendUserFriends);  // sendUser 조건에 맞는 친구들 추가
         }

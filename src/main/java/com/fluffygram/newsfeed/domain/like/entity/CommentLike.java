@@ -1,7 +1,7 @@
 package com.fluffygram.newsfeed.domain.like.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
-import com.fluffygram.newsfeed.domain.board.entity.Board;
+import com.fluffygram.newsfeed.domain.comment.entity.Comment;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,8 +17,8 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "board_like")
-public class BoardLike extends BaseEntity {
+@Table(name = "comment_like")
+public class CommentLike extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,21 +31,20 @@ public class BoardLike extends BaseEntity {
 
     //연관관계 - N:1
     @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;//게시물 id(외래키)
+    @JoinColumn(name = "comment_id")
+    private Comment comment;//댓글 id(외래키)
 
     @Enumerated(EnumType.STRING)
     private LikeStatus likeStatus; //좋아요 상태
 
-
-    public BoardLike() {
+    public CommentLike() {
     }
 
-    //게시물 좋아요
+    //댓글 좋아요
     @Builder
-    public BoardLike(User user, Board board, LikeStatus likeStatus) {
+    public CommentLike(User user, Comment comment, LikeStatus likeStatus) {
         this.user = user;
-        this.board = board;
+        this.comment = comment;
         this.likeStatus = likeStatus;
     }
 

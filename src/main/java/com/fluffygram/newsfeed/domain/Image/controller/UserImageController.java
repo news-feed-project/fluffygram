@@ -1,9 +1,11 @@
 package com.fluffygram.newsfeed.domain.Image.controller;
 
+import com.fluffygram.newsfeed.domain.Image.dto.ImageRequestDto;
 import com.fluffygram.newsfeed.domain.Image.dto.ImageResponseDto;
 import com.fluffygram.newsfeed.domain.Image.entity.Image;
 import com.fluffygram.newsfeed.domain.Image.service.ImageService;
 import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,66 +13,65 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/imagefiles")
+@RequestMapping("/image_files")
 @RequiredArgsConstructor
 public class UserImageController {
 
     private final ImageService imageService;
 
-    @PostMapping("/users/{userId}")
-    public ResponseEntity<ImageResponseDto> saveImage(@RequestParam MultipartFile file, @PathVariable Long userId) {
-        Image image = imageService.saveImage(file, userId);
+    /**
+     *  이미지 저장 API
+     *
+     * @return ResponseEntity<ImageResponseDto>  이미지 정보 및 http 상태 전달
+     *
+     */
+    @PostMapping
+    public ResponseEntity<ImageResponseDto> saveImage(@RequestParam MultipartFile file, @Valid @RequestBody ImageRequestDto requestDto) {
+        Image image = imageService.saveImage(file, requestDto.getStatusId(), ImageStatus.valueOf(requestDto.getImageStatus()));
 
         ImageResponseDto imageResponseDto = new ImageResponseDto(image.getId(), image.getDBFileName(), image.getCreatedAt(), image.getModifiedAt());
 
         return new ResponseEntity<>(imageResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<String> getUserImage(@RequestParam Long userId) {
-        String base64Image = imageService.getImage(userId);
+    /**
+     *  이미지 조회 API
+     *
+     * @return ResponseEntity<String>  base64로 인코딩된 이미지 및 http 상태 전달
+     *
+     */
+    @GetMapping
+    public ResponseEntity<String> getImage(@RequestParam Long statusId, @RequestParam String imageStatus) {
+        String base64Image = imageService.getImage(statusId, ImageStatus.valueOf(imageStatus));
 
-        // HTTP 응답 생성 (Content-Disposition: inline)
-        return ResponseEntity.ok().body(base64Image);
+        return new ResponseEntity<>(base64Image, HttpStatus.OK);
     }
 
-    @PatchMapping("/users/{userId}")
-    public ResponseEntity<ImageResponseDto> UpdateImage(@RequestParam MultipartFile file, @PathVariable Long userId) {
-        Image image = imageService.updateImage(file, userId);
+    /**
+     *  이미지 수정 API
+     *
+     * @return ResponseEntity<ImageResponseDto>  이미지 정보 및 http 상태 전달
+     *
+     */
+    @PatchMapping("{statusId}")
+    public ResponseEntity<ImageResponseDto> UpdateImage(@RequestParam MultipartFile file, @Valid @RequestBody ImageRequestDto requestDto) {
+        Image image = imageService.updateImage(file, requestDto.getStatusId(), ImageStatus.valueOf(requestDto.getImageStatus()));
 
         ImageResponseDto imageResponseDto = new ImageResponseDto(image.getId(), image.getDBFileName(), image.getCreatedAt(), image.getModifiedAt());
 
         return new ResponseEntity<>(imageResponseDto, HttpStatus.OK);
     }
 
-
+    /**
+     *  이미지 삭제 API
+     *
+     * @return ResponseEntity<Void>  http 상태 전달
+     *
+     */
     @DeleteMapping
-    public ResponseEntity<Void> deleteUserImage(@RequestParam Long imageId) {
+    public ResponseEntity<Void> deleteImage(@RequestParam Long imageId) {
         imageService.deleteImage(imageId, ImageStatus.ORPHANAGE);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
-
-    /*
-    * 클라이언트 예시
-    *
-    const imageUrl = "http://localhost:8080/images/example.png";
-    const imgElement = document.getElementById("myImage");
-
-    fetch(imageUrl)
-      .then(response => {
-        if (response.ok) {
-        * blob 을 이용
-          return response.blob();
-        } else {
-          throw new Error("Image not found");
-        }
-      })
-      .then(blob => {
-        const imageUrl = URL.createObjectURL(blob);
-        imgElement.src = imageUrl;
-      })
-      .catch(error => console.error("Error loading image:", error));
-
-     */

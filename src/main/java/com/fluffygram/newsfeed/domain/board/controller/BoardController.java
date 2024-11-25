@@ -36,13 +36,13 @@ public class BoardController {
         BoardResponseDto boardResponseDto = boardService.save(requestDto.getUserId(),
                 requestDto.getTitle(),
                 requestDto.getContents(),
-                boardImages, user.getId()
+                boardImages,
+                user.getId()
         );
 
         return  new ResponseEntity<>(boardResponseDto, HttpStatus.CREATED);
     }
 
-    //-- contents 제외한 dto 로 변경
     //게시물 전체 List 조회
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> findAllBoard(@PageableDefault() Pageable pageable,
@@ -62,7 +62,7 @@ public class BoardController {
     }
 
     //게시물 ID로 특정 게시물 수정
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id,
                                                         @RequestParam(required = false) List<MultipartFile> boardImages,
                                                         @Valid @ModelAttribute UpdateBoardRequestDto requestDto,

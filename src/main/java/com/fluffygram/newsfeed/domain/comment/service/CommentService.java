@@ -35,14 +35,20 @@ public class CommentService {
         Board board = boardRepository.findBoardByIdOrElseThrow(boardId);
 
         Comment comment = new Comment(commentContents, user, board);
-
+        
         Comment savedComment = commentRepository.save(comment);
 
         return CommentResponseDto.toDto(savedComment);
     }
 
+
     public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {//페이징 구현
-        Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);//
+        Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);
+
+    //댓글 생성일 기준 내림차순
+    public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {
+        Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);
+
 
         return comments.stream().map(CommentResponseDto::toDto).toList();
     }
@@ -54,7 +60,8 @@ public class CommentService {
         return CommentResponseDto.toDto(comment);
     }
 
-    public  void UpdateComments(Long id, String commentContents, Long loginUserId){
+    //댓글 수정
+    public CommentResponseDto UpdateComments(Long id, String commentContents, Long loginUserId){
         Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인 및 게시물 작성자 일치 여부 확인
@@ -64,8 +71,13 @@ public class CommentService {
         }
 
         comment.updateComment(commentContents);
+
+        commentRepository.save(comment);
+
+        return CommentResponseDto.toDto(comment);
     }
 
+    //댓글 삭제
     public void deleteComment(Long id, Long loginUserId) {
         Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 

@@ -4,6 +4,7 @@ import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.config.Const;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,7 +27,7 @@ public class CommentController {
     //댓글 생성(작성)
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(
-            @RequestBody CreateCommentRequestDto requestDto,
+            @Valid @RequestBody CreateCommentRequestDto requestDto,
             HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
@@ -60,13 +61,20 @@ public class CommentController {
     @PatchMapping("/{id}")
     public ResponseEntity<CommentResponseDto> updateComments(
         @PathVariable Long id,
-        @RequestBody UpdateCommentRequestDto requestDto,
+        @Valid @RequestBody UpdateCommentRequestDto requestDto,
         HttpServletRequest request
     ) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
+
         commentService.UpdateComments(id, requestDto.getComment(), user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
+
+
+        CommentResponseDto commentResponseDto = commentService.UpdateComments(id, requestDto.getComment(), user.getId());
+
+        return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
+
     }
     //댓글 단건 삭제
     @DeleteMapping("/{id}")

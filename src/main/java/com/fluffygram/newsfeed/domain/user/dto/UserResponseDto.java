@@ -4,13 +4,11 @@ import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.base.enums.UserRelationship;
 import com.fluffygram.newsfeed.global.config.Const;
 import com.fluffygram.newsfeed.global.tool.GetImage;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 public class UserResponseDto {
     private final Long id;
 
@@ -29,7 +27,7 @@ public class UserResponseDto {
     private String status;
 
 
-    public UserResponseDto(Long id, String email, String userNickname, String phoneNumber, String profileImage, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public UserResponseDto(Long id, String email, String userNickname, String phoneNumber, String profileImage, LocalDateTime createdAt, LocalDateTime modifiedAt, String status) {
         this.id = id;
         this.email = email;
         this.userNickname = userNickname;
@@ -37,7 +35,7 @@ public class UserResponseDto {
         this.profileImage = profileImage;
         this.createdAt = createdAt;
         this.updatedAt = modifiedAt;
-        this.status = UserRelationship.MINE.toString();
+        this.status = status;
     }
 
     public UserResponseDto(Long id, String userNickname, String base64Image, LocalDateTime createdAt, LocalDateTime modifiedAt, UserRelationship userRelationship) {
@@ -50,6 +48,21 @@ public class UserResponseDto {
     }
 
 
+    public static UserResponseDto ToDtoForAll(User user) {
+        String base64Image = GetImage.getImage(Const.USER_IMAGE_STORAGE, user.getProfileImage().getDBFileName());
+
+        return new UserResponseDto(
+                user.getId(),
+                user.getEmail(),
+                user.getUserNickname(),
+                user.getPhoneNumber(),
+                base64Image,
+                user.getCreatedAt(),
+                user.getModifiedAt(),
+                user.getUserStatus().toString()
+        );
+    }
+
     public static UserResponseDto ToDtoForMine(User user) {
         String base64Image = GetImage.getImage(Const.USER_IMAGE_STORAGE, user.getProfileImage().getDBFileName());
 
@@ -60,7 +73,8 @@ public class UserResponseDto {
                 user.getPhoneNumber(),
                 base64Image,
                 user.getCreatedAt(),
-                user.getModifiedAt()
+                user.getModifiedAt(),
+                UserRelationship.MINE.toString()
         );
     }
 
