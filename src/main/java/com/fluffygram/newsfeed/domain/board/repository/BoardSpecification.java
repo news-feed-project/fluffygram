@@ -21,7 +21,7 @@ public class BoardSpecification {
     public static Specification<Board> filterByLikeManySort(String likeManySort) {
         return (root, query, criteriaBuilder) -> {
             if ("like".equals(likeManySort)) {
-                query.orderBy(criteriaBuilder.desc(criteriaBuilder.size(root.get("boardLikeListList"))));
+                query.orderBy(criteriaBuilder.desc(criteriaBuilder.size(root.get("boardLikeList"))));
             }
             return null;
         };

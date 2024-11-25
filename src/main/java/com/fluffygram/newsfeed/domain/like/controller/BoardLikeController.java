@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/boards/{boardId}/boardlikes")
+@RequestMapping("/boards/{boardId}/likes")
 @RequiredArgsConstructor
 public class BoardLikeController {
     private  final BoardLikeService boardLikeService;
