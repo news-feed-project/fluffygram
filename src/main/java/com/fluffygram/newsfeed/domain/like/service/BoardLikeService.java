@@ -13,6 +13,7 @@ import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class BoardLikeService {
     private final BoardLikeRepository boardLikeRepository;
 
     //좋아요 생성, 취소 - 활성화, 비활성화
+    @Transactional
     public BoardLikeResponseDto toggleLike(Long loginUserId, Long userId, Long boardId) {
         //로그인한 id가 동일한 유저가 게시물에 좋아요를 눌렀는지 확인
         if(!loginUserId.equals(userId)) {
@@ -42,6 +44,8 @@ public class BoardLikeService {
             BoardLike createBoardLike = new BoardLike(findUserById, findBoardById, LikeStatus.REGISTER);
             //DB에 저장
             boardLikeRepository.save(createBoardLike);
+
+            findBoardById.addBoardLike(createBoardLike);
 
             //저장된 좋아요 데이터를 반환
             checkLike = createBoardLike;
