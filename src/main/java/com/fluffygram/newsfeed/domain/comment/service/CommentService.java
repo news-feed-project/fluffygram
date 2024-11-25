@@ -42,13 +42,9 @@ public class CommentService {
     }
 
 
-    public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {//페이징 구현
-        Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);
-
     //댓글 생성일 기준 내림차순
     public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {
         Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);
-
 
         return comments.stream().map(CommentResponseDto::toDto).toList();
     }

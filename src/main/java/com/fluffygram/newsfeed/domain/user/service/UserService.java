@@ -9,6 +9,7 @@ import com.fluffygram.newsfeed.domain.base.enums.UserStatus;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
 import com.fluffygram.newsfeed.global.config.PasswordEncoder;
 import com.fluffygram.newsfeed.global.exception.*;
+import com.fluffygram.newsfeed.global.tool.CustomMultipartFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -16,7 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 @Service
@@ -29,13 +31,12 @@ public class UserService {
     private final ResourceLoader resourceLoader;
 
     /**
-     *  회원가입 서비스
-     *  사용자 정보와 이미지를 저장
-     *
+     * 회원가입 서비스
+     * 사용자 정보와 이미지를 저장
      */
     @Transactional
-    public UserResponseDto signUp(String email,String password, String userNickname, String phoneNumber,
-                                  MultipartFile profileImage) {
+    public UserResponseDto signUp(String email, String password, String userNickname, String phoneNumber,
+                                  MultipartFile profileImage) throws IOException {
         // 이미 존재하는 email 인지 확인
         if(userRepository.existsByEmail(email)){
             throw new BadValueException(ExceptionType.EXIST_USER);
@@ -52,7 +53,14 @@ public class UserService {
 
         if(profileImage == null || profileImage.isEmpty()){
             Resource resource = resourceLoader.getResource("classpath:static/user.jpg");
-            profileImage = (MultipartFile) resource;
+            byte[] content = Files.readAllBytes(resource.getFile().toPath());
+
+            profileImage =  new CustomMultipartFile(
+                    "profileImage",
+                    resource.getFilename(),
+                    "image/jpeg",
+                    content
+            );
         }
 
         // 이미지 저장

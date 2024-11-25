@@ -36,7 +36,7 @@ public class Board extends BaseEntity {
     private List<Comment> commentList = new ArrayList<>();
 
     //양방향관계 - 1:N
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
     //게시글 생성
@@ -60,5 +60,9 @@ public class Board extends BaseEntity {
         }
 
         return this;
+    }
+
+    public void addBoardLike(BoardLike boardLike) {
+        boardLikeList.add(boardLike);
     }
 }

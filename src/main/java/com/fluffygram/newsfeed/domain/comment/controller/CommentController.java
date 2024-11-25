@@ -67,10 +67,6 @@ public class CommentController {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
-        commentService.UpdateComments(id, requestDto.getComment(), user.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
-
-
         CommentResponseDto commentResponseDto = commentService.UpdateComments(id, requestDto.getComment(), user.getId());
 
         return new ResponseEntity<>(commentResponseDto, HttpStatus.OK);
