@@ -11,8 +11,10 @@ import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
 import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import com.fluffygram.newsfeed.global.exception.WrongAccessException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -114,6 +116,7 @@ public class FriendService {
         //아이디 1번이 -> 3번 요청함
         //로그인은 3번이 하고있음 receivedUserId : 1번 얘를 삭제하려고 함
         //isPresent 있으면 true 없으면 false
+
         if (friendRepository.findBySendUserIdAndReceivedUserId(loginUserId, receivedUserId).isPresent()) {
             Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
             friendRepository.delete(friend);
@@ -123,6 +126,17 @@ public class FriendService {
         } else {
             throw new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND);
         }
+
+//        if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId) != null) {
+//            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(loginUserId, receivedUserId);
+//            friendRepository.delete(friend);
+//        } else if (friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId) != null) {
+//            Friend friend = friendRepository.findBySendUserIdAndReceivedUserIdOrThrow(receivedUserId, loginUserId);
+//            friendRepository.delete(friend);
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "데이터를 찾을수 없습니다.");
+//
+//        }
 
     }
 

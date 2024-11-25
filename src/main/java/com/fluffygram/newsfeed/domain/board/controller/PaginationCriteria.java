@@ -11,14 +11,14 @@ import java.time.LocalDate;
 @Setter
 public class PaginationCriteria {
 
-    String dateType = "create";
+    String dateType = "create"; //생성일 순 or 수정일 순
 
-    String likeManySort = "noLike";
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate startAt;
+    String likeManySort = "noLike"; //좋아요 순
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate endAt;
+    private LocalDate startAt; //시작일
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endAt; //마지막 일
 
 }
