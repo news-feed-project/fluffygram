@@ -1,4 +1,4 @@
-package com.fluffygram.newsfeed.domain.like.entity;
+package com.fluffygram.newsfeed.domain.base.enums;
 
 import lombok.Getter;
 

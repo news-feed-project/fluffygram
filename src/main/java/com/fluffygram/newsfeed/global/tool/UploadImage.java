@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.global.tool;
 
+import com.fluffygram.newsfeed.domain.base.enums.MediaType;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import com.fluffygram.newsfeed.global.exception.WrongAccessException;
 import org.springframework.util.ObjectUtils;
@@ -35,9 +36,9 @@ public class UploadImage {
             // 타입 없으면 null
             throw new WrongAccessException(ExceptionType.FAIL_FILE_UPLOADED);
         } else {
-            if (contentType.contains("image/jpeg")) {
+            if (contentType.contains(MediaType.JPEG.getUrl())) {
                 originalFileExtension = ".jpg";
-            } else if (contentType.contains("image/png")) {
+            } else if (contentType.contains(MediaType.PNG.getUrl())) {
                 originalFileExtension = ".png";
             } else {
                 throw new WrongAccessException(ExceptionType.FAIL_FILE_UPLOADED);

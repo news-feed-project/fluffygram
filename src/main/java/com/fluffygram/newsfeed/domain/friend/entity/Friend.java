@@ -5,12 +5,10 @@ import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
-@Table(name = "Friend")
+@Table(name = "friend")
 public class Friend extends BaseEntity {
 
     @Id
