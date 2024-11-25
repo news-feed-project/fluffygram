@@ -32,17 +32,18 @@ public class CommentController {
         User user = (User) session.getAttribute(Const.LOGIN_USER);
 
         CommentResponseDto commentResponseDto = commentService.createComment(
-                requestDto.getBoardId(), requestDto.getUserId(), requestDto.getComment(), user.getId()
+                requestDto.getBoardId(), requestDto.getUserId(),
+                requestDto.getComment(), user.getId()
         );
         return new ResponseEntity<>(commentResponseDto, HttpStatus.CREATED);
     }
-
     //댓글 전체 조회
     @GetMapping
     public ResponseEntity<List<CommentResponseDto>> findAllComment(
             @PageableDefault(size = 20) Pageable pageable,
             @RequestParam Long boardId) {
-        List<CommentResponseDto> commentResponseDtoList = commentService.findAllCommentByBoardId(pageable, boardId);
+        List<CommentResponseDto> commentResponseDtoList =
+                commentService.findAllCommentByBoardId(pageable, boardId);
         return new ResponseEntity<>(commentResponseDtoList, HttpStatus.OK);
     }
 
@@ -64,20 +65,15 @@ public class CommentController {
     ) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
-
         commentService.UpdateComments(id, requestDto.getComment(), user.getId());
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
     //댓글 단건 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<CommentResponseDto> deleteComments(@PathVariable Long id, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute(Const.LOGIN_USER);
-
         commentService.deleteComment(id, user.getId());
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

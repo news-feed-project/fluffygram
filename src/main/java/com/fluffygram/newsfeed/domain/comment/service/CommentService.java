@@ -27,8 +27,8 @@ public class CommentService {
     //댓글 생성
     public CommentResponseDto createComment(Long boardId, Long userId, String commentContents, Long loginUserId) {
         // 로그인한 사용자와 아이디(id) 일치 여부 확인
-        if(!userId.equals(loginUserId)){
-            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
+        if(!userId.equals(loginUserId)){//userid 검증
+            throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH); //userid가 일치하지 않을시 예외처리
         }
 
         User user = userRepository.findByIdOrElseThrow(userId);
@@ -41,8 +41,8 @@ public class CommentService {
         return CommentResponseDto.toDto(savedComment);
     }
 
-    public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {
-        Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);
+    public List<CommentResponseDto> findAllCommentByBoardId(Pageable pageable, Long boardId) {//페이징 구현
+        Page<Comment> comments = commentRepository.findCommentByBoardIdOrderByCreatedAtDesc(pageable, boardId);//
 
         return comments.stream().map(CommentResponseDto::toDto).toList();
     }
@@ -58,7 +58,8 @@ public class CommentService {
         Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인 및 게시물 작성자 일치 여부 확인
-        if(!comment.getUser().getId().equals(loginUserId) || !comment.getBoard().getUser().getId().equals(loginUserId)){
+        if(!comment.getUser().getId().equals(loginUserId) ||
+                !comment.getBoard().getUser().getId().equals(loginUserId)){
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
@@ -69,7 +70,8 @@ public class CommentService {
         Comment comment = commentRepository.findCommentsByIdOrElseThrow(id);
 
         // 로그인한 사용자와 아이디(id) 일치 여부 확인 및 게시물 작성자 일치 여부 확인
-        if(!comment.getUser().getId().equals(loginUserId) || !comment.getBoard().getUser().getId().equals(loginUserId)){
+        if(!comment.getUser().getId().equals(loginUserId) ||
+                !comment.getBoard().getUser().getId().equals(loginUserId)){
             throw new NotMatchByUserIdException(ExceptionType.USER_NOT_MATCH);
         }
 
