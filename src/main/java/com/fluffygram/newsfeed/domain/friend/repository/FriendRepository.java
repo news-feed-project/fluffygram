@@ -34,7 +34,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     // 친구수락 메서드. 로그인한 유저가 DB ReceivedUserId에 있어야 정상동작. 요청 받은사람이 수락가능.
     default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long loginUserId, long sendUserId) {
         return findByReceivedUserIdAndSendUserId(loginUserId, sendUserId)
-                .orElseThrow(() -> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundByIdException(ExceptionType.FRIEND_NOT_FOUND));
 
     }
 
@@ -42,7 +42,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     default Friend findBySendUserIdAndReceivedUserIdOrThrow(
             Long loginUserId, long deleteUserId) {
         return findBySendUserIdAndReceivedUserId(loginUserId, deleteUserId)
-                .orElseThrow( ()-> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+                .orElseThrow( ()-> new NotFoundByIdException(ExceptionType.FRIEND_NOT_FOUND));
 
     }
 
