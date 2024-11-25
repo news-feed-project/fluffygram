@@ -1,20 +1,26 @@
-package com.fluffygram.newsfeed.domain.board.repository;
+package com.fluffygram.newsfeed.domain.board.specification;
 
 import com.fluffygram.newsfeed.domain.board.entity.Board;
+import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
+import com.fluffygram.newsfeed.domain.like.entity.LikeStatus;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Order;
 import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BoardSpecification {
     public static Specification<Board> filterByDateType(String dateType) {
         return (root, query, criteriaBuilder) -> {
-            if ("create".equals(dateType)) {
-                query.orderBy(criteriaBuilder.asc(root.get("createdAt")));
-            } else if ("modify".equals(dateType)) {
+            if ("modify".equals(dateType)) {
                 query.orderBy(criteriaBuilder.desc(root.get("modifiedAt")));
+            }else {
+                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
             }
             return null;
         };
@@ -29,27 +35,35 @@ public class BoardSpecification {
 //        };
 //    }
 
-    public static Specification<Board> filterByLikeManySort(String likeManySort) {
-        return (root, query, criteriaBuilder) -> {
-            if ("like".equals(likeManySort)) {
-                // Join boardLikeList
-                Join<Object, Object> boardLikeJoin = root.join("board_like", JoinType.LEFT);
+    public static Specification<Board> filterByLikeManySortAndDateType(String dateType) {
+        return (root, query, cb) -> {
+            // LEFT JOIN board_like
+            Join<Board, BoardLike> likesJoin = root.join("boardLikeList", JoinType.LEFT);
 
-                // Filter for boardLikeList's likeStatus == "REGISTER"
-                query.orderBy(
-                        criteriaBuilder.desc(
-                                criteriaBuilder.count(
-                                        criteriaBuilder.selectCase()
-                                                .when(criteriaBuilder.equal(boardLikeJoin.get("likeStatus"), "REGISTER"), 1)
-                                                .otherwise(0)
-                                )
-                        )
-                );
+            // COUNT(CASE WHEN bl.likeStatus = 'REGISTER' THEN 1 END)
+            Expression<Long> likeCount = cb.count(cb.selectCase()
+                    .when(cb.equal(likesJoin.get("likeStatus"), LikeStatus.REGISTER), 1)
+                    .otherwise((Long) null)
+            );
 
-                // Ensure unique results for Board since we're working with aggregates
-                query.groupBy(root.get("id"));
+            // Add group by for Board.id
+            query.groupBy(root.get("id"));
+
+            // Order by likeCount DESC as the primary sort
+            List<Order> orderList = new ArrayList<>();
+            orderList.add(cb.desc(likeCount));
+
+            // Add secondary sort based on dateType (createAt or modifyAt)
+            if ("create".equalsIgnoreCase(dateType)) {
+                orderList.add(cb.desc(root.get("createdAt")));
+            } else if ("modify".equalsIgnoreCase(dateType)) {
+                orderList.add(cb.desc(root.get("modifiedAt")));
             }
-            return null;
+
+            // Apply the order list
+            query.orderBy(orderList);
+
+            return null; // No specific where condition, just sorting/grouping
         };
     }
 

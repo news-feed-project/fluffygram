@@ -1,5 +1,6 @@
 package com.fluffygram.newsfeed.domain.board.controller;
 
+import com.fluffygram.newsfeed.domain.board.dto.BoardPaginationDto;
 import com.fluffygram.newsfeed.domain.board.dto.BoardResponseDto;
 import com.fluffygram.newsfeed.domain.board.dto.CreateBoardRequestDto;
 import com.fluffygram.newsfeed.domain.board.dto.UpdateBoardRequestDto;
@@ -46,9 +47,9 @@ public class BoardController {
     //게시물 전체 List 조회
     @GetMapping
     public ResponseEntity<List<BoardResponseDto>> findAllBoard(@PageableDefault() Pageable pageable,
-                                                                   @Valid @ModelAttribute() PaginationCriteria paginationCriteria){
+                                                                   @Valid @ModelAttribute() BoardPaginationDto boardPaginationDto){
         List<BoardResponseDto> boardResponseDtoList =
-                boardService.findAllBoard(pageable, paginationCriteria);
+                boardService.findAllBoard(pageable, boardPaginationDto);
 
         return  new ResponseEntity<>(boardResponseDtoList, HttpStatus.OK);
     }
