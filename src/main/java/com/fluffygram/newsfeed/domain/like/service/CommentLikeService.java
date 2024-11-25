@@ -43,7 +43,7 @@ public class CommentLikeService {
         if (checkLike == null) {
             //좋아요 활성화
             CommentLike createCommentLike = new CommentLike(findUserById, findCommentById, LikeStatus.REGISTER);
-            //DB에 저장
+
             commentLikeRepository.save(createCommentLike);
 
             //저장된 좋아요 데이터를 반환

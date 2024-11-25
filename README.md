@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 
 # 🖥️☀프로젝트 소개
 #### **🐱플러피그램(Fluffygram)🐶**
+=======
+# 💻 프로젝트 소개
+#### **플러피그램(Fluffygram)**
+>>>>>>> main
 #### 자신의 애완동물을 자랑하고 서로 정보를 공유하는 커뮤니티 사이트
 
 ## 🚀 개발 기간
@@ -12,7 +17,7 @@
 - `Java Development Kit : openjdk version '17.0.2'`
 - `Framework : springframework.boot version '3.3.5', Spring Data JPA`
 - `Database : MySQL version '8.0.40'`
-- `tool : figma, `
+- `tool : Figma, ERD Cloud, Slack, Github & git`
 
 ## 🪧 커밋 컨벤션
 🎉 Begin: 프로젝트 시작 <br>
@@ -31,6 +36,30 @@
 🏗️ Chore : 빌드 업무 수정, 패키지 매니저 수정, 패키지 관리자 구성 등
 
 ## 🪐구현 기능
+<<<<<<< HEAD
+=======
+
+#### **✨ 사용자 인증 & 프로필 관리**
+* 회원가입 & 회원탈퇴 & 로그인 & 프로필 조회 & 프로필 수정 기능
+  
+#### **✨ 게시물 관리**
+* 게시물 작성 & 조회 & 수정 & 삭제 기능
+
+#### **✨ 친구 관리**
+* 친구 요청 & 수락 & 거절 & 삭제 & 친구 조회 기능
+
+#### **✨ 댓글 관리**
+* 댓글 작성 & 조회 & 수정 & 삭제 기능
+
+#### **✨ 좋아요 기능**
+* 게시물 & 댓글 좋아요 토글 형식 기능 (활성화 & 비활성화 & 좋아요 수 카운트)
+
+#### **✨ 유효성 검사 & 예외처리**
+* 사용자 & 비밀번호 검증 & 상황별 예외처리
+
+#### **✨ 정렬 & 페이징**
+* 생성일자, 수정일자, 내림차순(최신 순), 좋아요 많은 순 정렬 & 페이징 조회
+>>>>>>> main
 
 #### **✨ 사용자 인증 & 프로필 관리**
 * 회원가입 & 회원탈퇴 & 로그인 & 프로필 조회 & 프로필 수정 기능
@@ -57,6 +86,27 @@
 </details>
 
 ## 📅 와이어 프레임
+<details>
+<summary>와이어 프레임</summary>
+
+![image](https://github.com/user-attachments/assets/70632c8e-55c6-4c0c-9501-abe9b8194a1d)
+![image](https://github.com/user-attachments/assets/e258d084-2ca2-46f8-886d-8bba94ae4c12)
+![image](https://github.com/user-attachments/assets/80196432-b058-4554-bc09-8fb220da951c)
+![image](https://github.com/user-attachments/assets/6891a9d1-5d89-458e-84af-55c9cfc7ea0f)
+![image](https://github.com/user-attachments/assets/16128539-d75c-4c11-bb5a-69c977557310)
+![image](https://github.com/user-attachments/assets/04812178-81a8-4331-bcfa-00d00a91d51d)
+
+
+
+</details>
+
+## ⚙️ ERD
+<details>
+<summary>ERD</summary>
+
+![fluffygram ERD](https://github.com/user-attachments/assets/17514ff3-d6d7-4f5a-82ac-96392b07cb04)
+</details>
+  
 
 
 ## ⚙️ ERD
@@ -71,222 +121,52 @@
 
 
 ## 📑 API 명세서
-
 <details>
 <summary>API 명세서</summary>
 <br/>
 
-#### user
+
+## user
+![image](https://github.com/user-attachments/assets/77ea07e7-38fd-4484-a47e-fa4f497e5803)
+![image](https://github.com/user-attachments/assets/95f57699-3c8d-4d7c-b9ba-7d5d4aabba21)
 
 
-<table>
-    <tr>
-      <th scope="col">기능</td>
-      <th scope="col">Method</td>
-      <th scope="col">URL</th>
-      <th scope="col">Request</td>
-      <th scope="col">Response</td>
-      <th scope="col">요쳥 변수</td>
-      <th scope="col">request</td>
-      <th scope="col">응답 변수</td>
-      <th scope="col">response</td>
-      <th scope="col">상태 코드</td>
-    </tr>
-    <tr>
-      <td>사용자 생성</td>
-      <td>POST </td>
-      <td>/users/signup</td>
-      <td></td>
-      <td></td>
-      <td>String email : 필수 0<br>
-        String password : 필수 0<br>
-       String userNicname : 필수 0<br>
-      String phoneNumber : 필수 0<br>
-      String profileImage : 필수 x</td>
-      <td>requestBody(JSON) :
-{
-      "email " : "abcde@gmail.com",<br>
-      "password" : "12345",<br>
-      "userNicname " : "닉네임",<br>
-     "phoneNumber " : "01012345678",<br>
-     "profileImage" : "fdkjf39"<br>
- }</td>
- 
-      <td>requestBody(JSON) :
-{<br>
-      "email " : "abcde@gmail.com",<br>
-      "password" : "12345",<br>
-      "userNicname " : "닉네임",<br>
-     "phoneNumber " : "01012345678",<br>
-     "profileImage" : "fdkjf39"<br>
- }</td>
-      <td>Long id : 필수 0<br>
-String email : 필수 0<br>
-String userNicname : 필수 0<br>
-String phoneNumber : 필수 0<br>
-String profileImage : 필수 x<br>
-LocalDatetime createAt : 필수 0<br>
-LocalDatetime modifyAt : 필수 0"</td>
-      <td>
-        {
-      "id" : "1",<br>
-      "email " : "abcde@gmail.com",<br>
-      "userNicname " : "닉네임",<br>
-     "phoneNumber " : "01012345678",<br>
-     "profileImage" : "fdkjf39",<br>
-    "create_at" : "2024-11-19 18:00:00",<br>
-     "modify_at" : "2024-11-19 18:00:00"<br>
- }
-      </td>
-      <td>
-        201: 생성 성공,<br> 
-400: 잘못된 값 입력
-      </td>
-    </tr>
-    <tr>
-      <td>사용자 전체 조회</td>
-      <td>GET</td>
-      <td>/users</td>
-      <td>Cookie :<br>
-JSESSIONID= ${sessionId}</td>
-<td></td>
-<td>없음</td>
-<td>없음</td>
-      <td>list:<br>
-Long id : 필수 0<br>
-String email : 필수 0<br>
-String userNicname : 필수 0<br>
-String phoneNumber : 필수 0<br>
-String profileImage : 필수 x<br>
-LocalDatetime createAt : 필수 0<br>
-LocalDatetime modifyAt : 필수 0</td>
-      <td>[
-{
-      "id" : "1",<br>
-      "email " : "abcde@gmail.com",<br>
-      "userNicname " : "닉네임",<br>
-     "phoneNumber " : "01012345678",<br>
-     "profileImage" : "fdkjf39",<br>
-    "create_at" : "2024-11-19 18:00:00",<br>
-     "modifyAt " : "2024-11-19 18:00:00"<br>
- },<br>
-{<br>
-      "id" : "1",<br>
-      "email " : "efgh@gmail.com",<br>
-      "userNicname " : "닉네임2",<br>
-     "phoneNumber " : "01012349876",<br>
-     "profileImage" : "glwjfq",<br>
-    "create_at" : "2024-11-19 18:00:00",<br>
-     "modify_at" : "2024-11-19"<br>
- }<br>
-]</td>
-<td>200 : 정상<br>
-400 : 잘못된 값 입력<br>
-401 : 권한 없음 (로그인 인증 안됨)<br>
-404 : 해당 데이터 없음</td>
-    </tr>
-    <tr>
-      <td>사용자 단건 조회</td> 
-      <td>GET</td>
-      <td>/users/mypage/{id}</td>
-      <td>Cookie :<br>
-      JESSIONID = ${sessionId}</td>
-      <td></td>
-      <td>Long id : 필수 0</td>
-      <td>PathVariable(param)<br>
-{<br>
-"id" : 1<br>
-}</td>
-      <td>Long id : 필수 0<br>
-String email : 필수 0<br>
-String userNicname : 필수 0<br>
-String phoneNumber : 필수 0<br>
-String profileImage : 필수 x<br>
-LocalDatetime createAt : 필수 0<br>
-LocalDatetime modifyAt : 필수 0</td>
-      <td>
-        {<br>
-      "id" : "1",<br>
-      "email " : "abcde@gmail.com",<br>
-      "userNicname " : "닉네임",<br>
-     "phoneNumber " : "01012345678",<br>
-     "profileImage" : "fdkjf39",<br>
-    "create_at" : "2024-11-19 18:00:00",<br>
-     "modify_at" : "2024-11-19 18:00:00"<br>
- }
-      </td>
-      <td>
-        200 : 정상<br>
-400 : 잘못된 값 입력<br>
-401 : 권한 없음 (로그인 인증 안됨)<br>
-404 : 해당 데이터 없음<br>
-      </td>
-    </tr>
-    <tr>
-      <td>다른 사용자 프로필 조회</td>
-      <td>GET</td>
-      <td>/users/others/{id}</td>
-      <td>Cookie :<br>
-      JSESSIONID=${sessionId}</td>
-      <td></td>
-      <td>Long id : 필수 0</td>
-      <td>
-        PathVariable(param<br>
-{<br>
-"id" : 1<br>
-}
-      </td>
-      <td>
-      Long id : 필수 0<br>
-String userNicname : 필수 0<br>
-String profileImage : 필수 x<br>
-LocalDatetime createAt : 필수 0<br>
-LocalDatetime modifyAt : 필수 0<br>
-      </td>
-      <td>{<br>
-      "id" : "1",<br>
-      "userNicname " : "닉네임수정",<br>
-     "profileImage" : "fdkjf39",<br>
-    "create_at" : "2024-11-19 18:00:00",<br>
-     "modify_at" : "2024-11-19 18:00:00"<br>
- }</td>
-      <td>
-        200 : 정상<br>
-400 : 잘못된 값 입력<br>
-404 : 해당 데이터 없음<br>
-      </td>
-    </tr>
-    <tr>
-      <td>사용자 삭제</td>
-      <td>Delete</td>
-      <td>/users/{id}</td>
-      <td>Cookie :<br>
-      JSESSIONID = ${sessionId}</td>
-      <td></td>
-      <td>Long id : 필수 0<br>
-String password : 필수 0</td>
-      
-      <td>PathVariable(param)<br>
-{<br>
-"id" : 1<br>
-},<br>
-requestBody(JSON) :<br>
-{<br>
-     "password" : "!a123456"<br>
- }</td>
- <td></td>
- <td></td>
- <td>204 : 내용없음<br>
-400 : 잘못된 값 입력<br>
-401 : 권한 없음 (로그인 인증 안됨)<br>
-404 : 해당 데이터 없음</td>
-    </tr>
-  </table>
+## comment
+![image](https://github.com/user-attachments/assets/9b37ae68-7b7d-45f5-a0e0-e0f5d74d6093)
 
+
+## boardlike
+![image](https://github.com/user-attachments/assets/4280204d-b5ea-4e24-8343-46f415b9c752)
+
+
+## friend
+![image](https://github.com/user-attachments/assets/1dc8caa1-a5ec-4859-9d67-62f866ac5ea3)
+
+
+## board
+![image](https://github.com/user-attachments/assets/ec9eea73-87ef-4c06-a1b6-0e24fbf9024c)
+
+
+## image_file
+![image](https://github.com/user-attachments/assets/622e5b1e-6ac3-47f8-b642-f74ab63c4abb)
+
+
+## commentLike
+![image](https://github.com/user-attachments/assets/e22eaf84-6ee7-45d1-96af-d728447f2d40)
+
+</details>
+
+## 🌟 실행 화면
 <details>
-<summary> 사용자 생성</summary>
+<summary> 🙋회원가입</summary>
+
+</details>
+
+
+
 
   
+<<<<<<< HEAD
 |  기능  | method |URL|
 |:----:|:------:|:---:|
 | 사용자 생성 | POST  |/users/signup|
@@ -372,5 +252,7 @@ requestBody(JSON) :<br>
 ```
 </details>
 </details>
+=======
+>>>>>>> main
 
 
