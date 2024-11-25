@@ -1,6 +1,12 @@
 # 💻 프로젝트 소개
-#### **플러피그램(Fluffygram)**
+#### **🐱플러피그램(Fluffygram)🐶**
 #### 자신의 애완동물을 자랑하고 서로 정보를 공유하는 커뮤니티 사이트
+
+
+## 👨‍💻 팀 소개
+- `☕커피수혈조` <br>
+<br>
+<img src="https://github.com/user-attachments/assets/953b8b0f-564d-4560-b92c-79752cf1ca05" width="500" height="400"/>
 
 ## 🚀 개발 기간
 > 2024.11.20 - 2024.11.24
@@ -65,14 +71,14 @@
 ![image](https://github.com/user-attachments/assets/04812178-81a8-4331-bcfa-00d00a91d51d)
 
 
-
 </details>
 
 ## ⚙️ ERD
 <details>
 <summary>ERD</summary>
+  
+![ERD 최종본](https://github.com/user-attachments/assets/54855e87-0072-488f-97f6-3553fa422b13)
 
-![fluffygram ERD](https://github.com/user-attachments/assets/17514ff3-d6d7-4f5a-82ac-96392b07cb04)
 </details>
   
 
@@ -87,14 +93,6 @@
 ![image](https://github.com/user-attachments/assets/95f57699-3c8d-4d7c-b9ba-7d5d4aabba21)
 
 
-## comment
-![image](https://github.com/user-attachments/assets/9b37ae68-7b7d-45f5-a0e0-e0f5d74d6093)
-
-
-## boardlike
-![image](https://github.com/user-attachments/assets/4280204d-b5ea-4e24-8343-46f415b9c752)
-
-
 ## friend
 ![image](https://github.com/user-attachments/assets/1dc8caa1-a5ec-4859-9d67-62f866ac5ea3)
 
@@ -103,12 +101,19 @@
 ![image](https://github.com/user-attachments/assets/ec9eea73-87ef-4c06-a1b6-0e24fbf9024c)
 
 
+## comment
+![image](https://github.com/user-attachments/assets/9b37ae68-7b7d-45f5-a0e0-e0f5d74d6093)
+
+
 ## image_file
 ![image](https://github.com/user-attachments/assets/622e5b1e-6ac3-47f8-b642-f74ab63c4abb)
 
 
+## boardlike
+![게시물 좋아요 API 수정본](https://github.com/user-attachments/assets/d95a5785-2e93-4f19-8381-0b5b4d6e6715)
+
 ## commentLike
-![image](https://github.com/user-attachments/assets/e22eaf84-6ee7-45d1-96af-d728447f2d40)
+![댓글 좋아요 API 수정본](https://github.com/user-attachments/assets/226f5904-278e-4b97-8c2d-f8ca149cf545)
 
 </details>
 
