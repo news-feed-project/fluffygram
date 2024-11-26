@@ -128,7 +128,7 @@
 <summary> 🙋회원가입/로그인/로그아웃</summary>
   
 #### ⭐ 회원가입
-![회원가입](https://github.com/user-attachments/assets/bb7621d7-5227-460a-b577-e2420d712422)
+![image](https://github.com/user-attachments/assets/59ffd3c6-acde-460d-8604-9513bed12463)
 #### ⭐ 로그인
 ![로그인](https://github.com/user-attachments/assets/e34db8a9-da0d-4da7-afb5-703a07eb14ef)
 #### ⭐ 로그아웃
@@ -140,17 +140,20 @@
 <summary> 👩사용자 인증 & 프로필 관리</summary>
   
 #### ⭐ 본인 사용자 조회
-![본인 유저 조회](https://github.com/user-attachments/assets/ede17a68-7f49-4fd4-bd80-1be7a575d426)
+![image](https://github.com/user-attachments/assets/4bcb278d-caea-412b-8dfc-d1dedee90837)
 #### ⭐ 다른 사용자 조회
-![다른 유저 조회](https://github.com/user-attachments/assets/461cd92b-a0d5-4fd2-8d92-237e19fc468b)
+![image](https://github.com/user-attachments/assets/d2fcb659-4b96-45db-85a5-b69b621c4e3d)
 #### ⭐ 사용자 전체 조회 (pagination 적용)
-![유저 전체 조회 페이지네이션2](https://github.com/user-attachments/assets/8fbb89ca-86c2-41d2-937a-4c208e68edb7)
+![image](https://github.com/user-attachments/assets/2416950e-b8d4-420a-bae1-d8d4b373fd4c)
 #### ⭐ 본인 사용자 수정
-![본인 유저 수정](https://github.com/user-attachments/assets/d10f9e36-b611-4124-a4c1-114845cc7409)
+![image](https://github.com/user-attachments/assets/ffa935bc-6f60-4812-91ae-08956b34e54d)
+#### ⭐ 본인 사용자 수정 후 조회
+
 #### ⭐ 본인 사용자 삭제
 ![유저 삭제](https://github.com/user-attachments/assets/f0356c75-af2a-442a-b4ed-517fc954cbf3)
 #### ⭐ 탈퇴한 회원 조회
-![탈퇴한사용자](https://github.com/user-attachments/assets/e3b5895c-7258-4c61-ba99-6668d7e69edd)
+![image](https://github.com/user-attachments/assets/97f6ed69-bc8f-4bac-bd5a-6c13062c742f)
+
 
 </details>
 
@@ -250,7 +253,22 @@
 <details>
 <summary> 🚨유효성 검사 & 예외처리</summary>
 
-#### ⭐ 친구 요청 거절 - 친구 요청한 사용자와 찬구 요청 받은 사용자 id가 같을 경우
+
+#### ⭐ 회원가입시 동일한 이메일이 있을 경우
+![image](https://github.com/user-attachments/assets/6170b592-a2f8-4e11-98d5-41aa231c326e)
+#### ⭐ 회원가입시 필수 입력값 공백일 경우
+![image](https://github.com/user-attachments/assets/b73da3e1-4b75-41b3-95c6-ca1181fe8007)
+
+#### ⭐ 로그인시 이메일이 일치하지 않을 경우
+![image](https://github.com/user-attachments/assets/0a495f72-e66c-47e9-9d2a-41f8165fd538)
+#### ⭐ 로그인시 비밀번호가 일치하지 않을 경우
+![image](https://github.com/user-attachments/assets/dd59ae05-02e5-466f-bece-f6ec5c66c532)
+
+#### ⭐ 사용자 정보 수정시 수정하려는 비밀번호 형식이 올바르지 않을 경우
+![image](https://github.com/user-attachments/assets/20585007-075b-407b-aa92-8cc8d159b62f)
+
+
+#### ⭐ 친구 요청 거절 - 친구 요청한 사용자와 친구 요청 받은 사용자 id가 같을 경우
 ![image](https://github.com/user-attachments/assets/06a5d723-a162-4856-81f4-31111379a320)
 #### ⭐ 친구 요청 수락 - 친구 요청한 사용자의 id가 데이터에 없을 경우
 ![image](https://github.com/user-attachments/assets/ece0ee35-464b-46f2-b229-7eac3627891c)
@@ -266,7 +284,13 @@
 
 <details>
 <summary> 🏷️정렬 & 페이징</summary>
-  
+
+#### ⭐ 사용자 전체 조회 페이징 전
+![image](https://github.com/user-attachments/assets/8b4ff5dc-c1d1-4313-bd76-355a05ff1ef8)
+#### ⭐ 사용자 전체 조회 페이징 후
+![image](https://github.com/user-attachments/assets/f7f99cd6-2b3c-4dd3-af46-f2e7e362c6b1)
+
+
 #### ⭐ 게시물 수정일 기준 정렬
 ![image](https://github.com/user-attachments/assets/90c71e11-5161-47ff-a9ac-a3fc4b674338)
 #### ⭐ 게시물 생성일 기준 정렬
