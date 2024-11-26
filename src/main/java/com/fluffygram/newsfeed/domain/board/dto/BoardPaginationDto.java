@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 public class BoardPaginationDto {
 
-    String dateType = "create"; //생성일 순 or 수정일 순
+    String dateType = "createdAt"; //생성일 순 or 수정일 순
 
     String likeManySort = "noLike"; //좋아요 순
 

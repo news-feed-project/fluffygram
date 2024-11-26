@@ -56,8 +56,8 @@ public class BoardService {
         Specification<Board> spec = Specification.where(null);
 
         // day 범위 조건
-        if (criteria.getStartAt() != null && criteria.getEndAt() != null) {
-            spec = spec.and(BoardSpecification.filterByModifyAtRange(criteria.getStartAt(), criteria.getEndAt()));
+        if (criteria.getStartAt() != null || criteria.getEndAt() != null) {
+            spec = spec.and(BoardSpecification.filterByModifyAtRange(criteria.getDateType(), criteria.getStartAt(), criteria.getEndAt()));
         }
 
         // dateType 에 따른 정렬 조건
