@@ -1,6 +1,7 @@
 package com.fluffygram.newsfeed.domain.like.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
+import com.fluffygram.newsfeed.domain.base.enums.LikeStatus;
 import com.fluffygram.newsfeed.domain.comment.entity.Comment;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import jakarta.persistence.Entity;

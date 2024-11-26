@@ -2,7 +2,7 @@ package com.fluffygram.newsfeed.domain.board.specification;
 
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
-import com.fluffygram.newsfeed.domain.like.entity.LikeStatus;
+import com.fluffygram.newsfeed.domain.base.enums.LikeStatus;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
