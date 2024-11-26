@@ -3,7 +3,7 @@ package com.fluffygram.newsfeed.domain.friend.repository;
 import com.fluffygram.newsfeed.domain.friend.entity.Friend;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
-import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
+import com.fluffygram.newsfeed.global.exception.NotFoundByIdException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,46 +14,56 @@ import java.util.Optional;
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
-    Optional<Friend> findByReceivedUserIdAndSendUserId(long receivedUserId, long sendUserId);
+    // receivedUserId와 sendUserId로 Friend 엔티티를 조회
+    Optional<Friend> findByReceivedUserIdAndSendUserId(long loginUserId, long receivedUserId);
 
-    Optional<Friend> findBySendUserIdAndReceivedUserId(Long sendUserId, long receivedUserId);
+    // sendUserId와 receivedUserId로 Friend 엔티티를 조회
+    Optional<Friend> findBySendUserIdAndReceivedUserId(Long loginUserId, long deleteUserId);
 
-    List<Friend> findBySendUserIdAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
+    // sendUserId와 friendStatus로 Friend 리스트 조회
+    List<Friend> findBySendUserIdAndFriendStatus(Long loginUserId, Friend.FriendStatus friendStatus);
 
-    List<Friend> findByReceivedUserIdAndFriendStatus(Long userId, Friend.FriendStatus friendStatus);
+    // receivedUserId와 friendStatus로 Friend 리스트 조회
+    List<Friend> findByReceivedUserIdAndFriendStatus(Long loginUserId, Friend.FriendStatus friendStatus);
+
+    // sendUser와 receivedUser의 Friend 관계 여부 확인
+    boolean existsBySendUserAndReceivedUser(User sendUser, User receivedUser);
 
 
-    default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long receivedUserId, long sendUserId) {
-        return findByReceivedUserIdAndSendUserId(receivedUserId, sendUserId)
-                .orElseThrow(() -> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+
+    // 친구수락 메서드. 로그인한 유저가 DB ReceivedUserId에 있어야 정상동작. 요청 받은사람이 수락가능.
+    default Friend findFriendByReceivedUserIdAndSendUserIdOrThrow(long loginUserId, long sendUserId) {
+        return findByReceivedUserIdAndSendUserId(loginUserId, sendUserId)
+                .orElseThrow(() -> new NotFoundByIdException(ExceptionType.FRIEND_NOT_FOUND));
+
     }
 
+    // sendUserId와 receivedUserId로 Friend 조회, 없으면 예외 발생
     default Friend findBySendUserIdAndReceivedUserIdOrThrow(
-            Long sendUserId, long receivedUserId) {
-        return findBySendUserIdAndReceivedUserId(sendUserId, receivedUserId)
-                .orElseThrow( ()-> new NotFountByIdException(ExceptionType.FRIEND_NOT_FOUND));
+            Long loginUserId, long deleteUserId) {
+        return findBySendUserIdAndReceivedUserId(loginUserId, deleteUserId)
+                .orElseThrow( ()-> new NotFoundByIdException(ExceptionType.FRIEND_NOT_FOUND));
+
     }
 
-    default List<Friend> findBySendUserAndFriendStatusOrThrow(Long userId, Friend.FriendStatus friendStatus) {
+    // sendUser와 receivedUser 기준으로 friendStatus에 해당하는 Friend 리스트를 조회, 없으면 빈 리스트 반환
+    default List<Friend> findFriendsByUserAndStatus(Long loginUserId, Friend.FriendStatus friendStatus) {
 
         // 결과를 담을 리스트
         List<Friend> friends = new ArrayList<>();
 
         // sendUser로 찾은 친구들
-        List<Friend> sendUserFriends = findBySendUserIdAndFriendStatus(userId, friendStatus);
+        List<Friend> sendUserFriends = findBySendUserIdAndFriendStatus(loginUserId, friendStatus);
         if (sendUserFriends != null && !sendUserFriends.isEmpty()) {
             friends.addAll(sendUserFriends);  // sendUser 조건에 맞는 친구들 추가
         }
 
         // receivedUser로 찾은 친구들
-        List<Friend> receivedUserFriends = findByReceivedUserIdAndFriendStatus(userId, friendStatus);
+        List<Friend> receivedUserFriends = findByReceivedUserIdAndFriendStatus(loginUserId, friendStatus);
         if (receivedUserFriends != null && !receivedUserFriends.isEmpty()) {
             friends.addAll(receivedUserFriends);  // receivedUser 조건에 맞는 친구들 추가
         }
 
         return friends;
     }
-
-    boolean existsBySendUserAndReceivedUser(User sendUser, User receivedUser);
-
 }

@@ -1,6 +1,8 @@
 package com.fluffygram.newsfeed.domain.board.repository;
 
 import com.fluffygram.newsfeed.domain.board.entity.Board;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +12,7 @@ public class BoardSpecification {
     public static Specification<Board> filterByDateType(String dateType) {
         return (root, query, criteriaBuilder) -> {
             if ("create".equals(dateType)) {
-                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+                query.orderBy(criteriaBuilder.asc(root.get("createdAt")));
             } else if ("modify".equals(dateType)) {
                 query.orderBy(criteriaBuilder.desc(root.get("modifiedAt")));
             }
@@ -18,10 +20,38 @@ public class BoardSpecification {
         };
     }
 
+//    public static Specification<Board> filterByLikeManySort(String likeManySort) {
+//        return (root, query, criteriaBuilder) -> {
+//            if ("like".equals(likeManySort)) {
+//                query.orderBy(criteriaBuilder.desc(criteriaBuilder.size(root.get("boardLikeList"))));
+//            }
+//            return null;
+//        };
+//    }
+
     public static Specification<Board> filterByLikeManySort(String likeManySort) {
         return (root, query, criteriaBuilder) -> {
             if ("like".equals(likeManySort)) {
+<<<<<<< HEAD
                 query.orderBy(criteriaBuilder.desc(criteriaBuilder.size(root.get("boardLikeList"))));
+=======
+                // Join boardLikeList
+                Join<Object, Object> boardLikeJoin = root.join("board_like", JoinType.LEFT);
+
+                // Filter for boardLikeList's likeStatus == "REGISTER"
+                query.orderBy(
+                        criteriaBuilder.desc(
+                                criteriaBuilder.count(
+                                        criteriaBuilder.selectCase()
+                                                .when(criteriaBuilder.equal(boardLikeJoin.get("likeStatus"), "REGISTER"), 1)
+                                                .otherwise(0)
+                                )
+                        )
+                );
+
+                // Ensure unique results for Board since we're working with aggregates
+                query.groupBy(root.get("id"));
+>>>>>>> main
             }
             return null;
         };
@@ -30,7 +60,11 @@ public class BoardSpecification {
     public static Specification<Board> filterByModifyAtRange(LocalDate startAt, LocalDate endAt) {
         return (root, query, criteriaBuilder) -> {
             if (startAt != null && endAt != null) {
-                return criteriaBuilder.between(root.get("modifiedAt"), startAt.atStartOfDay(), endAt.atTime(23, 59, 59));
+                return criteriaBuilder.between(
+                        root.get("modifiedAt"),
+                        startAt.atStartOfDay(),
+                        endAt.atTime(23, 59, 59));
+
             } else if (startAt != null) {
                 return criteriaBuilder.between(root.get("modifiedAt"), startAt.atStartOfDay(), LocalDateTime.now());
 

@@ -2,16 +2,10 @@ package com.fluffygram.newsfeed.domain.friend.entity;
 
 import com.fluffygram.newsfeed.domain.base.Entity.BaseEntity;
 import com.fluffygram.newsfeed.domain.user.entity.User;
-import com.fluffygram.newsfeed.global.exception.BusinessException;
-import com.fluffygram.newsfeed.global.exception.ExceptionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -35,14 +29,13 @@ public class Friend extends BaseEntity {
     private User receivedUser;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "friend_status", columnDefinition = "ENUM('REQUESTED', 'ACCEPTED', 'NOT_FRIEND') DEFAULT 'NOT_FRIEND'")
+    @Column(name = "friend_status", columnDefinition = "ENUM('REQUESTED', 'ACCEPTED')")
     @NotNull
-    private FriendStatus friendStatus = FriendStatus.NOT_FRIEND;
+    private FriendStatus friendStatus;
 
     public enum FriendStatus {
         REQUESTED, // 요청중상태
-        ACCEPTED, // 친구상태
-        NOT_FRIEND // 친구아님상태
+        ACCEPTED // 친구상태
     }
 
     public Friend() { }
@@ -61,13 +54,4 @@ public class Friend extends BaseEntity {
         }
         this.friendStatus = FriendStatus.ACCEPTED;
     }
-
-    // 친구관계 삭제시. NOT_FRIEND
-    public void rejectFriendRequest() {
-        if ( this.friendStatus == FriendStatus.NOT_FRIEND ) {
-            throw new IllegalStateException("이미 친구가 아닙니다.");
-        }
-        this.friendStatus = FriendStatus.NOT_FRIEND;
-    }
-
 }

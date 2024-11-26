@@ -53,7 +53,7 @@ public class UserImageController {
      * @return ResponseEntity<ImageResponseDto>  이미지 정보 및 http 상태 전달
      *
      */
-    @PatchMapping("{statusId}")
+    @PatchMapping
     public ResponseEntity<ImageResponseDto> UpdateImage(@RequestParam MultipartFile file, @Valid @RequestBody ImageRequestDto requestDto) {
         Image image = imageService.updateImage(file, requestDto.getStatusId(), ImageStatus.valueOf(requestDto.getImageStatus()));
 
@@ -68,8 +68,8 @@ public class UserImageController {
      * @return ResponseEntity<Void>  http 상태 전달
      *
      */
-    @DeleteMapping
-    public ResponseEntity<Void> deleteImage(@RequestParam Long imageId) {
+    @DeleteMapping("{imageId}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
         imageService.deleteImage(imageId, ImageStatus.ORPHANAGE);
 
         return new ResponseEntity<>(HttpStatus.OK);

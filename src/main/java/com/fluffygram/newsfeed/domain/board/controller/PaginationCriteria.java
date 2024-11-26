@@ -13,7 +13,7 @@ public class PaginationCriteria {
 
     String dateType = "create"; //생성일 순 or 수정일 순
 
-    String likeManySort = "noLike"; //좋아요 순
+    String likeManySort = "like"; //좋아요 순
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startAt; //시작일

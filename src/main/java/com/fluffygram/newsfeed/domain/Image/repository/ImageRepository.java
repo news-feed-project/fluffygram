@@ -4,7 +4,7 @@ import com.fluffygram.newsfeed.domain.Image.entity.Image;
 import com.fluffygram.newsfeed.domain.base.enums.ImageStatus;
 import com.fluffygram.newsfeed.global.config.Const;
 import com.fluffygram.newsfeed.global.exception.ExceptionType;
-import com.fluffygram.newsfeed.global.exception.NotFountByIdException;
+import com.fluffygram.newsfeed.global.exception.NotFoundByIdException;
 import com.fluffygram.newsfeed.global.tool.GetImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -23,7 +23,7 @@ public interface ImageRepository extends JpaRepository<Image, Long>{
     Optional<Image> findUserImageByStatusId(Long id);
 
     default Image getUserImageByIdOrElseThrow(Long id){
-        return findUserImageByStatusId(id).orElseThrow(()-> new NotFountByIdException(ExceptionType.FILE_NOT_FOUND));
+        return findUserImageByStatusId(id).orElseThrow(()-> new NotFoundByIdException(ExceptionType.FILE_NOT_FOUND));
     }
 
     List<Image> findAllByStatusIdAndStatus(Long id, ImageStatus status);
