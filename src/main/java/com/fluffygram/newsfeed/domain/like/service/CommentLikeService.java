@@ -1,16 +1,11 @@
 package com.fluffygram.newsfeed.domain.like.service;
 
 
-import com.fluffygram.newsfeed.domain.board.entity.Board;
-import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
 import com.fluffygram.newsfeed.domain.comment.entity.Comment;
 import com.fluffygram.newsfeed.domain.comment.repository.CommentRepository;
-import com.fluffygram.newsfeed.domain.like.dto.BoardLikeResponseDto;
 import com.fluffygram.newsfeed.domain.like.dto.CommentLikeResponseDto;
-import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
 import com.fluffygram.newsfeed.domain.like.entity.CommentLike;
-import com.fluffygram.newsfeed.domain.like.entity.LikeStatus;
-import com.fluffygram.newsfeed.domain.like.repository.BoardLikeRepository;
+import com.fluffygram.newsfeed.domain.base.enums.LikeStatus;
 import com.fluffygram.newsfeed.domain.like.repository.CommentLikeRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;

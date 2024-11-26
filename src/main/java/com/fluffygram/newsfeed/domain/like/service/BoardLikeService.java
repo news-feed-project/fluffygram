@@ -5,7 +5,7 @@ import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.board.repository.BoardRepository;
 import com.fluffygram.newsfeed.domain.like.dto.BoardLikeResponseDto;
 import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
-import com.fluffygram.newsfeed.domain.like.entity.LikeStatus;
+import com.fluffygram.newsfeed.domain.base.enums.LikeStatus;
 import com.fluffygram.newsfeed.domain.like.repository.BoardLikeRepository;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.domain.user.repository.UserRepository;
@@ -45,7 +45,7 @@ public class BoardLikeService {
             //DB에 저장
             boardLikeRepository.save(createBoardLike);
 
-            findBoardById.addBoardLike(createBoardLike);
+            // findBoardById.addBoardLike(createBoardLike);
 
             //저장된 좋아요 데이터를 반환
             checkLike = createBoardLike;
