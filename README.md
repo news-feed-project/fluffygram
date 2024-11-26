@@ -6,13 +6,12 @@
 ## 👨‍💻 팀 소개
 - `☕커피수혈조` <br>
 <br>
-<img src="https://github.com/user-attachments/assets/953b8b0f-564d-4560-b92c-79752cf1ca05" width="500" height="400"/>
+<img src="https://github.com/user-attachments/assets/953b8b0f-564d-4560-b92c-79752cf1ca05" width="550" height="500"/>
 
-<Github 주소><br>
-한지연 : [j-hann](https://github.com/j-hann)<br>
-박시환 : [baksihwan](https://github.com/baksihwan)<br>
-김명호 : [KimMyungHo919](https://github.com/KimMyungHo919)<br>
-김세원 : [taketheking](https://github.com/taketheking)<br>
+<br> **🔗한지연** <a href="https://github.com/j-hann"><img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white"></a>
+**박시환** <a href="https://github.com/baksihwan"><img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white"></a>
+**김명호** <a href="https://github.com/KimMyungHo919"><img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white"></a>
+**김세원** <a href="https://github.com/taketheking"><img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white"></a>
 
 ## 🚀 개발 기간
 > 2024.11.20 - 2024.11.24
