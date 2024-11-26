@@ -123,7 +123,7 @@
 </details>
 
 ## 🌟 실행 화면
-> postman API Test
+> postman API Test &  MySQL Workbench
 <details>
 <summary> 🙋회원가입/로그인/로그아웃</summary>
   
@@ -185,19 +185,33 @@
 ![image](https://github.com/user-attachments/assets/0b476b61-b9ca-4ae6-a38d-0c649336b794)
 
 #### ⭐ 친구 요청 거절
-![친구 요청 거절](https://github.com/user-attachments/assets/393b0275-9738-4402-88e2-33f79472ac3b)
+![image](https://github.com/user-attachments/assets/1a8760ac-e6cd-4810-a5ae-5ace3c902f98)
 
 - MySQL Workbench 조회시 데이터 삭제됨
 
+![image](https://github.com/user-attachments/assets/fb9c5464-365e-41ec-b550-8f8a8cef10b6)
+
+
+#### ⭐ 친구 요청 수락
+![image](https://github.com/user-attachments/assets/c5fb260e-0aa2-46e7-b128-b6e236fdea0b)
+
+- MySQL Workbench 조회시 ACCEPTED 상태
+
+![image](https://github.com/user-attachments/assets/c94f12e4-96a4-43ce-b864-30e0bbfdd2ad)
+
+#### ⭐ 친구 전체 조회
+![image](https://github.com/user-attachments/assets/1a068a4e-db1f-4196-a307-014d3c99f17e)
 
 #### ⭐ 친구 삭제
 ![친구 삭제](https://github.com/user-attachments/assets/f09300e3-97fb-4857-8cda-2f7a6bd2c36a)
-#### ⭐ 친구 요청
-![친구요청](https://github.com/user-attachments/assets/0aa7fe49-0b89-4cbf-a39e-ede863b501d5)
-#### ⭐ 친구 전체 조회
-![친구 전체 조회](https://github.com/user-attachments/assets/e7a4c7c6-ebce-4ce3-937a-470e438e53c8)
-#### ⭐ 친구 요청 수락
-![친구 요청 수락](https://github.com/user-attachments/assets/da81bf55-6ee4-4df6-b90f-1587ca7a1ec7)
+
+- MySQL Workbench 조회시 데이터 삭제됨
+
+![image](https://github.com/user-attachments/assets/45d517e1-6826-4a64-8e0d-d9bb699a5eaf)
+
+
+
+
 
 </details>
 
@@ -236,9 +250,9 @@
 <details>
 <summary> 🚨유효성 검사 & 예외처리</summary>
 
-#### 친구 요청 거절 - 친구 요청한 사용자와 찬구 요청 받은 사용자 id가 같을 경우
+#### ⭐ 친구 요청 거절 - 친구 요청한 사용자와 찬구 요청 받은 사용자 id가 같을 경우
 ![image](https://github.com/user-attachments/assets/06a5d723-a162-4856-81f4-31111379a320)
-#### 친구 요청 수락 - 친구 요청한 사용자의 id가 데이터에 없을 경우
+#### ⭐ 친구 요청 수락 - 친구 요청한 사용자의 id가 데이터에 없을 경우
 ![image](https://github.com/user-attachments/assets/ece0ee35-464b-46f2-b229-7eac3627891c)
 
   
@@ -257,10 +271,13 @@
 ![image](https://github.com/user-attachments/assets/90c71e11-5161-47ff-a9ac-a3fc4b674338)
 #### ⭐ 게시물 생성일 기준 정렬
 ![image](https://github.com/user-attachments/assets/b9643b59-1a6c-42b2-8055-1ad619844295)
-#### ⭐ 게시물 기간별 정렬 좋아요 많은 기준
-![페이징3](https://github.com/user-attachments/assets/0ff2cf71-1ac1-4039-b024-3960d7da148a)
+#### ⭐ 게시물 기간별 정렬
+![image](https://github.com/user-attachments/assets/de9e3ff0-8c90-43d5-aed1-5da8cac3625b)
 #### ⭐ 게시물 좋아요 많은 기준 정렬
 ![image](https://github.com/user-attachments/assets/4704972b-63e0-4696-bf0b-d47323920454)
+#### ⭐ 게시물 생성일 기준 & 좋아요 많은 기준 정렬
+![image](https://github.com/user-attachments/assets/83f94412-6e04-4ff3-9146-c58b91fb990a)
+
 
 #### ⭐ 댓글 페이징 전 전체 조회
 ![image](https://github.com/user-attachments/assets/a83f5b03-1a9f-4f56-82ed-6ff5b6b6bd78)
