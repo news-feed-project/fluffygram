@@ -20,7 +20,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
         return findById(id).orElseThrow(() -> new NotFoundByIdException(ExceptionType.BOARD_NOT_FOUND));
     }
 
-
     @Query("SELECT b FROM Board b " +
             "WHERE (:startDate IS NULL OR b.modifiedAt >= :startDate) " +
             "AND (:endDate IS NULL OR b.modifiedAt <= :endDate)" +

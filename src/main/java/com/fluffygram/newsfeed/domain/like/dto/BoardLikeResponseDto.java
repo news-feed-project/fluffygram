@@ -2,7 +2,7 @@ package com.fluffygram.newsfeed.domain.like.dto;
 
 
 import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
-import com.fluffygram.newsfeed.domain.like.entity.LikeStatus;
+import com.fluffygram.newsfeed.domain.base.enums.LikeStatus;
 import lombok.Getter;
 import java.time.LocalDateTime;
 

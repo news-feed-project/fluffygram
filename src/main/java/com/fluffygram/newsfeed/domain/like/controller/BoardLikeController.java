@@ -5,8 +5,6 @@ import com.fluffygram.newsfeed.domain.like.dto.BoardLikeResponseDto;
 import com.fluffygram.newsfeed.domain.like.service.BoardLikeService;
 import com.fluffygram.newsfeed.domain.user.entity.User;
 import com.fluffygram.newsfeed.global.config.Const;
-import com.fluffygram.newsfeed.global.exception.ExceptionType;
-import com.fluffygram.newsfeed.global.exception.NotMatchByUserIdException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
