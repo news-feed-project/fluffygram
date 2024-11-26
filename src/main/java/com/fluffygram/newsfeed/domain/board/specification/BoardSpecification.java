@@ -1,13 +1,14 @@
 package com.fluffygram.newsfeed.domain.board.specification;
 
+import com.fluffygram.newsfeed.domain.base.enums.LikeStatus;
 import com.fluffygram.newsfeed.domain.board.entity.Board;
 import com.fluffygram.newsfeed.domain.like.entity.BoardLike;
-import com.fluffygram.newsfeed.domain.base.enums.LikeStatus;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Order;
 import org.springframework.data.jpa.domain.Specification;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,30 +27,10 @@ public class BoardSpecification {
         };
     }
 
-//    public static Specification<Board> filterByLikeManySort(String likeManySort) {
-//        return (root, query, criteriaBuilder) -> {
-//            if ("like".equals(likeManySort)) {
-//                query.orderBy(criteriaBuilder.desc(criteriaBuilder.size(root.get("boardLikeList"))));
-//            }
-//            return null;
-//        };
-//    }
-
-<<<<<<< HEAD:src/main/java/com/fluffygram/newsfeed/domain/board/repository/BoardSpecification.java
-    public static Specification<Board> filterByLikeManySort(String likeManySort) {
-        return (root, query, criteriaBuilder) -> {
-            if ("like".equals(likeManySort)) {
-<<<<<<< HEAD
-                query.orderBy(criteriaBuilder.desc(criteriaBuilder.size(root.get("boardLikeList"))));
-=======
-                // Join boardLikeList
-                Join<Object, Object> boardLikeJoin = root.join("board_like", JoinType.LEFT);
-=======
     public static Specification<Board> filterByLikeManySortAndDateType(String dateType) {
         return (root, query, cb) -> {
             // LEFT JOIN board_like
             Join<Board, BoardLike> likesJoin = root.join("boardLikeList", JoinType.LEFT);
->>>>>>> main:src/main/java/com/fluffygram/newsfeed/domain/board/specification/BoardSpecification.java
 
             // COUNT(CASE WHEN bl.likeStatus = 'REGISTER' THEN 1 END)
             Expression<Long> likeCount = cb.count(cb.selectCase()
@@ -57,11 +38,6 @@ public class BoardSpecification {
                     .otherwise((Long) null)
             );
 
-<<<<<<< HEAD:src/main/java/com/fluffygram/newsfeed/domain/board/repository/BoardSpecification.java
-                // Ensure unique results for Board since we're working with aggregates
-                query.groupBy(root.get("id"));
->>>>>>> main
-=======
             // Add group by for Board.id
             query.groupBy(root.get("id"));
 
@@ -74,7 +50,6 @@ public class BoardSpecification {
                 orderList.add(cb.desc(root.get("createdAt")));
             } else if ("modify".equalsIgnoreCase(dateType)) {
                 orderList.add(cb.desc(root.get("modifiedAt")));
->>>>>>> main:src/main/java/com/fluffygram/newsfeed/domain/board/specification/BoardSpecification.java
             }
 
             // Apply the order list
@@ -105,4 +80,3 @@ public class BoardSpecification {
         };
     }
 }
-
