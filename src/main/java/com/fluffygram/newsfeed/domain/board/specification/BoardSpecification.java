@@ -11,17 +11,16 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardSpecification {
     public static Specification<Board> filterByDateType(String dateType) {
         return (root, query, criteriaBuilder) -> {
-            if ("modify".equals(dateType)) {
-                query.orderBy(criteriaBuilder.desc(root.get("modifiedAt")));
+            if ("modifiedAt".equals(dateType)) {
+                query.orderBy(criteriaBuilder.desc(root.get(dateType)));
             }else {
-                query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+                query.orderBy(criteriaBuilder.desc(root.get(dateType)));
             }
             return null;
         };
@@ -46,10 +45,10 @@ public class BoardSpecification {
             orderList.add(cb.desc(likeCount));
 
             // Add secondary sort based on dateType (createAt or modifyAt)
-            if ("create".equalsIgnoreCase(dateType)) {
-                orderList.add(cb.desc(root.get("createdAt")));
-            } else if ("modify".equalsIgnoreCase(dateType)) {
-                orderList.add(cb.desc(root.get("modifiedAt")));
+            if ("createdAt".equalsIgnoreCase(dateType)) {
+                orderList.add(cb.desc(root.get(dateType)));
+            } else {
+                orderList.add(cb.desc(root.get(dateType)));
             }
 
             // Apply the order list
@@ -59,22 +58,24 @@ public class BoardSpecification {
         };
     }
 
-    public static Specification<Board> filterByModifyAtRange(LocalDate startAt, LocalDate endAt) {
+    public static Specification<Board> filterByModifyAtRange(String dateType, LocalDate startAt, LocalDate endAt) {
+
         return (root, query, criteriaBuilder) -> {
             if (startAt != null && endAt != null) {
                 return criteriaBuilder.between(
-                        root.get("modifiedAt"),
+                        root.get(dateType),
                         startAt.atStartOfDay(),
                         endAt.atTime(23, 59, 59));
 
             } else if (startAt != null) {
-                return criteriaBuilder.between(root.get("modifiedAt"), startAt.atStartOfDay(), LocalDateTime.now());
+                return criteriaBuilder.between(root.get(dateType), startAt.atStartOfDay(), LocalDateTime.now());
 
             }else if (endAt != null) {
-                String str = "1970-01-01";
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate dateTime = LocalDate.parse(str, formatter);
-                return criteriaBuilder.between(root.get("modifiedAt"), dateTime, endAt);
+                LocalDate defaultStart = LocalDate.of(1970, 1, 1);
+                return criteriaBuilder.between(
+                        root.get(dateType),
+                        defaultStart.atStartOfDay(),
+                        endAt.atTime(23, 59, 59));
             }
             return null;
         };

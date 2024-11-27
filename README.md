@@ -137,7 +137,7 @@
 </details>
 
 <details>
-<summary> 🙋사용자 인증 & 프로필 관리</summary>
+<summary> 👩사용자 인증 & 프로필 관리</summary>
   
 #### ⭐ 본인 사용자 조회
 ![본인 유저 조회](https://github.com/user-attachments/assets/ede17a68-7f49-4fd4-bd80-1be7a575d426)
@@ -156,21 +156,40 @@
 
 <details>
 <summary> 📑게시물 관리</summary>
-
+  
+#### ⭐ 게시물 등록
+![image](https://github.com/user-attachments/assets/6a96727d-7a7a-4eb6-92d0-9f3a38879590)
 #### ⭐ 게시물 전체 조회
-![게시물 전체 조회](https://github.com/user-attachments/assets/98135485-a32a-4d4a-a1d0-4f9205a63648)
+![image](https://github.com/user-attachments/assets/92047157-db7d-4340-8079-6c08a80fd843)
 #### ⭐ 게시물 단건 조회
-![게시물 단건 조회](https://github.com/user-attachments/assets/6cda3589-30d7-4e7f-b133-b28f1f2daea9)
-#### ⭐ 게시물 저장
-![게시물저장](https://github.com/user-attachments/assets/7ecada23-09c9-4e9d-955c-3bb11ad5757b)
+![image](https://github.com/user-attachments/assets/85de567c-8657-4fa6-97a7-df153883d580)
+#### ⭐ 게시물 수정
+![image](https://github.com/user-attachments/assets/f773149c-9bca-4b2d-b748-afbdf5be5b6b)
+#### ⭐ 게시물 수정 후 단건 조회
+![image](https://github.com/user-attachments/assets/059dc9c9-54f8-4a5a-9fe1-2e6eb6b5e3ae)
+#### ⭐ 게시물 삭제
+![image](https://github.com/user-attachments/assets/c208436d-2655-4c4c-8000-031ec0e88f54)
+#### ⭐ 게시물 삭제 후 전체 조회
+![image](https://github.com/user-attachments/assets/61bcc358-1931-43b5-b77f-29d017eda3e8)
 
 </details>
 
 <details>
 <summary> 🧑‍🤝‍🧑친구 관리</summary>
 
+#### ⭐ 친구 요청
+![친구요청](https://github.com/user-attachments/assets/0aa7fe49-0b89-4cbf-a39e-ede863b501d5)
+
+- MySQL Workbench 조회시 REQUESTED 상태
+
+![image](https://github.com/user-attachments/assets/0b476b61-b9ca-4ae6-a38d-0c649336b794)
+
 #### ⭐ 친구 요청 거절
 ![친구 요청 거절](https://github.com/user-attachments/assets/393b0275-9738-4402-88e2-33f79472ac3b)
+
+- MySQL Workbench 조회시 데이터 삭제됨
+
+
 #### ⭐ 친구 삭제
 ![친구 삭제](https://github.com/user-attachments/assets/f09300e3-97fb-4857-8cda-2f7a6bd2c36a)
 #### ⭐ 친구 요청
@@ -186,28 +205,42 @@
 <summary> 🗨️댓글 관리</summary>
   
 #### ⭐ 댓글 작성
-![댓글 작성](https://github.com/user-attachments/assets/a9dcf3a2-b76f-4126-9838-dfa334541959)
+![image](https://github.com/user-attachments/assets/2519b16c-8eb6-42d1-aaf5-78ffe39518c6)
 #### ⭐ 댓글 수정
-![댓글 수정](https://github.com/user-attachments/assets/07c7e574-557e-49e3-95d2-01894a34d28d)
-#### ⭐ 댓글 삭제
-![댓글 삭제](https://github.com/user-attachments/assets/376dd370-4513-4511-8b3a-a7a416a88afc)
+![image](https://github.com/user-attachments/assets/d24f8e8b-aefa-4017-925d-a90d169e2660)
 #### ⭐ 댓글 전체 조회
-![댓글 전체 조회](https://github.com/user-attachments/assets/ef7dff7f-87ab-47e2-9df3-4f5aefebcf93)
+![image](https://github.com/user-attachments/assets/b3b28ebd-befc-42bd-b453-633976564462)
+#### ⭐ 댓글 삭제
+![image](https://github.com/user-attachments/assets/27a40e37-e9d7-4407-ab65-ded84d1bfc06)
+#### ⭐ 댓글 삭제 후 전체 조회
+![image](https://github.com/user-attachments/assets/07951b03-5c0c-4eb1-ab8b-69dde4f21f94)
+
 
 </details>
 
 <details>
 <summary> ❤️좋아요 기능</summary>
   
-#### ⭐ 게시글 좋아요
-![좋아요1](https://github.com/user-attachments/assets/b40e861a-72ce-4a6d-b1ab-82f2e2d718c2)
-#### ⭐ 댓글 좋아요
-![좋아요2](https://github.com/user-attachments/assets/1f195b04-af99-43ef-b113-e15f09491213)
+#### ⭐ 게시글 좋아요 활성화
+![image](https://github.com/user-attachments/assets/5c41b974-b701-4413-8f9f-2ed4148a0f42)
+#### ⭐ 게시글 좋아요 비활성화
+![image](https://github.com/user-attachments/assets/ca39df41-6265-4d24-ba17-9975fc160665)
+#### ⭐ 댓글 좋아요 활성화
+![image](https://github.com/user-attachments/assets/f59939ad-a3fb-4730-a9c8-4da7f44b6650)
+#### ⭐ 댓글 좋아요 비활성화
+![image](https://github.com/user-attachments/assets/e1da93d1-42d9-45d4-bc61-1e2bcea91612)
+
 
 </details>
 
 <details>
 <summary> 🚨유효성 검사 & 예외처리</summary>
+
+#### 친구 요청 거절 - 친구 요청한 사용자와 찬구 요청 받은 사용자 id가 같을 경우
+![image](https://github.com/user-attachments/assets/06a5d723-a162-4856-81f4-31111379a320)
+#### 친구 요청 수락 - 친구 요청한 사용자의 id가 데이터에 없을 경우
+![image](https://github.com/user-attachments/assets/ece0ee35-464b-46f2-b229-7eac3627891c)
+
   
 #### ⭐ 삭제된 게시글 좋아요
 ![좋아요 오류](https://github.com/user-attachments/assets/0a5e74da-19c0-413d-9678-7348ac1c5821)
@@ -220,12 +253,20 @@
 <details>
 <summary> 🏷️정렬 & 페이징</summary>
   
-#### ⭐ 수정일, 좋아요 많은순 기준 정렬
-![페이징](https://github.com/user-attachments/assets/436903f3-fe35-461a-88d7-f273fe2ba38e)
-#### ⭐ 좋아요 많은순, 기간별 정렬
+#### ⭐ 게시물 수정일 기준 정렬
+![image](https://github.com/user-attachments/assets/90c71e11-5161-47ff-a9ac-a3fc4b674338)
+#### ⭐ 게시물 생성일 기준 정렬
+![image](https://github.com/user-attachments/assets/b9643b59-1a6c-42b2-8055-1ad619844295)
+#### ⭐ 게시물 기간별 정렬 좋아요 많은 기준
 ![페이징3](https://github.com/user-attachments/assets/0ff2cf71-1ac1-4039-b024-3960d7da148a)
-#### ⭐ 좋아요 많은순 정렬
-![페이징2](https://github.com/user-attachments/assets/74b38c25-0f29-4fa3-8670-20b79a062239)
+#### ⭐ 게시물 좋아요 많은 기준 정렬
+![image](https://github.com/user-attachments/assets/4704972b-63e0-4696-bf0b-d47323920454)
+
+#### ⭐ 댓글 페이징 전 전체 조회
+![image](https://github.com/user-attachments/assets/a83f5b03-1a9f-4f56-82ed-6ff5b6b6bd78)
+#### ⭐ 댓글 페이징 후 전체 조회
+![image](https://github.com/user-attachments/assets/26e1ccb7-392d-4be2-b9f2-2a1c2013f86c)
+
 
 </details>
 
