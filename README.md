@@ -145,9 +145,12 @@
 ![image](https://github.com/user-attachments/assets/d2fcb659-4b96-45db-85a5-b69b621c4e3d)
 #### ⭐ 사용자 전체 조회 (pagination 적용)
 ![image](https://github.com/user-attachments/assets/2416950e-b8d4-420a-bae1-d8d4b373fd4c)
+
 #### ⭐ 본인 사용자 수정
-![image](https://github.com/user-attachments/assets/ffa935bc-6f60-4812-91ae-08956b34e54d)
+![image](https://github.com/user-attachments/assets/4766d97e-3cc5-46f1-80e4-3e9a191bcf7c)
 #### ⭐ 본인 사용자 수정 후 조회
+![image](https://github.com/user-attachments/assets/98ac6d7f-4cd8-4423-ab6b-2022f00cef5f)
+
 
 #### ⭐ 본인 사용자 삭제
 ![유저 삭제](https://github.com/user-attachments/assets/f0356c75-af2a-442a-b4ed-517fc954cbf3)
