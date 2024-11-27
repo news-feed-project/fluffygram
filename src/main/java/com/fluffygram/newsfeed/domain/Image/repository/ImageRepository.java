@@ -20,10 +20,10 @@ public interface ImageRepository extends JpaRepository<Image, Long>{
         return GetImage.getImage(Const.USER_IMAGE_STORAGE, imageUrl);
     }
 
-    Optional<Image> findUserImageByStatusId(Long id);
+    Optional<Image> findImageByStatusIdAndStatus(Long id, ImageStatus status);
 
-    default Image getUserImageByIdOrElseThrow(Long id){
-        return findUserImageByStatusId(id).orElseThrow(()-> new NotFoundByIdException(ExceptionType.FILE_NOT_FOUND));
+    default Image getImageByIdOrElseThrow(Long id, ImageStatus status){
+        return findImageByStatusIdAndStatus(id, status).orElseThrow(()-> new NotFoundByIdException(ExceptionType.FILE_NOT_FOUND));
     }
 
     List<Image> findAllByStatusIdAndStatus(Long id, ImageStatus status);
