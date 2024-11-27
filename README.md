@@ -123,12 +123,12 @@
 </details>
 
 ## 🌟 실행 화면
-> postman API Test
+> postman API Test &  MySQL Workbench
 <details>
 <summary> 🙋회원가입/로그인/로그아웃</summary>
   
 #### ⭐ 회원가입
-![회원가입](https://github.com/user-attachments/assets/bb7621d7-5227-460a-b577-e2420d712422)
+![image](https://github.com/user-attachments/assets/59ffd3c6-acde-460d-8604-9513bed12463)
 #### ⭐ 로그인
 ![로그인](https://github.com/user-attachments/assets/e34db8a9-da0d-4da7-afb5-703a07eb14ef)
 #### ⭐ 로그아웃
@@ -140,17 +140,20 @@
 <summary> 👩사용자 인증 & 프로필 관리</summary>
   
 #### ⭐ 본인 사용자 조회
-![본인 유저 조회](https://github.com/user-attachments/assets/ede17a68-7f49-4fd4-bd80-1be7a575d426)
+![image](https://github.com/user-attachments/assets/4bcb278d-caea-412b-8dfc-d1dedee90837)
 #### ⭐ 다른 사용자 조회
-![다른 유저 조회](https://github.com/user-attachments/assets/461cd92b-a0d5-4fd2-8d92-237e19fc468b)
+![image](https://github.com/user-attachments/assets/d2fcb659-4b96-45db-85a5-b69b621c4e3d)
 #### ⭐ 사용자 전체 조회 (pagination 적용)
-![유저 전체 조회 페이지네이션2](https://github.com/user-attachments/assets/8fbb89ca-86c2-41d2-937a-4c208e68edb7)
+![image](https://github.com/user-attachments/assets/2416950e-b8d4-420a-bae1-d8d4b373fd4c)
 #### ⭐ 본인 사용자 수정
-![본인 유저 수정](https://github.com/user-attachments/assets/d10f9e36-b611-4124-a4c1-114845cc7409)
+![image](https://github.com/user-attachments/assets/ffa935bc-6f60-4812-91ae-08956b34e54d)
+#### ⭐ 본인 사용자 수정 후 조회
+
 #### ⭐ 본인 사용자 삭제
 ![유저 삭제](https://github.com/user-attachments/assets/f0356c75-af2a-442a-b4ed-517fc954cbf3)
 #### ⭐ 탈퇴한 회원 조회
-![탈퇴한사용자](https://github.com/user-attachments/assets/e3b5895c-7258-4c61-ba99-6668d7e69edd)
+![image](https://github.com/user-attachments/assets/97f6ed69-bc8f-4bac-bd5a-6c13062c742f)
+
 
 </details>
 
@@ -185,19 +188,33 @@
 ![image](https://github.com/user-attachments/assets/0b476b61-b9ca-4ae6-a38d-0c649336b794)
 
 #### ⭐ 친구 요청 거절
-![친구 요청 거절](https://github.com/user-attachments/assets/393b0275-9738-4402-88e2-33f79472ac3b)
+![image](https://github.com/user-attachments/assets/1a8760ac-e6cd-4810-a5ae-5ace3c902f98)
 
 - MySQL Workbench 조회시 데이터 삭제됨
 
+![image](https://github.com/user-attachments/assets/fb9c5464-365e-41ec-b550-8f8a8cef10b6)
+
+
+#### ⭐ 친구 요청 수락
+![image](https://github.com/user-attachments/assets/c5fb260e-0aa2-46e7-b128-b6e236fdea0b)
+
+- MySQL Workbench 조회시 ACCEPTED 상태
+
+![image](https://github.com/user-attachments/assets/c94f12e4-96a4-43ce-b864-30e0bbfdd2ad)
+
+#### ⭐ 친구 전체 조회
+![image](https://github.com/user-attachments/assets/1a068a4e-db1f-4196-a307-014d3c99f17e)
 
 #### ⭐ 친구 삭제
 ![친구 삭제](https://github.com/user-attachments/assets/f09300e3-97fb-4857-8cda-2f7a6bd2c36a)
-#### ⭐ 친구 요청
-![친구요청](https://github.com/user-attachments/assets/0aa7fe49-0b89-4cbf-a39e-ede863b501d5)
-#### ⭐ 친구 전체 조회
-![친구 전체 조회](https://github.com/user-attachments/assets/e7a4c7c6-ebce-4ce3-937a-470e438e53c8)
-#### ⭐ 친구 요청 수락
-![친구 요청 수락](https://github.com/user-attachments/assets/da81bf55-6ee4-4df6-b90f-1587ca7a1ec7)
+
+- MySQL Workbench 조회시 데이터 삭제됨
+
+![image](https://github.com/user-attachments/assets/45d517e1-6826-4a64-8e0d-d9bb699a5eaf)
+
+
+
+
 
 </details>
 
@@ -236,9 +253,24 @@
 <details>
 <summary> 🚨유효성 검사 & 예외처리</summary>
 
-#### 친구 요청 거절 - 친구 요청한 사용자와 찬구 요청 받은 사용자 id가 같을 경우
+
+#### ⭐ 회원가입시 동일한 이메일이 있을 경우
+![image](https://github.com/user-attachments/assets/6170b592-a2f8-4e11-98d5-41aa231c326e)
+#### ⭐ 회원가입시 필수 입력값 공백일 경우
+![image](https://github.com/user-attachments/assets/b73da3e1-4b75-41b3-95c6-ca1181fe8007)
+
+#### ⭐ 로그인시 이메일이 일치하지 않을 경우
+![image](https://github.com/user-attachments/assets/0a495f72-e66c-47e9-9d2a-41f8165fd538)
+#### ⭐ 로그인시 비밀번호가 일치하지 않을 경우
+![image](https://github.com/user-attachments/assets/dd59ae05-02e5-466f-bece-f6ec5c66c532)
+
+#### ⭐ 사용자 정보 수정시 수정하려는 비밀번호 형식이 올바르지 않을 경우
+![image](https://github.com/user-attachments/assets/20585007-075b-407b-aa92-8cc8d159b62f)
+
+
+#### ⭐ 친구 요청 거절 - 친구 요청한 사용자와 친구 요청 받은 사용자 id가 같을 경우
 ![image](https://github.com/user-attachments/assets/06a5d723-a162-4856-81f4-31111379a320)
-#### 친구 요청 수락 - 친구 요청한 사용자의 id가 데이터에 없을 경우
+#### ⭐ 친구 요청 수락 - 친구 요청한 사용자의 id가 데이터에 없을 경우
 ![image](https://github.com/user-attachments/assets/ece0ee35-464b-46f2-b229-7eac3627891c)
 
   
@@ -252,15 +284,24 @@
 
 <details>
 <summary> 🏷️정렬 & 페이징</summary>
-  
+
+#### ⭐ 사용자 전체 조회 페이징 전
+![image](https://github.com/user-attachments/assets/8b4ff5dc-c1d1-4313-bd76-355a05ff1ef8)
+#### ⭐ 사용자 전체 조회 페이징 후
+![image](https://github.com/user-attachments/assets/f7f99cd6-2b3c-4dd3-af46-f2e7e362c6b1)
+
+
 #### ⭐ 게시물 수정일 기준 정렬
 ![image](https://github.com/user-attachments/assets/90c71e11-5161-47ff-a9ac-a3fc4b674338)
 #### ⭐ 게시물 생성일 기준 정렬
 ![image](https://github.com/user-attachments/assets/b9643b59-1a6c-42b2-8055-1ad619844295)
-#### ⭐ 게시물 기간별 정렬 좋아요 많은 기준
-![페이징3](https://github.com/user-attachments/assets/0ff2cf71-1ac1-4039-b024-3960d7da148a)
+#### ⭐ 게시물 기간별 정렬
+![image](https://github.com/user-attachments/assets/de9e3ff0-8c90-43d5-aed1-5da8cac3625b)
 #### ⭐ 게시물 좋아요 많은 기준 정렬
 ![image](https://github.com/user-attachments/assets/4704972b-63e0-4696-bf0b-d47323920454)
+#### ⭐ 게시물 생성일 기준 & 좋아요 많은 기준 정렬
+![image](https://github.com/user-attachments/assets/83f94412-6e04-4ff3-9146-c58b91fb990a)
+
 
 #### ⭐ 댓글 페이징 전 전체 조회
 ![image](https://github.com/user-attachments/assets/a83f5b03-1a9f-4f56-82ed-6ff5b6b6bd78)
