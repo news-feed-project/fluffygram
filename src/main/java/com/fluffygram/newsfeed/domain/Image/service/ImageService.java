@@ -66,7 +66,7 @@ public class ImageService {
 
         String DBfileName = UploadImage.uploadUserImage(status.getPath(), multipartFile);
 
-        Image image = imageRepository.getUserImageByIdOrElseThrow(statusId);
+        Image image = imageRepository.getImageByIdOrElseThrow(statusId, status);
 
         image.updateFileName(multipartFile.getOriginalFilename());
         image.updateDBFileName(DBfileName);
